@@ -107,7 +107,23 @@ for (const canonical of canonicalRoutes) assert.ok(sitemapUrls.includes(canonica
 
 const robots = readFileSync(path.join(publicRoot, "robots.txt"), "utf8");
 assert.ok(robots.includes(`Sitemap: ${canonicalOrigin}/sitemap.xml`), "robots.txt sitemap URL does not match canonical origin");
-assert.ok(!/google-site-verification/i.test(readFileSync(path.join(publicRoot, "index.html"), "utf8")), "Remove placeholder GSC tokens; add only the real token during setup");
+const homepageHtml = readFileSync(path.join(publicRoot, "index.html"), "utf8");
+const verificationMentions = homepageHtml.match(/google-site-verification/gi) || [];
+const verificationMetaTags = [...homepageHtml.matchAll(/<meta\b[^>]*>/gi)]
+  .filter(([tag]) => /\bname\s*=\s*["']google-site-verification["']/i.test(tag));
+assert.equal(verificationMentions.length, verificationMetaTags.length, "Google verification token must appear in a well-formed meta tag");
+assert.ok(verificationMetaTags.length <= 1, "Homepage must not contain duplicate Google verification tags");
+if (verificationMetaTags.length === 1) {
+  const tag = verificationMetaTags[0][0];
+  const nameAttributes = [...tag.matchAll(/\bname\s*=\s*(["'])(.*?)\1/gi)];
+  const contentAttributes = [...tag.matchAll(/\bcontent\s*=\s*(["'])(.*?)\1/gi)];
+  assert.equal(nameAttributes.length, 1, "Google verification meta tag must have exactly one quoted name attribute");
+  assert.equal(nameAttributes[0][2].toLowerCase(), "google-site-verification", "Unexpected Google verification meta name");
+  assert.equal(contentAttributes.length, 1, "Google verification meta tag must have exactly one quoted content attribute");
+  const verificationToken = contentAttributes[0][2];
+  assert.match(verificationToken, /^[A-Za-z0-9_-]{20,100}$/, "Google verification token must have a valid token format");
+  assert.ok(!/(?:^|[_-])(?:example|placeholder|your|replace|insert|todo|changeme|fake|dummy|sample|test|demo|token|x{3,})(?:$|[_-])/i.test(verificationToken), "Google verification token must not be a placeholder");
+}
 
 const comparison = readFileSync(path.join(publicRoot, "aluevertailu", "index.html"), "utf8");
 for (const destination of expectedDestinations) {
