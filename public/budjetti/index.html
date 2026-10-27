@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mitä talvehtiminen Espanjassa maksaa? Laske oma budjetti</title>
+    <meta name="description" content="Laske 1–6 kuukauden Espanjan-talven kulut omilla vuokra-, arki-, matka- ja vakuutusluvuillasi. Yhdelle tai kahdelle matkustajalle, ilman valmiita hinta-arvioita.">
+    <link rel="canonical" href="https://espanjan-talvi.pages.dev/budjetti/">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Laske oma Espanjan-talven budjetti">
+    <meta property="og:description" content="Kokoa koko matkan kulut omilla luvuillasi — kaikki laskenta tapahtuu tässä selaimessa.">
+    <meta property="og:url" content="https://espanjan-talvi.pages.dev/budjetti/">
+    <link rel="stylesheet" href="/assets/site.css">
+    <script type="module" src="/assets/budget.mjs"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#sisalto">Siirry sisältöön</a>
+    <header class="site-header"><a class="brand" href="/" aria-label="Espanjan talviarki – etusivu"><span class="brand-mark" aria-hidden="true">ET</span><span>Espanjan<br>talviarki</span></a><nav class="site-nav" aria-label="Päänavigaatio"><a href="/talvehtiminen-espanjassa/">Suunnittelu</a><a href="/aluevertailu/">Aluevertailu</a><a href="/vuokraus/">Vuokraus</a><a href="/budjetti/" aria-current="page">Budjetti</a></nav></header>
+    <main id="sisalto" class="article-shell">
+      <nav class="breadcrumbs" aria-label="Murupolku"><a href="/">Etusivu</a><span aria-hidden="true">/</span><span aria-current="page">Budjettilaskuri</span></nav>
+      <header class="page-heading"><p class="eyebrow">Omat luvut · ei keskihinta-arviota</p><h1>Mitä talvehtiminen Espanjassa maksaa?</h1><p class="lede">Kokoa suunnitelmasi kuukausierät, matkakulut ja itse määrittämäsi puskuri. Laskuri kertoo koko matkaseurueen summan sekä henkilökohtaisen osuuden yhdelle tai kahdelle matkustajalle.</p><p class="page-date">Laskenta tapahtuu selaimessa; sivusto ei tallenna syötteitä.</p></header>
+
+      <form id="budget-form" class="budget-form" novalidate>
+        <div class="budget-intro">
+          <label for="stay-months">Oleskelun pituus</label><div class="select-wrap"><select id="stay-months" name="months"><option value="1">1 kuukausi</option><option value="2">2 kuukautta</option><option selected value="3">3 kuukautta</option><option value="4">4 kuukautta</option><option value="5">5 kuukautta</option><option value="6">6 kuukautta</option></select></div>
+          <label for="travellers">Matkustajien määrä</label><div class="select-wrap"><select id="travellers" name="travellers"><option value="1">1 matkustaja</option><option value="2">2 matkustajaa</option></select></div>
+          <p class="small-note">Kuukausi tarkoittaa tässä yhtä suunnittelukuukautta, ei tarkkaa päivälaskutusta. Kolme kuukautta on vain aloitusarvo. Kaikki kulut syötetään koko seurueelle, ellei kentässä toisin sanota.</p>
+        </div>
+
+        <fieldset class="cost-group"><legend>Kuukausittaiset kulut</legend><p class="group-help">Syötä yhden kuukauden summa koko matkaseurueelle. Jätä kuluerä tyhjäksi tai merkitse 0, jos et vielä tiedä sitä — nolla ei tarkoita, että kulu olisi varmasti ilmainen.</p>
+          <label for="rent">Vuokra<input id="rent" name="rent" type="number" min="0" max="10000000" step="0.01" inputmode="decimal" data-cost-type="monthly" data-cost-key="rent" aria-describedby="rent-help"><span id="rent-help" class="field-help">Syötä todellisesta tarjouksesta koko kuukauden vuokra.</span></label>
+          <label for="utilities">Sähkö, vesi ja lämmitys<input id="utilities" name="utilities" type="number" min="0" max="10000000" step="0.01" inputmode="decimal" data-cost-type="monthly" data-cost-key="utilities"></label>
+          <label for="internet">Internet ja puhelin<input id="internet" name="internet" type="number" min="0" max="10000000" step="0.01" inputmode="decimal" data-cost-type="monthly" data-cost-key="internet"></label>
+          <label for="food">Ruoka ja kodin päivittäistavarat<input id="food" name="food" type="number" min="0" max="10000000" step="0.01" inputmode="decimal" data-cost-type="monthly" data-cost-key="food"></label>
+          <label for="transport">Paikallinen liikkuminen tai auton kulut<input id="transport" name="transport" type="number" min="0" max="10000000" step="0.01" inputmode="decimal" data-cost-type="monthly" data-cost-key="transport"><span class="field-help">Syötä joko joukkoliikenne/taksit tai auton vuokra, polttoaine ja pysäköinti. Älä laske samaa kulua kahteen kertaan.</span></label>
+          <label for="monthly-other">Muut kuukausikulut<input id="monthly-other" name="monthlyOther" type="number" min="0" max="10000000" step="0.01" inputmode="decimal" data-cost-type="monthly" data-cost-key="monthlyOther"></label>
+        </fieldset>
+
+        <fieldset class="cost-group"><legend>Kertakulut koko jaksolle</legend><p class="group-help">Syötä koko seurueen meno kerran koko oleskelulta, ei kuukauden arviota.</p>
+          <label for="travel">Matkat Suomesta ja takaisin<input id="travel" name="travel" type="number" min="0" max="10000000" step="0.01" inputmode="decimal" data-cost-type="one-off" data-cost-key="travel"></label>
+          <label for="insurance">Matka- tai muu vakuutus<input id="insurance" name="insurance" type="number" min="0" max="10000000" step="0.01" inputmode="decimal" data-cost-type="one-off" data-cost-key="insurance"></label>
+          <label for="oneoff-other">Muut kertakulut<input id="oneoff-other" name="other" type="number" min="0" max="10000000" step="0.01" inputmode="decimal" data-cost-type="one-off" data-cost-key="other"><span class="field-help">Esimerkiksi siirtymät, maksut tai varusteet, jos ne koskevat omaa suunnitelmaasi.</span></label>
+        </fieldset>
+
+        <fieldset class="cost-group cost-group-buffer"><legend>Vara yllättäviin kuluihin</legend><p class="group-help">Puskuriprosentti on oma suunnitteluoletuksesi. Se lasketaan kuukausi- ja kertakulujen summasta; laskuri ei valitse prosenttia puolestasi.</p><label for="contingency">Puskurin osuus, %<input id="contingency" name="contingency" type="number" min="0" max="50" step="1" value="0" inputmode="numeric"></label></fieldset>
+
+        <div class="form-actions"><button class="button button-primary" type="submit">Laske kokonaisuus</button><button class="button button-quiet" type="reset">Tyhjennä kulut</button></div>
+        <section id="budget-result" class="budget-result" role="status" aria-live="polite" aria-atomic="true" hidden>
+          <p class="eyebrow">Sinun suunnitelmasi</p><h2>Arvio omilla syöttämilläsi luvuilla</h2>
+          <dl class="result-grid"><div><dt>Kuukausikulut yhteensä</dt><dd id="monthly-result">—</dd></div><div><dt>Kertakulut</dt><dd id="oneoff-result">—</dd></div><div><dt>Itse valitsemasi puskuri</dt><dd id="contingency-result">—</dd></div><div class="result-total"><dt>Koko jakso yhteensä</dt><dd id="total-result">—</dd></div><div><dt>Keskimäärin kuukaudessa</dt><dd id="average-result">—</dd></div><div><dt>Henkilöä kohti koko jaksolla</dt><dd id="per-traveller-result">—</dd></div></dl>
+          <p class="small-note">Kokonaisarvio on aritmeettinen suunnittelun apu, ei hintatutkimus, tarjous tai taattu elinkustannus. Tarkista sopimukset ja lisää puuttuvat erät omaan laskelmaasi.</p>
+        </section>
+        <p id="budget-error" class="form-error" role="alert" hidden></p>
+      </form>
+
+      <section class="section section-narrow">
+        <div class="callout callout-ochre"><h2>Mitä laskuri ei tiedä</h2><p>Sivulla ei ole yleisiä vuokrahinta- tai elinkustannusoletuksia. Syöttämiesi lukujen lähteitä tai tarkkuutta ei tarkisteta. Tyhjä kenttä lasketaan nollaksi; lisää epävarmat mutta mahdolliset menot omaksi eräkseen ja valitse sopiva puskuri.</p></div>
+        <h2>Vertaile asuntoja samoilla päivillä ja samoilla erillä</h2><p>Varmista kirjallisesti vuokra koko ajalle, mitä sähkön/lämmityksen, veden ja internetin hinnassa tapahtuu, sekä vakuuden, varausmaksun, siivouksen ja peruutuksen ehdot. Pitkäaikaisen vuokrauksen €/m²-indeksi ei ole kalustetun talviasunnon kuukausihinta.</p><p><a href="/aluevertailu/">Vertaa kymmentä paikkakuntaa ja ilmoitusindeksiä</a> · <a href="/vuokraus/">Avaa vuokrauksen tarkistuslista</a> · <a href="/talvehtiminen-espanjassa/">Palaa suunnitteluoppaaseen</a>.</p>
+      </section>
+    </main>
+    <footer class="site-footer"><a class="footer-brand" href="/">Espanjan talviarki</a><p>Suunnitteluapua pidempään talveen — lähteet näkyviin, oletukset erilleen faktoista.</p><nav aria-label="Alatunniste"><a href="/toimitusperiaatteet/">Tietoa ja toimitusperiaatteet</a><a href="/tietosuoja/">Tietosuoja</a></nav><p class="footer-meta">Laskenta tapahtuu tässä selaimessa. Syötteitä ei lähetetä tai tallenneta sivuston toimesta.</p></footer>
+  </body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://espanjan-talvi.pages.dev/sitemap.xml
