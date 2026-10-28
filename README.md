@@ -1,6 +1,6 @@
 # Espanjan talviarki — staattinen sivusto
 
-Suomenkielinen staattinen opas 1–6 kuukauden talvehtimisen suunnitteluun. Julkinen sivusto on Cloudflare Pagesissa osoitteessa <https://espanjan-talvi.pages.dev/>; tämän repositorion GitHub-etärepo on [villeraikka-prog/espanjan-talvi](https://github.com/villeraikka-prog/espanjan-talvi). Google Search Console -omistajuus on vahvistettu etusivun HTML-meta-tunnisteella. Se ei tarkoita kävijäanalytiikan asentamista: tässä tarkistuksessa paikallisesta projektikoodista ei löytynyt analytiikka- tai mainosseurannan tageja. Julkaistua HTML:ää ei tarkistettu. Cloudflare-tilin asetuksia tai infrastruktuuritason lokitus- ja säilytyskäytäntöjä ei ole itsenäisesti varmennettu. Kun budjettilaskurin JavaScript-moduuli toimii, se käsittelee syötteet selaimessa ja estää lomakkeen tavallisen lähetyksen. HTML-lomake ei määritä `method`-arvoa, joten jos JavaScript ei toimi, selaimen oletusarvoinen GET-lähetys voi liittää nimetyt kenttäarvot URL:iin. Paikallisessa projektissa ei ole omaa backendia, kirjautumista, uutiskirjettä, mainoksia tai affiliate-seurantaa.
+Suomenkielinen staattinen opas 1–6 kuukauden talvehtimisen suunnitteluun. Julkinen sivusto on Cloudflare Pagesissa osoitteessa <https://espanjan-talvi.pages.dev/>; tämän repositorion GitHub-etärepo on [villeraikka-prog/espanjan-talvi](https://github.com/villeraikka-prog/espanjan-talvi). Google Search Console -omistajuus on vahvistettu etusivun HTML-meta-tunnisteella. Se on erillinen asia kävijäanalytiikasta. Cloudflare Web Analytics -snippet on lisätty paikallisen työversion kahdeksaan HTML-tiedostoon, myös 404-sivulle. Tätä muutosta ei ole julkaistu tuotantoon, eikä tuotannon analytiikan toimintaa ole vahvistettu. Sivusto on staattinen ja julkaistaan `public/`-hakemistosta ilman build-komentoa. Cloudflare-tilin asetuksia tai infrastruktuuritason lokitus- ja säilytyskäytäntöjä ei ole itsenäisesti varmennettu. Kun budjettilaskurin JavaScript-moduuli toimii, se käsittelee syötteet selaimessa ja estää lomakkeen tavallisen lähetyksen. HTML-lomake ei määritä `method`-arvoa, joten jos JavaScript ei toimi, selaimen oletusarvoinen GET-lähetys voi liittää nimetyt kenttäarvot URL:iin. Paikallisessa projektissa ei ole omaa backendia, kirjautumista, uutiskirjettä, mainoksia tai affiliate-seurantaa.
 
 ## Rakenne
 
@@ -29,7 +29,7 @@ Avaa `http://localhost:4173/`. Pysäytä käynnistetty palvelin `Ctrl+C`-näppä
 
 - `/` — etusivu ja opastuksen aloituspiste.
 - `/talvehtiminen-espanjassa/` — 1–6 kuukauden suunnittelupolku, aikajana, talvikodin tarkistus, liikkuminen sekä viranomaislinkit ja yksilöllisyysrajaukset.
-- `/aluevertailu/` — kymmenen kaupungin profiilit, kahdeksan AEMET-aseman kuukausinormaalit ja Idealistan ilmoitusindeksi.
+- `/aluevertailu/` — tällä hetkellä 24 kohdeprofiilia viidessä kategoriassa (kahdeksan Costa Blancalla), kahdeksan AEMET-aseman kuukausinormaalit ja Idealistan ilmoitusindeksi.
 - `/vuokraus/` — asunnon talvikunto, kysymykset ennen maksua, tyhjä saman ehtorakenteen vertailupohja sekä virallinen lakilähde.
 - `/budjetti/` — selaimessa toimiva laskuri 1–2 matkustajalle ja 1–6 kuukaudelle. Käyttäjä syöttää kaikki kustannukset; laskuri ei sisällä hintaoletuksia.
 - `/toimitusperiaatteet/` ja `/tietosuoja/` — sivuston rajat, lähteet ja nykyiset tietosuojatoiminnot.
@@ -71,7 +71,7 @@ Google Search Console -omistajuus on vahvistettu URL-prefix-ominaisuudelle `http
 - **Hakutulokset:** tarkista Performance-raportista impressions/clicks/queries/pages sekä ajan myötä CTR. Tämänhetkisiä lukuja ei ole tarkistettu eikä niitä päätellä lähdekoodista.
 - **Budjettilaskurin käyttö:** tällä hetkellä ei mitata. Search Console näyttää budjettisivun haku- ja laskeutumissivutietoja, ei lomakkeen käyttöä. Jos erillinen mittaus myöhemmin hyväksytään, mittaa korkeintaan laskurin aloitus/laskentatapahtuma suostumus- ja tietosuojaratkaisun jälkeen; älä koskaan lähetä euroarvoja, matkan päivämääriä tai muita lomakekenttien sisältöjä analytiikkaan.
 - **Affiliate-linkit ja tulokset:** tarkastetussa koodissa ei ole affiliate-seurantaa; mahdollisten linkkien kumppanuussuhteita ei ole tässä tarkistuksessa erikseen vahvistettu. Jos kumppanuusmarkkinointia myöhemmin lisätään, päivitä sitä koskevat tiedot ja mittaa linkkien tuloksia vain erillisellä päätöksellä. Erota kumppanin raportoimat varaukset klikkauksista äläkä esitä provisioita tai konversioita ilman todellista dataa.
-- **Nykyinen tila:** Search Console -omistajuus on vahvistettu, mutta sen tämänhetkisiä haku- tai indeksointituloksia ei ole tässä README:ssä todennettu. Paikallisen projektikoodin tarkistuksessa ei löytynyt kävijäanalytiikkaa; laskurin käyttöä, affiliate-klikkauksia tai myyntejä ei mitata.
+- **Nykyinen tila:** Search Console -omistajuus on vahvistettu, mutta sen tämänhetkisiä haku- tai indeksointituloksia ei ole tässä README:ssä todennettu. Paikallisessa työversiossa on Cloudflare Web Analytics -tagi, mutta sitä ei ole julkaistu tuotantoon eikä tuotannon mittauksen toimintaa ole vahvistettu. Laskurin käyttöä, affiliate-klikkauksia tai myyntejä ei mitata.
 
 ## Avoimet tietotäydennykset ja ylläpito
 
@@ -79,4 +79,4 @@ Google Search Console -omistajuus on vahvistettu URL-prefix-ominaisuudelle `http
 - Tarkista vuokrausta koskevat lakilinkit ja omaan tilanteeseen soveltuvat viranomaisohjeet uudelleen; yleisopas ei ole juridinen tarkistus.
 - Varmista kaikki vuokraraporttien syyskuu 2026 arvot uudestaan, jos julkaisu siirtyy tai raportointi päivittyy. Päivitä taulukko ja lähderekisteri yhdessä.
 - Nykyinen canonical-osoite on `https://espanjan-talvi.pages.dev/`. Jos käyttöön otetaan muu domain, vaihda kaikki SEO-URL:t yhdessä.
-- Harkitse omistajan tarkistusta kaupungin arjen kuvauksiin sekä kunkin lainatun kuvan käyttöön ennen kaupallista muutosta. Kuvat on lisensoitu Unsplashissa, ja niiden tekijät on nimetty.
+- Harkitse omistajan tarkistusta kaupungin arjen kuvauksiin sekä kunkin lainatun kuvan käyttöön ennen kaupallista muutosta. Sivuston kuvat ovat peräisin useista lähteistä, kuten Unsplashista ja Wikimedia Commonsista. Kuvatiedostojen lähteet, tekijätiedot ja käyttöoikeudet on dokumentoitu `IMAGE-SOURCES.md`-tiedostossa; yksittäisten kuvien lisenssit ja attribuutiovaatimukset vaihtelevat lähteen mukaan.

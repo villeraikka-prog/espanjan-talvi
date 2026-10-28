@@ -1,6 +1,6 @@
 # Lähderekisteri — Espanjan talviarki
 
-Sisältö ja lähteet tarkistettu 27.10.2026. Aikaan sidotut markkina-, hallinto- ja liikennetiedot pitää tarkistaa uudelleen ennen julkista julkaisua. Tutkimuskansion alkuperäisiä raportteja ei ole muutettu.
+Sisältölähteet tarkistettu 27.10.2026; kuvalähteiden tarkistuspäivät on merkitty erikseen kuvalähteiden osioon. Aikaan sidotut markkina-, hallinto- ja liikennetiedot pitää tarkistaa uudelleen ennen julkista julkaisua. Tutkimuskansion alkuperäisiä raportteja ei ole muutettu.
 
 ## Ilmastonormaalit — AEMET
 
@@ -23,13 +23,18 @@ AEMET-taulukko esittää vertailukelpoiset kuukausiarvot asemakohtaisesti. Alica
 
 ## Vuokraindeksi — Idealista
 
-Kaikki alla olevat luvut ovat Idealistan syyskuun 2026 kaupunkikohtaisia vuokran €/m²-lukuja; Idealistan uusi metodologia tuli raportin mukaan käyttöön heinäkuussa 2026. Luvut ovat tilannekuva portalissa olevasta asuntotarjonnasta ja kyseisen mittarin kuukausiarvo, eivät toteutuneita vuokrasopimuksia, yksittäisen asunnon hinta tai kalustetun 1–6 kuukauden talvikauden vertailuhinta. Idealista sanoo omassa metodologiassaan, ettei luku vastaa toteutunutta kauppahintaa eikä keskimääräistä nykyistä vuokrasummaa.
+Alla olevat luvut ovat Idealistan syyskuun 2026 kaupunki- tai aluekohtaisia vuokrailmoitusten pyyntihintaindeksejä (€/m²/kk). Vuonna 2026 päivitetty menetelmä suodattaa tavanomaisen asuntomarkkinan indeksistä kausi- ja lomavuokraukseen tarkoitetut ilmoitukset. Indeksi ei ole toteutunut vuokra eikä yksittäisen kalustetun talvikauden asunnon tarjoushinta. Raportin alue voi olla kunta tai sitä pienempi paikallisuus tai rannikkoalue.
 
-| Kaupunki | Syyskuu 2026, €/m²/kk | Idealistan kaupunkiraportti |
+| Kaupunki tai vertailualue | Syyskuu 2026, €/m²/kk | Idealistan kohde- tai alueraportti |
 |---|---:|---|
 | Alicante / Alacant | 13,9 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/alicante-alacant/) |
 | Torrevieja | 12,7 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/torrevieja/) |
 | Benidorm | 17,7 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/benidorm/) |
+| Orihuela Costa (Orihuelan kunnan rannikkoalue) | 13,2 | [Alueraportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/orihuela/orihuela-costa/) |
+| Guardamar del Segura | 11,4 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/guardamar-del-segura/) |
+| Dénia | 13,9 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/denia/) |
+| Jávea / Xàbia | 15,4 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/javea-xabia/) |
+| Calp / Calpe | 15,0 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/calpe/) |
 | Málaga | 16,5 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/malaga-provincia/malaga/) |
 | Fuengirola | 17,2 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/malaga-provincia/fuengirola/) |
 | Almería | 9,4 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/almeria-provincia/almeria/) |
@@ -37,8 +42,24 @@ Kaikki alla olevat luvut ovat Idealistan syyskuun 2026 kaupunkikohtaisia vuokran
 | Murcia | 9,9 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/murcia/) |
 | Cádiz | 12,4 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/cadiz-provincia/cadiz/) |
 | Huelva | 10,7 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/huelva-provincia/huelva/) |
+| Cartagena | 9,4 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/cartagena/) |
+| Los Alcázares | 10,5 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/los-alcazares/) |
+| San Pedro del Pinatar | 10,2 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/san-pedro-del-pinatar/) |
+| La Manga del Mar Menor (rannikkoalue, ei kunta) | 11,7 | [Alueraportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/la-manga-del-mar-menor/) |
+| Puerto de Mazarrón (Mazarrónin kunnan rannikkokohde) | 10,8 | [Alueraportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/mazarron/puerto-de-mazarron/) |
+| Águilas | 8,3 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/aguilas/) |
+| Roquetas de Mar | 9,2 | [Kuntaraportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/almeria-provincia/roquetas-de-mar/) |
+| Almerimar (El Ejidon kunnan rannikkopaikallisuus) | 9,4 | [Alueraportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/almeria-provincia/el-ejido/almerimar/) |
+| Vera | 9,5 | [Raportti](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/almeria-provincia/vera/) |
+
+Costa Blancan vuokraindeksivertailussa on kahdeksan valittua riviä. Orihuela Costa on Orihuelan kunnan rannikkoalue, ei itsenäinen kunta; sen Idealista-alueindeksiä ei pidä sekoittaa Orihuela Ciudadin riviin. Jávea/Xàbian raportissa on myös erillisiä aluerivejä; vertailussa käytetään nimetyn Jávea/Xàbia-kohteen pääriviä. Costa Blancan aluekuvauksen lähteet: [Costa Blancan rannikkoalueet ja pohjois–etelä-jako](https://www.costablanca.org/es/discover/seaside/beaches), [Orihuela Costan kunnallinen rantatieto](https://www.orihuela.es/desarrollo-de-la-ciudad/costa/playas/), [Xàbian matkailun strategiasuunnitelma](https://www.xabia.org/ver/9309/Plan-Estrat%C3%A9gico-2023-2026.html) ja [Calpin Peñón d’Ifach -luonnonpuisto](https://www.calpe.es/es/descubre-calpe/espacios-naturales/pe%C3%B1on-de-ifach). Tarkistusajankohta: 28.10.2026.
+
+Costa Cálidan kuuden kohteen rajaus perustuu rannikkokohteiden vertailuun. Cartagenan 9,4 €/m²/kk viittaa kuntatason Idealista-raporttiriviin, ei samannimiseen sisäkkäiseen alueriviin. Los Alcázaresista käytetään kuntatason 10,5 €/m²/kk -riviä; saman niminen sisäkkäinen Idealista-alue on 10,0 €/m²/kk, eikä sitä ole sekoitettu kuntalukuun. La Manga on rannikkoalue eikä kunta. Puerto de Mazarrón on Mazarrónin kunnan rannikkokohde; Mazarrónin kunnan erillistä 10,2 €/m²/kk -lukua ei sisällytetä Costa Cálidan kuuden kohteen taulukkoon. San Javierin ja Santiago de la Riberan rivejä ei lisätä tässä vaiheessa. Alueen kohdekuvaukset: [Murcian alueen rannikkokohteet](https://turismoazul.turismoregiondemurcia.es/turismoazul/es/destinos), [La Manga ja kuntarajaus](https://www.turismoregiondemurcia.es/webs/murciaturistica/documentos/1/DOCUMENTOS_1_1336.pdf), [Puerto de Mazarrónin satamatieto](https://www.turismoregiondemurcia.es/es/puerto_deportivo/puerto-deportivo-de-mazarron-1282/).
+
+Costa de Almerían vertailussa Almería ja Roquetas de Mar esitetään kuntakohteina; Aguadulcea ei lisätä Roquetasin rinnalle, koska se on kunnan sisäinen paikallisuus. Almerimar esitetään omalla alueindeksillään El Ejidon kuntarivin sijasta. Veran indeksi on Vera-nimiseltä Idealista-alueelta, eikä sitä nimetä Vera Playan hinnaksi. Adralle ja Mojácarille ei lisätä syyskuun 2026 lukua, koska raporttisivut näyttävät ajankohdalle arvon `n.d.`. Aluekuvaukset: [Roquetas de Mar ja sen asutuskeskukset](https://www.andalucia.org/listing/roquetas-de-mar/19218102/), [Almerimar](https://www.andalucia.org/listing/almerimar/19248103/), [Costa de Almería](https://www.andalucia.org/actividades-y-atracciones/playas/costa-de-almeria/), [Vera](https://www.andalucia.org/listing/vera/19240102/). Tarkistusajankohta: 28.10.2026.
 
 - [Idealista: Espanjan vuokrahintaraportti, syyskuu 2026](https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/report/) — julkaisuajankohta ja kaupunki-/aluearvojen taustat.
+- [Idealista: menetelmäkuvaus 2026 (PDF)](https://st3.idealista.com/cms/archivos/static/price-indicator/es-metodologia-informes-de-precios-vivienda-2026.pdf?VersionId=t7nqokhgfa6VQpcM43AdTT8K3J5FSjj3&fv=lJHOzQn2&v=1556008208) — uudistetun hintaindeksin kuvaus ja kausi-/lomavuokraukseen tarkoitettujen ilmoitusten suodatus.
 - [Idealista/data: metodologiadokumentti](https://st3.idealista.com/cms/archivos/metodologia-informes-de-precios-vivienda.pdf?fv=Q1YiTy17&v=1556008208) — ilmoitustarjonnan mittari, ei sopimuksissa sovittu tai maksettu vuokra. Idealista ilmoittaa myös raporttien metodologian uudistuksesta heinäkuussa 2026.
 
 **Talvikauden vertailulähdettä ei ole vahvistettu.** Sivustolla ei julkaista “tyypillistä talvikuukausivuokraa”, vakuuden määrää, varausmaksua, sähkölaskua tai internetin kustannusta, koska vertailukelpoista, päivitettyä lähdeaineistoa ei ole koottu. Käyttäjää ohjataan vertaamaan todellisia tarjouksia samoille päiville ja pyytämään kulut kirjallisesti.
@@ -70,7 +91,7 @@ Reitti- ja palvelukuvausten tarkoitus on kertoa, mistä käyttäjä voi tarkista
 
 ## Kuvien lähteet
 
-Kuvaajien nimet, paikalliset tiedostot, lisenssit, attribuutiot ja lähdesivut: [IMAGE-SOURCES.md](IMAGE-SOURCES.md). Kymmenen kaupungin kortit käyttävät omia, kyseiseen kaupunkiin paikannettuja valokuvia. Unsplash-lisenssi ja kuvasivut sekä Huelvan Wikimedia Commonsin CC BY 2.0 -tiedosto on tarkistettu 27.10.2026. Kuvatiedostot on tallennettu paikallisesti eikä ulkoisia kuvia hotlinkitetä.
+Kuvaajien nimet, kaikki 24 paikallista kuvatiedostoparia, lisenssit, attribuutiot ja lähdesivut: [IMAGE-SOURCES.md](IMAGE-SOURCES.md). Jokaisella kohdeprofiililla on nyt oma, kyseiseen paikkaan paikannettu valokuva. Aiemmat 10 kuvaa ja uudet 14 ehdokasta tarkistettiin lähdesivuilta 27.–28.10.2026. Kuvatiedostot on tallennettu paikallisesti eikä ulkoisia kuvia hotlinkitetä.
 
 ## Julkaisu- ja mittausohjeiden lähteet
 

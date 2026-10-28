@@ -29,9 +29,77 @@ const pages = htmlFiles.filter((file) => path.relative(publicRoot, file).replace
 const titles = new Set();
 const descriptions = new Set();
 const canonicalRoutes = new Set();
-const expectedDestinations = ["alicante", "torrevieja", "benidorm", "malaga", "fuengirola", "almeria", "valencia", "murcia", "cadiz", "huelva"];
+const expectedDestinations = ["alicante", "torrevieja", "benidorm", "orihuela-costa", "guardamar-del-segura", "denia", "javea-xabia", "calp", "malaga", "fuengirola", "cartagena", "los-alcazares", "san-pedro-del-pinatar", "la-manga-del-mar-menor", "puerto-de-mazarron", "aguilas", "almeria", "roquetas-de-mar", "almerimar", "vera", "valencia", "murcia", "cadiz", "huelva"];
+const expectedCostaBlancaProfiles = ["alicante", "torrevieja", "benidorm", "orihuela-costa", "guardamar-del-segura", "denia", "javea-xabia", "calp"];
+const expectedDestinationNavigationGroups = new Map([
+  ["Costa Blanca", [...expectedCostaBlancaProfiles, "alicante-vai-torrevieja"]],
+  ["Costa del Sol", ["malaga", "fuengirola"]],
+  ["Costa Cálida", ["cartagena", "los-alcazares", "san-pedro-del-pinatar", "la-manga-del-mar-menor", "puerto-de-mazarron", "aguilas"]],
+  ["Costa de Almería", ["almeria", "roquetas-de-mar", "almerimar", "vera"]],
+  ["Muut kohteet Espanjassa", ["valencia", "murcia", "cadiz", "huelva"]],
+]);
+const destinationAltNames = new Map([
+  ["orihuela-costa", "Orihuela Costa"],
+  ["guardamar-del-segura", "Guardamar del Segura"],
+  ["javea-xabia", "Xàbia"],
+  ["san-pedro-del-pinatar", "San Pedro del Pinatar"],
+  ["la-manga-del-mar-menor", "La Manga"],
+  ["puerto-de-mazarron", "Puerto de Mazarrón"],
+  ["roquetas-de-mar", "Roquetas de Mar"],
+]);
+const expectedNewPhotoSources = new Map([
+  ["orihuela-costa", "https://commons.wikimedia.org/wiki/File:Mediterranean_coastline_of_Cabo_Roig_in_Orihuela_Costa,_Orihuela,_Alicante,_Spain,_2022_January.jpg"],
+  ["guardamar-del-segura", "https://unsplash.com/photos/a-sandy-area-with-trees-and-bushes-in-the-foreground-ioeoj6bpoKU"],
+  ["denia", "https://unsplash.com/photos/white-boats-on-docking-station-oADsJyngtEs"],
+  ["javea-xabia", "https://unsplash.com/photos/an-aerial-view-of-a-beach-and-the-ocean-S9wG2nhlyt8"],
+  ["calp", "https://unsplash.com/photos/a-view-of-a-city-with-a-mountain-in-the-background-zgK9I8MEjMY"],
+  ["cartagena", "https://unsplash.com/photos/ancient-roman-amphitheater-ruins-under-the-bright-sun-2GGPhORBdVE"],
+  ["los-alcazares", "https://commons.wikimedia.org/wiki/File:Los_Alcazares_del_mar_menor.JPG"],
+  ["san-pedro-del-pinatar", "https://commons.wikimedia.org/wiki/File:Salinas_y_Arenales_de_San_Pedro_del_Pinatar_-_WLE_Spain_2015.jpg"],
+  ["la-manga-del-mar-menor", "https://unsplash.com/photos/green-palm-trees-near-white-and-brown-concrete-building-during-daytime-PlObKBlri-M"],
+  ["puerto-de-mazarron", "https://commons.wikimedia.org/wiki/File:Hafen_Pto.d.Mazarron05.JPG"],
+  ["aguilas", "https://commons.wikimedia.org/wiki/File:Aguilasmurcia.JPG"],
+  ["roquetas-de-mar", "https://unsplash.com/photos/a-view-of-a-body-of-water-next-to-a-beach-1iGPrkOsoeo"],
+  ["almerimar", "https://commons.wikimedia.org/wiki/File:PXL_20240126_gale%C3%B3n_Andaluc%C3%ADa_en_Almerimar_12.jpg"],
+  ["vera", "https://commons.wikimedia.org/wiki/File:Vista_de_Vera_013.jpg"],
+]);
 const expectedStations = ["8025", "8019", "6155A", "8416", "6325O", "7178I", "5973", "4642E"];
 const expectedRents = new Map([["Alicante / Alacant", "13,9"], ["Torrevieja", "12,7"], ["Benidorm", "17,7"], ["Málaga", "16,5"], ["Fuengirola", "17,2"], ["Almería", "9,4"], ["Valencia", "16,3"], ["Murcia", "9,9"], ["Cádiz", "12,4"], ["Huelva", "10,7"]]);
+const expectedComparisonRents = new Map([...expectedRents, ["Orihuela Costa", "13,2"], ["Guardamar del Segura", "11,4"], ["Dénia", "13,9"], ["Jávea / Xàbia", "15,4"], ["Calp / Calpe", "15,0"], ["Cartagena", "9,4"], ["Los Alcázares", "10,5"], ["San Pedro del Pinatar", "10,2"], ["La Manga del Mar Menor", "11,7"], ["Puerto de Mazarrón", "10,8"], ["Águilas", "8,3"], ["Roquetas de Mar", "9,2"], ["Almerimar", "9,4"], ["Vera", "9,5"]]);
+const expectedCostaBlancaRents = new Map([["Alicante / Alacant", "13,9"], ["Torrevieja", "12,7"], ["Benidorm", "17,7"], ["Orihuela Costa", "13,2"], ["Guardamar del Segura", "11,4"], ["Dénia", "13,9"], ["Jávea / Xàbia", "15,4"], ["Calp / Calpe", "15,0"]]);
+const expectedCostaBlancaAdditionalProfileSources = new Map([
+  ["orihuela-costa", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/orihuela/orihuela-costa/"],
+  ["guardamar-del-segura", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/guardamar-del-segura/"],
+  ["denia", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/denia/"],
+  ["javea-xabia", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/javea-xabia/"],
+  ["calp", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/calpe/"],
+]);
+const expectedComparisonSources = new Map([
+  ["Alicante / Alacant", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/alicante-alacant/"],
+  ["Torrevieja", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/torrevieja/"],
+  ["Benidorm", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/benidorm/"],
+  ["Orihuela Costa", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/orihuela/orihuela-costa/"],
+  ["Guardamar del Segura", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/guardamar-del-segura/"],
+  ["Dénia", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/denia/"],
+  ["Jávea / Xàbia", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/javea-xabia/"],
+  ["Calp / Calpe", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/alicante/calpe/"],
+  ["Málaga", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/malaga-provincia/malaga/"],
+  ["Fuengirola", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/malaga-provincia/fuengirola/"],
+  ["Cartagena", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/cartagena/"],
+  ["Los Alcázares", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/los-alcazares/"],
+  ["San Pedro del Pinatar", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/san-pedro-del-pinatar/"],
+  ["La Manga del Mar Menor", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/la-manga-del-mar-menor/"],
+  ["Puerto de Mazarrón", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/mazarron/puerto-de-mazarron/"],
+  ["Águilas", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/aguilas/"],
+  ["Almería", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/almeria-provincia/almeria/"],
+  ["Roquetas de Mar", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/almeria-provincia/roquetas-de-mar/"],
+  ["Almerimar", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/almeria-provincia/el-ejido/almerimar/"],
+  ["Vera", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/almeria-provincia/vera/"],
+  ["Valencia", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/comunitat-valenciana/valencia-provincia/valencia/"],
+  ["Murcia", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/murcia-region/murcia-provincia/murcia/"],
+  ["Cádiz", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/cadiz-provincia/cadiz/"],
+  ["Huelva", "https://www.idealista.com/sala-de-prensa/informes-precio-vivienda/alquiler/andalucia/huelva-provincia/huelva/"],
+]);
 
 for (const filePath of pages) {
   const html = readFileSync(filePath, "utf8");
@@ -126,12 +194,36 @@ if (verificationMetaTags.length === 1) {
 }
 
 const comparison = readFileSync(path.join(publicRoot, "aluevertailu", "index.html"), "utf8");
+assert.ok(!/10\s+Espanjan talvikohdetta/i.test(comparison), "Comparison title must not retain the outdated ten-destination claim");
+assert.ok(!/Kymmenen kaupunkia|Kymmenen erilaista paikkaa/i.test(comparison), "Comparison introduction must not retain the outdated ten-destination claim");
 for (const destination of expectedDestinations) {
   assert.ok(comparison.includes(`id="${destination}"`), `Missing destination profile: ${destination}`);
 }
 const destinationCards = [...comparison.matchAll(/<article class="destination-card" id="([^"]+)">([\s\S]*?)<\/article>/g)];
 assert.equal(destinationCards.length, expectedDestinations.length, "Each destination needs exactly one profile");
+const destinationNavGroups = [...comparison.matchAll(/<nav class="city-index" aria-label="([^"]+)">([\s\S]*?)<\/nav>/g)];
+assert.equal(destinationNavGroups.length, expectedDestinationNavigationGroups.size, "Destination index must have one navigation group per region category");
+const navigationProfileTargets = [];
+for (const [label, expectedLinks] of expectedDestinationNavigationGroups) {
+  const group = destinationNavGroups.find(([, groupLabel]) => groupLabel === label)?.[2] || "";
+  assert.ok(group, `Missing destination navigation group: ${label}`);
+  const targets = [...group.matchAll(/<a href="#([^"]+)">/g)].map(([, target]) => target);
+  const profileTargets = targets.filter((target) => expectedDestinations.includes(target));
+  assert.deepEqual(profileTargets, expectedLinks.filter((target) => expectedDestinations.includes(target)), `Wrong destination links or order in navigation group: ${label}`);
+  const nonProfileTargets = targets.filter((target) => !expectedDestinations.includes(target));
+  assert.deepEqual(nonProfileTargets, expectedLinks.filter((target) => !expectedDestinations.includes(target)), `Unexpected non-profile link in navigation group: ${label}`);
+  navigationProfileTargets.push(...profileTargets);
+}
+assert.deepEqual(navigationProfileTargets, expectedDestinations, "All 24 destination profiles must be linked exactly once in category navigation order");
+for (const [destination, source] of expectedCostaBlancaAdditionalProfileSources) {
+  const card = destinationCards.find(([, id]) => id === destination)?.[2] || "";
+  assert.ok(card.includes(source), `Costa Blanca profile has the wrong or missing Idealista report: ${destination}`);
+}
+const costaBlancaRegion = comparison.match(/<section class="destination-region" aria-labelledby="costa-blanca-heading">([\s\S]*?)<\/section>/)?.[1] || "";
+const costaBlancaProfileIds = [...costaBlancaRegion.matchAll(/<article class="destination-card" id="([^"]+)">/g)].map(([, id]) => id);
+assert.deepEqual(costaBlancaProfileIds, expectedCostaBlancaProfiles, "Costa Blanca must contain exactly the eight approved destination profiles in order");
 const destinationImages = new Set();
+const imageSourceRegistry = readFileSync(path.join(projectRoot, "IMAGE-SOURCES.md"), "utf8");
 const foldText = (value) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("fi");
 for (const [, destination, card] of destinationCards) {
   assert.ok(expectedDestinations.includes(destination), `Unexpected destination profile: ${destination}`);
@@ -143,30 +235,28 @@ for (const [, destination, card] of destinationCards) {
   assert.ok(src, `Destination photo has no src: ${destination}`);
   assert.ok(!destinationImages.has(src), `Destination photo is reused in another card: ${destination}`);
   destinationImages.add(src);
-  assert.ok(alt && foldText(alt).includes(foldText(destination)), `Alt text must identify ${destination}: ${alt}`);
+  const altName = destinationAltNames.get(destination) || destination.replaceAll("-", " ");
+  assert.ok(alt && foldText(alt).includes(foldText(altName)), `Alt text must identify ${destination}: ${alt}`);
   assert.ok(/<figcaption>[\s\S]*?href="https:\/\//i.test(figure), `Destination photo needs a linked source credit: ${destination}`);
+  const imageFile = path.basename(new URL(src, `https://local.test${routeFor(path.join(publicRoot, "aluevertailu", "index.html"))}`).pathname);
+  assert.ok(imageSourceRegistry.includes(`public/assets/${imageFile}`), `Destination photo is missing from IMAGE-SOURCES.md: ${destination}`);
+  const expectedSource = expectedNewPhotoSources.get(destination);
+  if (expectedSource) assert.ok(figure.includes(expectedSource), `Destination photo has the wrong source URL: ${destination}`);
+  if (expectedNewPhotoSources.has(destination)) {
+    assert.ok(img.includes('width="1400" height="933"'), `New destination photo must declare the 3:2 output size: ${destination}`);
+    assert.ok(img.includes(`srcset="/assets/${destination}-700.jpg 700w, /assets/${destination}.jpg 1400w"`), `New destination photo must include its responsive 700px variant: ${destination}`);
+  }
   assert.ok(/<details class="destination-details">[\s\S]*?<summary\b/.test(card), `Destination profile should keep its longer guidance accessible but collapsed: ${destination}`);
 }
+assert.equal(destinationImages.size, expectedDestinations.length, "All 24 destination profiles must have a unique photo");
 
 const rentalPage = readFileSync(path.join(publicRoot, "vuokraus", "index.html"), "utf8");
-const rentEquivalentTable = rentalPage.match(/<table id="vuokraesimerkit">([\s\S]*?)<\/table>/i)?.[1];
-assert.ok(rentEquivalentTable, "Missing rent-index equivalent table");
-const equivalentRows = [...rentEquivalentTable.matchAll(/<tr data-city="([^"]+)" data-rate="([^"]+)">([\s\S]*?)<\/tr>/g)];
-assert.equal(equivalentRows.length, expectedRents.size, "Each city needs one rent-equivalent calculation row");
-for (const [, city, rawRate, row] of equivalentRows) {
-  const indexValue = expectedRents.get(city);
-  assert.ok(indexValue, `Unexpected city in rent-equivalent table: ${city}`);
-  const rate = Number(rawRate);
-  assert.equal(rate, Number(indexValue.replace(",", ".")), `Rent-index value mismatch for ${city}`);
-  for (const [, rawArea, amount] of row.matchAll(/<td data-area="(40|60|80)">([\d\s]+)\s*€/g)) {
-    const area = Number(rawArea);
-    const displayed = Number(amount.replace(/\s/g, ""));
-    assert.equal(displayed, Math.round(rate * area), `Incorrect ${area} m² rent-index illustration for ${city}`);
-  }
-  assert.equal([...row.matchAll(/<td data-area="(40|60|80)">/g)].length, 3, `Expected 40, 60 and 80 m² illustrations for ${city}`);
-}
+assert.ok(!/id="vuokraesimerkit"|data-city="|data-rate="/.test(rentalPage), "Rental page must not duplicate the destination rent-index table");
+assert.ok(rentalPage.includes('href="/aluevertailu/#vuokrausdata"'), "Rental page must link directly to the destination rent-index section");
+assert.match(rentalPage, /Idealistan vuokrailmoitusindeksi[\s\S]{0,180}alustavaan alueiden väliseen vertailuun/i, "Rental page must explain the indicative use of the rent index");
+assert.match(rentalPage, /indeksit eivät ole toteutuneita vuokria[\s\S]{0,160}talvivuokrauksille ei ole käytettävissä/i, "Rental page must distinguish asking-price indices from seasonal rent");
 assert.match(rentalPage, /vertailukelpoista aineistoa kalustetuille 1–6 kuukauden talvivuokrauksille ei ole käytettävissä/i, "Seasonal-rental data limitations must be clear");
-assert.match(rentalPage, /ei ole talvikauden vuokrahinta|eivät ole[\s\S]{0,120}talviasuntojen hintoja/i, "The rent table must disclaim actual winter-rent pricing");
+assert.match(rentalPage, /indeksi ei ole talvikauden vuokrahinta|indeksit eivät ole[\s\S]{0,120}talvivuokrauksille/i, "Rental page must disclaim actual winter-rent pricing");
 assert.ok(rentalPage.includes('href="/budjetti/"') && rentalPage.includes('href="/aluevertailu/"'), "Rental page must link to budget and destination planning");
 
 const climateBlocks = [...comparison.matchAll(/<details class="climate-station">([\s\S]*?)<\/details>/g)];
@@ -190,10 +280,17 @@ assert.equal((cadizBlock.match(/<td>–<\/td>/g) || []).length, 2, "Cádiz missi
 const rentTable = comparison.match(/<caption>Idealista:[\s\S]*?<\/table>/i)?.[0];
 assert.ok(rentTable, "Missing dated Idealista rental index table");
 const rentRows = [...rentTable.matchAll(/<tr>\s*<th scope="row">([^<]+)<\/th>\s*<td>([^<]+)<\/td>\s*<td><a href="([^"]+)"/g)];
-assert.equal(rentRows.length, expectedRents.size, "Each destination needs one dated rental index value");
+assert.equal(rentRows.length, expectedComparisonRents.size, "Each destination needs one dated rental index value");
 for (const [, city, value, source] of rentRows) {
-  assert.equal(value, expectedRents.get(city), `Rental index value changed or mismatched for ${city}`);
-  assert.ok(source.startsWith("https://www.idealista.com/"), `Rental index needs an Idealista city report for ${city}`);
+  assert.equal(value, expectedComparisonRents.get(city), `Rental index value changed or mismatched for ${city}`);
+  assert.equal(source, expectedComparisonSources.get(city), `Unexpected Idealista report for ${city}`);
+}
+const costaBlancaRentBody = rentTable.match(/<tbody><tr><th scope="rowgroup" colspan="3">Costa Blanca<\/th><\/tr>([\s\S]*?)<\/tbody>/)?.[1] || "";
+const costaBlancaRentRows = [...costaBlancaRentBody.matchAll(/<tr>\s*<th scope="row">([^<]+)<\/th>\s*<td>([^<]+)<\/td>\s*<td><a href="([^"]+)"/g)];
+assert.equal(costaBlancaRentRows.length, expectedCostaBlancaRents.size, "Costa Blanca must have exactly eight approved rental-index rows");
+for (const [, city, value, source] of costaBlancaRentRows) {
+  assert.equal(value, expectedCostaBlancaRents.get(city), `Costa Blanca rental-index value changed or mismatched for ${city}`);
+  assert.equal(source, expectedComparisonSources.get(city), `Unexpected Costa Blanca Idealista report for ${city}`);
 }
 assert.ok(/syyskuu 2026/i.test(rentTable), "Rental index must retain its publication month");
 
@@ -233,4 +330,4 @@ for (const travellers of [0, 3, "two"]) assert.throws(() => calculateBudget({ mo
 for (const contingencyPercent of [-1, 51, Infinity]) assert.throws(() => calculateBudget({ months: 1, contingencyPercent }), RangeError, `Invalid contingency should fail: ${contingencyPercent}`);
 for (const value of [-0.01, Infinity, "not a number"]) assert.throws(() => calculateBudget({ months: 1, monthly: { rent: value } }), RangeError, `Invalid costs should fail: ${value}`);
 
-console.log(`OK: ${pages.length} indexable pages; ${sitemapUrls.length} sitemap URLs; internal href/src/srcset targets; metadata and canonicals; labelled forms and responsive/accessibility basics; ${destinationCards.length} destinations with unique, identified photos; ${equivalentRows.length} rent tables with 40/60/80 m² arithmetic; ${climateBlocks.length} climate tables × 12 months; ${rentRows.length} dated rental indices; budget arithmetic and invalid-input cases.`);
+console.log(`OK: ${pages.length} indexable pages; ${sitemapUrls.length} sitemap URLs; internal href/src/srcset targets; metadata and canonicals; labelled forms and responsive/accessibility basics; ${destinationCards.length} destination profiles (${destinationImages.size} with unique, identified photos); all destination profiles linked in ${destinationNavGroups.length} category groups; ${expectedCostaBlancaProfiles.length} Costa Blanca profiles and exact rent rows; no duplicate rent-index table on rental page; ${climateBlocks.length} climate tables × 12 months; ${rentRows.length} dated rental indices; budget arithmetic and invalid-input cases.`);
