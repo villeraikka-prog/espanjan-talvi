@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Elinkustannukset Espanjan talvikohteissa | Espanjan talviarki</title>
+    <meta name="description" content="Tarkastele 24 Espanjan talvikohteen vuokraindeksiä, Espanjan ruoan hintatasoa, varmennettuja paikallisliikenteen lippuja ja lentoasemavaihtoehtoja lähteineen.">
+    <link rel="canonical" href="https://espanjan-talvi.pages.dev/elinkustannukset/">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Elinkustannukset Espanjan talvikohteissa">
+    <meta property="og:description" content="Kohdekohtainen Idealista-vuokraindeksi, Espanjan kansallinen ruokahintatieto, liikenneliput ja lentoasemavaihtoehdot lähteineen.">
+    <meta property="og:url" content="https://espanjan-talvi.pages.dev/elinkustannukset/">
+    <link rel="stylesheet" href="/assets/site.css">
+    <script type="module" src="/assets/elinkustannukset.mjs"></script>
+    <!-- Cloudflare Web Analytics -->
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "3417bf6e12fa4f4cb95039eddd2e5af8"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+  </head>
+  <body>
+    <a class="skip-link" href="#sisalto">Siirry sisältöön</a>
+    <header class="site-header"><a class="brand" href="/" aria-label="Espanjan talviarki – etusivu"><span class="brand-mark" aria-hidden="true">ET</span><span>Espanjan<br>talviarki</span></a><nav class="site-nav" aria-label="Päänavigaatio"><a href="/">Vertaa</a><a href="/vuokraus/">Vuokraus</a><a href="/budjetti/">Budjetti</a><a href="/elinkustannukset/" aria-current="page">Elinkustannukset</a><a href="/talvehtiminen-espanjassa/">Talvehtimisen opas</a><a href="/palvelut-ja-linkit/">Palvelut ja linkit</a></nav></header>
+    <main id="sisalto" class="article-shell article-shell-wide cost-page">
+      <nav class="breadcrumbs" aria-label="Murupolku"><a href="/">Etusivu</a><span aria-hidden="true">/</span><span aria-current="page">Elinkustannukset</span></nav>
+      <div class="editorial-hero editorial-hero--cost-page">
+        <header class="page-heading cost-page-heading">
+          <p class="eyebrow">Neljä eri näkökulmaa · ei yhteispisteitä</p>
+          <h1>Elinkustannukset talvikohteissa</h1>
+          <p class="lede">Vertaa lähteistettyjä elintarvikehintoja alueittain ja valitse kohde sen asumis- ja liikkumistietoja varten. Osa tiedoista on paikallisia, osa vain koko Espanjaa koskevaa taustatietoa. Sivun luvut eivät muodosta henkilökohtaista kuukausibudjettia.</p>
+          <p class="page-date">Tiedot tarkistettu 30.10.2026; vuokraindeksin viitekuukausi on syyskuu 2026.</p>
+        </header>
+        <figure class="editorial-photo editorial-hero-photo editorial-hero-photo--market"><img src="/assets/elinkustannukset-market.jpg" srcset="/assets/elinkustannukset-market-700.jpg 700w, /assets/elinkustannukset-market.jpg 1400w" sizes="(max-width: 760px) calc(100vw - 2rem), 540px" alt="Värikkäitä hedelmä- ja vihanneslaatikoita Valencian katumarkkinan myyntikojussa" width="1400" height="933" decoding="async"><figcaption class="editorial-image-credit"><details><summary>Kuvan lähde ja lisenssi</summary><p>Kuvaaja: Joaquin Carfagna / Pexels · <a href="https://www.pexels.com/photo/food-on-an-exhibition-on-market-17626466/">Pexels-kuvasivu</a>. Lisenssi: <a href="https://www.pexels.com/legal-pages/license/">Pexels License</a>. Pexelsin kuvasivu paikantaa myyntikojun Valenciaan; kuvassa näkyvä myynti ei ole hintavertailun lähde eikä ilmaise kauppayhteistyötä.</p></details></figcaption></figure>
+      </div>
+
+      <section class="cost-section cost-section-tinted" aria-labelledby="cost-food-title">
+        <div class="cost-section-heading"><p class="eyebrow">01 · Elintarvikkeet</p><h2 id="cost-food-title">Elintarvikkeiden hintavertailu alueittain</h2><p>MAPA:n vuoden 2025 kotitalousostojen keskihinnat ja niiden suhde Espanjan saman tuoteryhmän hintaan. Aluetaso on itsehallintoalue, ei kaupunki.</p></div>
+        <div class="table-wrap cost-food-table-wrap" role="region" aria-label="MAPA:n elintarvikkeiden alueelliset keskihinnat ja hintasuhteet" tabindex="0">
+          <table id="cost-food-table" class="cost-food-table">
+            <caption id="cost-food-caption"></caption>
+            <thead><tr><th scope="col">Tuoteryhmä ja yksikkö</th><th scope="col">Espanja<small>Hinta · indeksi</small></th><th scope="col">Comunitat Valenciana<small>Hinta · indeksi</small></th><th scope="col">Región de Murcia<small>Hinta · indeksi</small></th><th scope="col">Andalucía<small>Hinta · indeksi</small></th></tr></thead>
+            <tbody id="cost-food-rows"><tr><td colspan="5">Taulukon tiedot näytetään JavaScriptillä.</td></tr></tbody>
+          </table>
+        </div>
+        <div class="callout callout-compact cost-food-method"><strong>Mitä luvut kertovat:</strong> keskihinta lasketaan vuoden ostojen arvosta ja määrästä (Σ VALOR / Σ VOLUMEN). Kunkin ryhmän indeksi on 100 × alueen keskihinta / Espanjan saman ryhmän keskihinta. Kyse on MAPA:n kotitalouksien tosiasiallisista ostoista, ei kauppojen saman vakioidun tuotteen hyllyhinnoista. Aluetaso on itsehallintoalue: kaikki saman alueen tämän sivuston kohteet jakavat saman arvon. Ryhmän sisäinen tuotevalikoima, laatu, tuotemerkit, pakkauskoot, tarjoukset ja ostovalinnat vaikuttavat keskiarvoon. Luvut eivät muodosta painotettua yleistä elintarvikeindeksiä tai henkilökohtaista ruokabudjettia.</div>
+        <p class="small-note cost-food-sources">Lähde: MAPA:n <a href="https://www.mapa.gob.es/es/alimentacion/temas/consumo-tendencias/panel-de-consumo-alimentario/series-anuales" target="_blank" rel="noopener noreferrer">vuosi- ja CCAA-kuukausisarjat</a>, <a href="https://www.mapa.gob.es/es/dam/jcr:709a23d0-3e92-4368-9872-c52ad957742a/2025-datos-anuales-panel-consumo-hogares-base2021_corregido.2026-09-03-13-09-59.xlsx" target="_blank" rel="noopener noreferrer">vuoden 2025 vuosityökirja</a>, <a href="https://www.mapa.gob.es/es/dam/jcr:fbc5c7de-ac34-4dde-aaf5-5c490165ff05/2025dic-datos-mensuales-panel-consumo-hogares-ccaa-base2021-ok2.2026-09-03-13-12-58.xlsx" target="_blank" rel="noopener noreferrer">vuoden 2025 kuukausittainen CCAA-työkirja</a>, <a href="https://www.mapa.gob.es/dam/mapa/contenido/alimentacion/temas/consumo-y-tendencias-en-alimentacion/panel-de-consumo-alimentario/metodologia/definiciones-y-clasificaciones-panel-hogares-rev-julio2025_v1.xlsx" target="_blank" rel="noopener noreferrer">tuoteryhmien määritelmät</a> ja <a href="https://www.mapa.gob.es/es/alimentacion/temas/consumo-tendencias/panel-de-consumo-alimentario/metodologia/" target="_blank" rel="noopener noreferrer">paneelin menetelmä</a>. Yksittäisten rivien määritelmät näkyvät taulukossa.</p>
+
+        <div class="cost-food-eurostat" aria-labelledby="cost-food-eurostat-title">
+          <div class="cost-food-eurostat__heading"><p class="eyebrow">Erillinen kansallinen vertailu · Eurostat</p><h3 id="cost-food-eurostat-title">Espanjan hintataso suhteessa EU:hun</h3></div>
+          <article class="cost-national-indicator">
+            <div><p class="cost-metric__label">Espanja · elintarvikkeiden hintatasoindeksi</p><strong class="cost-national-value">94,9</strong><p>EU = 100 · viitevuosi 2025</p></div>
+            <p>Eurostatin ostovoimapariteettien vertailussa Espanjan elintarvikkeiden hintatasoindeksi on 94,9, kun EU:n vertailutaso on 100. Mittari kuvaa maan keskimääräistä hintatasoa suhteessa EU:hun; se ei ole paikallinen hinta eikä yksittäisen ostoskorin kustannus. Aineisto ei anna tämän sivun kohteille alue- tai kaupunkikohtaista erotusta.</p>
+          </article>
+          <p class="small-note">Lähde: Eurostat, <a href="https://ec.europa.eu/eurostat/statistics-explained/SEPDF/cache/50524.pdf?v=6501977341129626" target="_blank" rel="noopener noreferrer">Comparative price levels for food, beverages and tobacco, taulukko 1</a>; tietokanta <a href="https://ec.europa.eu/eurostat/databrowser/view/prc_ppp_ind_1/default/table?lang=en" target="_blank" rel="noopener noreferrer">prc_ppp_ind_1</a>. Eurostat sallii tilastotietojen kaupallisen ja ei-kaupallisen uudelleenkäytön lähde mainiten: <a href="https://ec.europa.eu/eurostat/help/copyright-notice" target="_blank" rel="noopener noreferrer">käyttöehdot</a>. Tieto tarkistettu 29.10.2026.</p>
+        </div>
+      </section>
+
+      <section class="cost-destination-picker" aria-label="Valitse tarkasteltava kohde">
+        <label for="cost-destination">Talvikohde
+          <select id="cost-destination" disabled>
+            <optgroup label="Costa Blanca">
+            <option value="alicantealacant">Alicante / Alacant</option>
+            <option value="benidorm">Benidorm</option>
+            <option value="calpcalpe">Calp / Calpe</option>
+            <option value="denia">Dénia</option>
+            <option value="guardamardelsegura">Guardamar del Segura</option>
+            <option value="javeaxabia">Jávea / Xàbia</option>
+            <option value="orihuelacosta">Orihuela Costa</option>
+            <option value="torrevieja" selected>Torrevieja</option>
+            </optgroup>
+            <optgroup label="Costa del Sol">
+            <option value="fuengirola">Fuengirola</option>
+            <option value="malaga">Málaga</option>
+            </optgroup>
+            <optgroup label="Costa Cálida">
+            <option value="aguilas">Águilas</option>
+            <option value="cartagena">Cartagena</option>
+            <option value="lamangadelmarmenor">La Manga del Mar Menor</option>
+            <option value="losalcazares">Los Alcázares</option>
+            <option value="puertodemazarron">Puerto de Mazarrón</option>
+            <option value="sanpedrodelpinatar">San Pedro del Pinatar</option>
+            </optgroup>
+            <optgroup label="Costa de Almería">
+            <option value="almeria">Almería</option>
+            <option value="almerimar">Almerimar</option>
+            <option value="roquetasdemar">Roquetas de Mar</option>
+            <option value="vera">Vera</option>
+            </optgroup>
+            <optgroup label="Muut kohteet Espanjassa">
+            <option value="cadiz">Cádiz</option>
+            <option value="huelva">Huelva</option>
+            <option value="murcia">Murcia</option>
+            <option value="valencia">Valencia</option>
+            </optgroup>
+          </select>
+        </label>
+        <p id="cost-data-status" class="cost-data-status" role="status" aria-live="polite">Ladataan kohteiden yhteistä vuokraindeksitaulukkoa…</p>
+      </section>
+
+      <section class="cost-section" aria-labelledby="cost-housing-title">
+        <div class="cost-section-heading"><p class="eyebrow">02 · Asuminen</p><h2 id="cost-housing-title">Vuokrailmoitusten hintataso</h2><p>Idealistan pyyntihintaindeksit antavat yhden vertailupisteen; ne eivät ole yksittäisen asunnon tai talvikauden vuokrahinta.</p></div>
+        <div id="cost-housing-result" class="cost-result" aria-live="polite"><p class="small-note">Valitun kohteen tiedot latautuvat etusivun vuokraindeksitaulukosta.</p></div>
+        <div class="callout callout-compact"><strong>Vertaa samalla tavalla:</strong> paikallinen ja kansallinen luku ovat Idealistan syyskuun 2026 vuokrailmoitusten €/m²/kk-indeksejä. Raporttialue voi olla kunta tai pienempi paikallisuus; alueiden kattavuus ei ole täysin yhdenmukainen. Pyyntihinta ei ole toteutunut vuokra tai kalustetun talvikauden tarjous.</div>
+      </section>
+
+      <section class="cost-section" aria-labelledby="cost-transport-title">
+        <div class="cost-section-heading"><p class="eyebrow">03 · Julkinen liikenne</p><h2 id="cost-transport-title">Lippu riippuu reitistä ja tuotteesta</h2><p>Tässä ei ole kaupunkien välistä hintaindeksiä. Hinta näytetään vain, kun tavallinen aikuisen lippu, palvelualue ja voimassaolo on pystytty tarkistamaan.</p></div>
+        <div id="cost-transport-result" class="cost-result" aria-live="polite"><p class="small-note">Valitse kohde liikennetietojen tarkasteluun.</p></div>
+        <p class="small-note">Kertalippua ja kuukausituotetta ei sekoiteta: esimerkiksi opiskelija-, monimatka- ja kuukausiliput voivat edellyttää omaa käyttöoikeutta tai erilaista palvelualuetta. Hintoja ei järjestetä edullisuusjärjestykseen.</p>
+      </section>
+
+      <section class="cost-section cost-section-tinted" aria-labelledby="cost-travel-title">
+        <div class="cost-section-heading"><p class="eyebrow">04 · Matkat Suomeen</p><h2 id="cost-travel-title">Tarkista lentoasema ja päivät itse</h2><p>Lentoasemavaihtoehdot ovat sijaintiin perustuvia hakulähtökohtia, eivät väitteitä lähimmästä tai aina käytännöllisimmästä kentästä.</p></div>
+        <div id="cost-airport-options" class="airport-options" aria-live="polite"></div>
+        <div class="flight-search">
+          <div class="flight-search__fields">
+            <label for="cost-airport">Haettava lentoasema<select id="cost-airport" disabled></select></label>
+            <label for="cost-departure">Lähtöpäivä Helsingistä<input id="cost-departure" type="date"></label>
+            <label for="cost-return">Paluupäivä Suomeen<input id="cost-return" type="date"></label>
+          </div>
+          <p id="cost-flight-status" class="small-note" role="status" aria-live="polite">Valitse lähtö- ja paluupäivä, niin saat päivämäärärajatun Helsinki–lentoasema-haun.</p>
+          <a id="cost-flight-search" class="button button-primary" target="_blank" rel="noopener noreferrer" hidden>Hae lennot Google Flightsissa</a>
+        </div>
+        <p class="small-note">Reitit ja lentoyhtiöiden aikataulut vaihtuvat. Tarkista lentoaseman <a href="https://www.aena.es/en/passengers/our-airports.html" target="_blank" rel="noopener noreferrer">virallinen nimi ja IATA-koodi Aenasta</a>, sen reittitiedot sekä lentoyhtiön aikataulu valitsemillesi päiville. Suoraa Helsinki-yhteyttä talvikaudelle tai kiinteää lentohintaa ei luvata.</p>
+      </section>
+
+      <section class="cost-section cost-section-last" aria-labelledby="cost-limits-title">
+        <div class="callout callout-ochre"><h2 id="cost-limits-title">Mitä ei vielä vertailla?</h2><p>MAPA- ja OCU-aineistoista ei ole vahvistettu tällä sivulla luotettavaa, kaupalliseen julkaisuun sopivaa 24 kohteen elintarvikeindeksiä. Sähkön, internetin ja muiden säännöllisten kulujen vertailukelpoista kohdedataa ei ole varmistettu. Siksi sivu ei laske yhteistä elinkustannuspistemäärää eikä täytä puuttuvia hintoja arvioilla.</p><p>Henkilökohtaisia kuluja varten käytä <a href="/budjetti/">Budjetti-laskuria</a>; kohteiden ilmasto- ja vuokratietoihin palaa <a href="/">Vertaa-työkaluun</a>.</p></div>
+      </section>
+    </main>
+    <footer class="site-footer"><a class="footer-brand" href="/">Espanjan talviarki</a><p>Suunnitteluapua pidempään talveen — lähteet näkyviin, oletukset erilleen faktoista.</p><nav aria-label="Alatunniste"><a href="/toimitusperiaatteet/">Tietoa ja toimitusperiaatteet</a><a href="/tietosuoja/">Tietosuoja</a></nav><p class="footer-meta">Lähde- ja menetelmämerkinnät tarkistettu 29.10.2026 · Yleistietoa, ei henkilökohtaista talous- tai matkaneuvontaa.</p></footer>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 # Espanjan talviarki — staattinen sivusto
 
-Suomenkielinen staattinen opas 1–6 kuukauden talvehtimisen suunnitteluun. Julkinen sivusto on Cloudflare Pagesissa osoitteessa <https://espanjan-talvi.pages.dev/>; tämän repositorion GitHub-etärepo on [villeraikka-prog/espanjan-talvi](https://github.com/villeraikka-prog/espanjan-talvi). Google Search Console -omistajuus on vahvistettu etusivun HTML-meta-tunnisteella. Se on erillinen asia kävijäanalytiikasta. Cloudflare Web Analytics -snippet on lisätty paikallisen työversion kahdeksaan HTML-tiedostoon, myös 404-sivulle. Tätä muutosta ei ole julkaistu tuotantoon, eikä tuotannon analytiikan toimintaa ole vahvistettu. Sivusto on staattinen ja julkaistaan `public/`-hakemistosta ilman build-komentoa. Cloudflare-tilin asetuksia tai infrastruktuuritason lokitus- ja säilytyskäytäntöjä ei ole itsenäisesti varmennettu. Kun budjettilaskurin JavaScript-moduuli toimii, se käsittelee syötteet selaimessa ja estää lomakkeen tavallisen lähetyksen. HTML-lomake ei määritä `method`-arvoa, joten jos JavaScript ei toimi, selaimen oletusarvoinen GET-lähetys voi liittää nimetyt kenttäarvot URL:iin. Paikallisessa projektissa ei ole omaa backendia, kirjautumista, uutiskirjettä, mainoksia tai affiliate-seurantaa.
+Suomenkielinen staattinen opas 1–6 kuukauden talvehtimisen suunnitteluun. Julkinen sivusto on Cloudflare Pagesissa osoitteessa <https://espanjan-talvi.pages.dev/>; tämän repositorion GitHub-etärepo on [villeraikka-prog/espanjan-talvi](https://github.com/villeraikka-prog/espanjan-talvi). Google Search Console -omistajuus on vahvistettu etusivun HTML-meta-tunnisteella. Se on erillinen asia kävijäanalytiikasta. Paikallisessa julkaisukandidaatissa Cloudflare Web Analytics -tagi on kerran jokaisella kahdeksalla indeksoitavalla HTML-sivulla; 404- ja vanhan vertailureitin fallback-sivulta se on poistettu. Julkisen sivuston HTTP-vastauksissa tagi havaittiin 29.10.2026, mutta tagin näkyminen HTML:ssä ei vahvista mittauspyynnön onnistumista tai raporttidatan kertymistä. Samassa tarkistuksessa uudet `/elinkustannukset/`- ja `/palvelut-ja-linkit/`-reitit palauttivat 404:n ja vanha `/aluevertailu/`-reitti palautti sivun 200-vastauksella; tämän työpuun reitti- ja sitemap-päivityksiä ei ole julkaistu. Cloudflare-tilin asetuksia tai infrastruktuuritason lokitus- ja säilytyskäytäntöjä ei ole itsenäisesti varmennettu. Sivusto on staattinen ja julkaistaan `public/`-hakemistosta ilman build-komentoa. Kun budjettilaskurin JavaScript-moduuli toimii, se käsittelee syötteet selaimessa ja estää lomakkeen tavallisen lähetyksen. HTML-lomake ei määritä `method`-arvoa, joten jos JavaScript ei toimi, selaimen oletusarvoinen GET-lähetys voi liittää nimetyt kenttäarvot URL:iin. Paikallisessa projektissa ei ole omaa backendia, kirjautumista, uutiskirjettä, mainoksia tai affiliate-seurantaa.
 
 ## Rakenne
 
@@ -27,14 +27,14 @@ Avaa `http://localhost:4173/`. Pysäytä käynnistetty palvelin `Ctrl+C`-näppä
 
 ## Sivuarkkitehtuuri ja sisältö
 
-- `/` — etusivu ja opastuksen aloituspiste.
-- `/talvehtiminen-espanjassa/` — 1–6 kuukauden suunnittelupolku, aikajana, talvikodin tarkistus, liikkuminen sekä viranomaislinkit ja yksilöllisyysrajaukset.
-- `/aluevertailu/` — tällä hetkellä 24 kohdeprofiilia viidessä kategoriassa (kahdeksan Costa Blancalla), kahdeksan AEMET-aseman kuukausinormaalit ja Idealistan ilmoitusindeksi.
+- `/` — etusivu ja interaktiivinen vertailutyökalu: 24 kohdeprofiilia viidessä kategoriassa (kahdeksan Costa Blancalla), kahdeksan AEMET-aseman kuukausinormaalit ja Idealistan ilmoitusindeksit.
 - `/vuokraus/` — asunnon talvikunto, kysymykset ennen maksua, tyhjä saman ehtorakenteen vertailupohja sekä virallinen lakilähde.
 - `/budjetti/` — selaimessa toimiva laskuri 1–2 matkustajalle ja 1–6 kuukaudelle. Käyttäjä syöttää kaikki kustannukset; laskuri ei sisällä hintaoletuksia.
+- `/talvehtiminen-espanjassa/` — 1–6 kuukauden suunnittelupolku, aikajana, talvikodin tarkistus, liikkuminen sekä viranomaislinkit ja yksilöllisyysrajaukset.
 - `/toimitusperiaatteet/` ja `/tietosuoja/` — sivuston rajat, lähteet ja nykyiset tietosuojatoiminnot.
+- `/aluevertailu/` — pysyvä 301-uudelleenohjaus vertailun etusivulle.
 
-Jokaisella indeksoitavalla sivulla on oma title, description, canonical ja yksi H1. `public/sitemap.xml` sisältää nykyiset seitsemän sivua; `robots.txt` osoittaa siihen. Canonical-origin on `https://espanjan-talvi.pages.dev/`, sama kuin nykyinen julkinen osoite. Jos käytät myöhemmin muuta domainia, päivitä kaikki canonical-, `og:url`-, sitemap-, robots- ja tarkistusskriptin origin-arvot yhtenäisesti.
+Jokaisella kahdeksalla indeksoitavalla sivulla on oma title, description, canonical ja yksi H1. `public/sitemap.xml` sisältää kaikki kahdeksan kanonista sivua eikä listaa noindex- tai uudelleenohjattuja reittejä. Vanha `/aluevertailu/`-osoite ohjataan `public/_redirects`-säännöllä etusivulle; paikallinen fallback on noindex eikä sisällä rinnakkaista vertailusisältöä. `robots.txt` osoittaa sitemap-tiedostoon. Canonical-origin on `https://espanjan-talvi.pages.dev/`, sama kuin nykyinen julkinen osoite. Jos käytät myöhemmin muuta domainia, päivitä kaikki canonical-, `og:url`-, sitemap-, robots- ja tarkistusskriptin origin-arvot yhtenäisesti.
 
 ## Lähteet ja päiväykset
 
@@ -59,7 +59,7 @@ Ohjeet: [Cloudflare Pages Git integration](https://developers.cloudflare.com/pag
 
 ## Google Search Console — omistajuus vahvistettu
 
-Google Search Console -omistajuus on vahvistettu URL-prefix-ominaisuudelle `https://espanjan-talvi.pages.dev/`. Etusivun `google-site-verification`-meta-tunniste tarvitaan tähän vahvistukseen, joten älä poista sitä. Vahvistus ei asenna Google Analyticsia tai muuta sivuston sisäistä kävijäseurantaa.
+Google Search Console -omistajuus on vahvistettu URL-prefix-ominaisuudelle `https://espanjan-talvi.pages.dev/`. Etusivun `google-site-verification`-meta-tunniste tarvitaan tähän vahvistukseen, joten älä poista sitä. Search Console -vahvistus itsessään ei asenna Google Analyticsia tai muuta kävijämittausta; Cloudflare Web Analytics on tästä erillinen, HTML-koodissa oleva toteutus.
 
 1. Tarkista Search Consolen nykyisestä Sitemaps-raportista, onko `https://espanjan-talvi.pages.dev/sitemap.xml` vastaanotettu ja käsitelty. Lähetä se, jos sitä ei ole vielä lisätty. Seuraa, löytyivätkö URL:t ja ovatko ne indeksoituneet; sitemapin lähetys ei takaa indeksointia. [Googlen sitemap-ohje](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap).
 2. Käytä URL inspection -työkalua etusivuun ja tärkeimpiin laskeutumissivuihin. Tarkista canonicalit, crawl- ja indexing-virheet sekä löytyneiden sivujen tila.
@@ -71,7 +71,7 @@ Google Search Console -omistajuus on vahvistettu URL-prefix-ominaisuudelle `http
 - **Hakutulokset:** tarkista Performance-raportista impressions/clicks/queries/pages sekä ajan myötä CTR. Tämänhetkisiä lukuja ei ole tarkistettu eikä niitä päätellä lähdekoodista.
 - **Budjettilaskurin käyttö:** tällä hetkellä ei mitata. Search Console näyttää budjettisivun haku- ja laskeutumissivutietoja, ei lomakkeen käyttöä. Jos erillinen mittaus myöhemmin hyväksytään, mittaa korkeintaan laskurin aloitus/laskentatapahtuma suostumus- ja tietosuojaratkaisun jälkeen; älä koskaan lähetä euroarvoja, matkan päivämääriä tai muita lomakekenttien sisältöjä analytiikkaan.
 - **Affiliate-linkit ja tulokset:** tarkastetussa koodissa ei ole affiliate-seurantaa; mahdollisten linkkien kumppanuussuhteita ei ole tässä tarkistuksessa erikseen vahvistettu. Jos kumppanuusmarkkinointia myöhemmin lisätään, päivitä sitä koskevat tiedot ja mittaa linkkien tuloksia vain erillisellä päätöksellä. Erota kumppanin raportoimat varaukset klikkauksista äläkä esitä provisioita tai konversioita ilman todellista dataa.
-- **Nykyinen tila:** Search Console -omistajuus on vahvistettu, mutta sen tämänhetkisiä haku- tai indeksointituloksia ei ole tässä README:ssä todennettu. Paikallisessa työversiossa on Cloudflare Web Analytics -tagi, mutta sitä ei ole julkaistu tuotantoon eikä tuotannon mittauksen toimintaa ole vahvistettu. Laskurin käyttöä, affiliate-klikkauksia tai myyntejä ei mitata.
+- **Nykyinen tila:** Search Console -omistajuus on vahvistettu, mutta sen tämänhetkisiä haku- tai indeksointituloksia ei ole tässä README:ssä todennettu. Cloudflare Web Analytics -tagi on paikallisessa julkaisukandidaatissa kahdeksalla indeksoitavalla sivulla. Julkisissa HTTP-vastauksissa tagi näkyi 29.10.2026, mutta beacon-pyynnön onnistumista tai Cloudflare-raporttien dataa ei tarkistettu. Julkaisukandidaatin reitti- ja sitemap-korjaukset eivät vielä näy tuotannossa. Budjettilaskurin käyttöä, affiliate-klikkauksia tai myyntejä ei mitata erillisinä tapahtumina.
 
 ## Avoimet tietotäydennykset ja ylläpito
 
