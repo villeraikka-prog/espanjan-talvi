@@ -39,14 +39,14 @@ import {
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const publicRoot = path.join(projectRoot, "public");
-const canonicalOrigin = "https://espanjan-talvi.pages.dev";
+const canonicalOrigin = "https://espanjan-talvi.netlify.app";
 const htmlFiles = [];
 
 function walk(directory) {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const fullPath = path.join(directory, entry.name);
     if (entry.isDirectory()) walk(fullPath);
-    else if (entry.isFile() && entry.name.endsWith(".html")) htmlFiles.push(fullPath);
+    else if (entry.isFile() && entry.name.endsWith(".html") && entry.name !== "googled30403c4c0cf7607.html") htmlFiles.push(fullPath);
   }
 }
 
@@ -211,10 +211,12 @@ for (const filePath of pages) {
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1]?.trim();
   const description = html.match(/<meta\s+name="description"\s+content="([^"]+)"\s*>/i)?.[1]?.trim();
   const canonical = html.match(/<link\s+rel="canonical"\s+href="([^"]+)"\s*>/i)?.[1];
+  const openGraphUrl = html.match(/<meta\s+property="og:url"\s+content="([^"]+)"\s*>/i)?.[1];
 
   assert.ok(title, `Missing title: ${route}`);
   assert.ok(description, `Missing meta description: ${route}`);
   assert.ok(canonical, `Missing canonical: ${route}`);
+  assert.ok(openGraphUrl, `Missing Open Graph URL: ${route}`);
   assert.ok(html.includes('<html lang="fi">'), `Missing Finnish language declaration: ${route}`);
   assert.ok(html.includes('<main id="sisalto">') || html.includes('<main id="sisalto" '), `Missing main landmark: ${route}`);
   assert.ok((html.match(/<h1\b/gi) || []).length === 1, `Expected one h1: ${route}`);
@@ -225,6 +227,8 @@ for (const filePath of pages) {
 
   const expectedCanonical = new URL(route, canonicalOrigin).href;
   assert.equal(canonical, expectedCanonical, `Canonical does not match route: ${route}`);
+  assert.equal(openGraphUrl, expectedCanonical, `Open Graph URL does not match canonical: ${route}`);
+  assert.ok(!html.includes("espanjan-talvi.pages.dev"), `Legacy Cloudflare host remains in indexable page metadata: ${route}`);
   canonicalRoutes.add(expectedCanonical);
 
   const robotsMetaTags = [...html.matchAll(/<meta\b[^>]*>/gi)]
@@ -321,6 +325,9 @@ for (const filePath of htmlFiles) {
 }
 
 const sitemap = readFileSync(path.join(publicRoot, "sitemap.xml"), "utf8");
+const alternateSitemap = readFileSync(path.join(publicRoot, "sitemap-google.xml"), "utf8");
+assert.match(sitemap, /^<\?xml\s+version="1\.0"\s+encoding="UTF-8"\?>\s*<urlset\b[\s\S]*<\/urlset>\s*$/i, "Primary sitemap must be a well-formed XML urlset document");
+assert.equal(alternateSitemap, sitemap, "Alternate Google sitemap must remain byte-for-byte identical to the primary sitemap");
 const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 assert.equal(new Set(sitemapUrls).size, sitemapUrls.length, "Sitemap must not contain duplicate URLs");
 assert.equal(sitemapUrls.length, canonicalRoutes.size, "Sitemap must contain every indexable canonical page and no others");
@@ -351,20 +358,21 @@ assert.ok(!sitemapUrls.some((url) => new URL(url).pathname.startsWith("/aluevert
 
 const comparisonRedirect = readFileSync(comparisonRedirectPath, "utf8");
 assert.match(comparisonRedirect, /<meta name="robots" content="noindex, follow">/i, "Legacy-route fallback must not be indexable");
-assert.match(comparisonRedirect, /<link rel="canonical" href="https:\/\/espanjan-talvi\.pages\.dev\/">/i, "Legacy-route fallback must canonicalize to the homepage");
+assert.match(comparisonRedirect, /<link rel="canonical" href="https:\/\/espanjan-talvi\.netlify\.app\/">/i, "Legacy-route fallback must canonicalize to the homepage");
 assert.match(comparisonRedirect, /<meta http-equiv="refresh" content="0; url=\/">/i, "Local static preview must provide a redirect fallback");
 assert.doesNotMatch(comparisonRedirect, /id="comparison-app"|id="comparison-source"/, "Comparison experience must not be duplicated at the legacy URL");
 
 const robots = readFileSync(path.join(publicRoot, "robots.txt"), "utf8");
 assert.ok(robots.includes(`Sitemap: ${canonicalOrigin}/sitemap.xml`), "robots.txt sitemap URL does not match canonical origin");
+assert.ok(!robots.includes("espanjan-talvi.pages.dev"), "robots.txt must not reference the former Cloudflare host");
 const homepageHtml = readFileSync(path.join(publicRoot, "index.html"), "utf8");
 const verificationMentions = homepageHtml.match(/google-site-verification/gi) || [];
 const verificationMetaTags = [...homepageHtml.matchAll(/<meta\b[^>]*>/gi)]
   .filter(([tag]) => /\bname\s*=\s*["']google-site-verification["']/i.test(tag));
 assert.equal(verificationMentions.length, verificationMetaTags.length, "Google verification token must appear in a well-formed meta tag");
-assert.ok(verificationMetaTags.length <= 1, "Homepage must not contain duplicate Google verification tags");
-if (verificationMetaTags.length === 1) {
-  const tag = verificationMetaTags[0][0];
+assert.ok(verificationMetaTags.length >= 1, "Homepage must retain its Google Search Console verification meta tag");
+const verificationTokens = [];
+for (const [tag] of verificationMetaTags) {
   const nameAttributes = [...tag.matchAll(/\bname\s*=\s*(["'])(.*?)\1/gi)];
   const contentAttributes = [...tag.matchAll(/\bcontent\s*=\s*(["'])(.*?)\1/gi)];
   assert.equal(nameAttributes.length, 1, "Google verification meta tag must have exactly one quoted name attribute");
@@ -373,7 +381,9 @@ if (verificationMetaTags.length === 1) {
   const verificationToken = contentAttributes[0][2];
   assert.match(verificationToken, /^[A-Za-z0-9_-]{20,100}$/, "Google verification token must have a valid token format");
   assert.ok(!/(?:^|[_-])(?:example|placeholder|your|replace|insert|todo|changeme|fake|dummy|sample|test|demo|token|x{3,})(?:$|[_-])/i.test(verificationToken), "Google verification token must not be a placeholder");
+  verificationTokens.push(verificationToken);
 }
+assert.equal(new Set(verificationTokens).size, verificationTokens.length, "Homepage must not repeat the same Google verification token");
 
 const comparison = readFileSync(path.join(publicRoot, "index.html"), "utf8");
 assert.ok(comparison.includes('id="comparison-app"') && comparison.includes('id="comparison-source"'), "Comparison app must retain the searchable source content as a no-JavaScript fallback");
@@ -391,7 +401,7 @@ for (const id of ["viranomaiset", "terveydenhuolto", "joukkoliikenne", "suomalai
   assert.ok(servicesPage.includes(`id="${id}"`), `Services directory is missing its section: ${id}`);
 }
 assert.ok(!/<meta\s+name="robots"\s+content="noindex/i.test(servicesPage), "The services directory must remain indexable");
-assert.ok(servicesPage.includes("<link rel=\"canonical\" href=\"https://espanjan-talvi.pages.dev/palvelut-ja-linkit/\">"), "Services directory must self-canonicalize");
+assert.ok(servicesPage.includes(`<link rel="canonical" href="${canonicalOrigin}/palvelut-ja-linkit/">`), "Services directory must self-canonicalize");
 assert.ok(servicesPage.includes("https://sede.carm.es/web/pagina?IDCONTENIDO=3749&amp;IDTIPO=240&amp;RASTRO=c%24m40293"), "Services directory must include the verified regional Murcia transport source");
 const guidePage = readFileSync(path.join(publicRoot, "talvehtiminen-espanjassa", "index.html"), "utf8");
 assert.ok(guidePage.includes('href="/palvelut-ja-linkit/"'), "The wintering guide must link to the services directory");
