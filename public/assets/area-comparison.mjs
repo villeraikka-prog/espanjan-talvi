@@ -1,4 +1,11 @@
+import { DESTINATION_RECORDS_BY_ID, DESTINATION_REGIONS } from "./destinations.mjs";
+
 export const MAX_COMPARISON_ITEMS = 4;
+const REGION_ID_BY_HEADING_ID = new Map(DESTINATION_REGIONS.map(({ headingId, id }) => [headingId, id]));
+
+export function comparisonRegionId(headingId, fallback = headingId) {
+  return REGION_ID_BY_HEADING_ID.get(headingId) || fallback;
+}
 
 export function filterDestinations(destinations, region) {
   return region === "all" ? [...destinations] : destinations.filter((destination) => destination.regionId === region);
@@ -35,17 +42,32 @@ export function normalizePlaceName(value) {
     .replace(/[^a-z0-9]/g, "");
 }
 
+const pilotStation = (id) => {
+  const station = DESTINATION_RECORDS_BY_ID.get(id)?.climate.station;
+  return { stationId: station.id, role: station.role };
+};
+
+const pilotSeaCell = (id) => {
+  const sea = DESTINATION_RECORDS_BY_ID.get(id)?.seaSurface;
+  return {
+    value: sea.valueC,
+    place: sea.place,
+    latitude: sea.gridCenter.latitude,
+    longitude: sea.gridCenter.longitude,
+  };
+};
+
 export const DESTINATION_STATIONS = new Map([
   ["alicante", { stationId: "8025", role: "city" }],
-  ["torrevieja", { stationId: "8019", role: "regional" }],
-  ["benidorm", { stationId: "8025", role: "regional" }],
+  ["torrevieja", pilotStation("torrevieja")],
+  ["benidorm", pilotStation("benidorm")],
   ["orihuela-costa", { stationId: "8019", role: "regional" }],
   ["guardamar-del-segura", { stationId: "8019", role: "regional" }],
   ["denia", { stationId: "8416", role: "regional" }],
   ["javea-xabia", { stationId: "8025", role: "regional" }],
   ["calp", { stationId: "8025", role: "regional" }],
   ["malaga", { stationId: "6155A", role: "airport" }],
-  ["fuengirola", { stationId: "6155A", role: "regional" }],
+  ["fuengirola", pilotStation("fuengirola")],
   ["cartagena", { stationId: "7178I", role: "regional" }],
   ["los-alcazares", { stationId: "7178I", role: "regional" }],
   ["san-pedro-del-pinatar", { stationId: "7178I", role: "regional" }],
@@ -66,15 +88,15 @@ export const DESTINATION_STATIONS = new Map([
 // Values are rounded to whole degrees for display; grid coordinates are the cell centers.
 export const DESTINATION_SEA_TEMPERATURES = new Map([
   ["alicante", { value: 14, place: "Alicantesta itään, Välimeri", latitude: 38.375, longitude: -0.375 }],
-  ["torrevieja", { value: 14, place: "Torreviejan ja Orihuela Costan edusta", latitude: 37.875, longitude: -0.625 }],
-  ["benidorm", { value: 14, place: "Benidormin edusta", latitude: 38.375, longitude: -0.125 }],
+  ["torrevieja", pilotSeaCell("torrevieja")],
+  ["benidorm", pilotSeaCell("benidorm")],
   ["orihuela-costa", { value: 14, place: "Torreviejan ja Orihuela Costan edusta", latitude: 37.875, longitude: -0.625 }],
   ["guardamar-del-segura", { value: 14, place: "Guardamarin edusta", latitude: 38.125, longitude: -0.625 }],
   ["denia", { value: 14, place: "Dénian pohjoisrannikon edusta", latitude: 38.875, longitude: 0.125 }],
   ["javea-xabia", { value: 14, place: "Dénian ja Xàbian välinen merialue", latitude: 38.875, longitude: 0.125 }],
   ["calp", { value: 14, place: "Calpin edusta", latitude: 38.625, longitude: 0.125 }],
   ["malaga", { value: 15, place: "Málagan edusta", latitude: 36.625, longitude: -4.375 }],
-  ["fuengirola", { value: 15, place: "Fuengirolan eteläpuolinen Välimeri", latitude: 36.375, longitude: -4.625 }],
+  ["fuengirola", pilotSeaCell("fuengirola")],
   ["cartagena", { value: 15, place: "Cartagenan eteläpuolinen Välimeri", latitude: 37.375, longitude: -0.875 }],
   ["los-alcazares", { value: 14, place: "Mar Menorin kaakkoispuolinen Välimeri", latitude: 37.625, longitude: -0.625 }],
   ["san-pedro-del-pinatar", { value: 14, place: "San Pedro del Pinatarin itäpuolinen Välimeri", latitude: 37.875, longitude: -0.625 }],
@@ -105,6 +127,45 @@ export function noaaOisstCellUrl(latitude, longitude) {
   return `https://comet.nefsc.noaa.gov/erddap/griddap/noaa_psl_55a2_880b_1f29.htmlTable?${encodeURIComponent(query)}`;
 }
 
+export function applyDestinationRecord(fallback, record) {
+  if (!record) return fallback;
+  const rentLabel = record.rentalIndex.value.toLocaleString("fi-FI", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const sea = record.seaSurface;
+  return {
+    ...fallback,
+    id: record.id,
+    name: record.name,
+    regionId: record.region.id,
+    regionName: record.region.name,
+    description: record.summary,
+    practical: record.practicalSummary,
+    image: record.image.src,
+    srcset: record.image.srcset,
+    sizes: record.image.sizes,
+    alt: record.image.alt,
+    imageWidth: record.image.width,
+    imageHeight: record.image.height,
+    profileId: record.id,
+    rent: { value: record.rentalIndex.value, label: rentLabel, url: record.rentalIndex.sourceUrl },
+    climate: {
+      stationId: record.climate.station.id,
+      name: record.climate.station.name,
+      period: record.climate.station.period,
+      role: record.climate.station.role,
+      high: record.climate.january.dayHighMeanC,
+      low: record.climate.january.nightLowMeanC,
+      sourceUrl: record.climate.station.sourceUrl,
+    },
+    sea: {
+      value: sea.valueC,
+      place: sea.place,
+      latitude: sea.gridCenter.latitude,
+      longitude: sea.gridCenter.longitude,
+      sourceUrl: noaaOisstCellUrl(sea.gridCenter.latitude, sea.gridCenter.longitude),
+    },
+  };
+}
+
 function readFinnishNumber(value) {
   const trimmed = value.trim();
   if (!trimmed || trimmed === "–" || trimmed === "—") return null;
@@ -121,10 +182,10 @@ function createIcon(kind) {
   svg.setAttribute("viewBox", "0 0 24 24");
   svg.setAttribute("aria-hidden", "true");
   const paths = {
-    sun: ["circle:cx=12,cy=12,r=4", "path:d=M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"],
-    moon: ["path:d=M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z"],
-    wave: ["path:d=M2 8c2.5-3 5-3 7.5 0s5 3 7.5 0 5-3 7 0M2 15c2.5-3 5-3 7.5 0s5 3 7.5 0 5-3 7 0"],
-    home: ["path:d=m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1Z"],
+    sun: ["circle:cx=12,cy=12,r=4", "path:M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"],
+    moon: ["path:M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z"],
+    wave: ["path:M2 8c2.5-3 5-3 7.5 0s5 3 7.5 0 5-3 7 0M2 15c2.5-3 5-3 7.5 0s5 3 7.5 0 5-3 7 0"],
+    home: ["path:m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1Z"],
   };
   for (const descriptor of paths[kind] || []) {
     const [tagName, ...attributes] = descriptor.split(":");
@@ -145,8 +206,9 @@ function initializeComparison() {
   if (!app || !source) return;
 
   const regions = [...source.querySelectorAll(".destination-region")].map((regionElement) => {
-    const heading = document.getElementById(regionElement.getAttribute("aria-labelledby"));
-    return { id: regionElement.id || regionElement.getAttribute("aria-labelledby"), name: heading?.textContent.trim() || "Alue" };
+    const headingId = regionElement.getAttribute("aria-labelledby");
+    const heading = document.getElementById(headingId);
+    return { id: comparisonRegionId(headingId, regionElement.id || headingId), name: heading?.textContent.trim() || "Alue" };
   });
   const destinations = [...source.querySelectorAll(".destination-region .destination-card")].map((card) => {
     const regionElement = card.closest(".destination-region");
@@ -154,10 +216,10 @@ function initializeComparison() {
     const title = card.querySelector(".destination-top h3")?.textContent.trim() || card.id;
     const photo = card.querySelector("figure.destination-photo img");
     const practicalParagraph = card.querySelector(".destination-details .destination-columns > div p");
-    return {
+    const destinationFromHtml = {
       id: card.id,
       name: title,
-      regionId: regionElement?.id || regionHeadingId,
+      regionId: comparisonRegionId(regionHeadingId, regionElement?.id || regionHeadingId),
       regionName: document.getElementById(regionHeadingId)?.textContent.trim() || "Espanja",
       description: card.querySelector(".destination-fit")?.textContent.trim() || "",
       practical: practicalParagraph?.textContent.trim() || card.querySelector(".destination-fit")?.textContent.trim() || "",
@@ -171,6 +233,7 @@ function initializeComparison() {
       rent: null,
       climate: null,
     };
+    return applyDestinationRecord(destinationFromHtml, DESTINATION_RECORDS_BY_ID.get(card.id));
   });
 
   const byId = new Map(destinations.map((destination) => [destination.id, destination]));
@@ -195,6 +258,7 @@ function initializeComparison() {
     ["calp", "Calp / Calpe"],
   ]);
   for (const destination of destinations) {
+    if (destination.rent) continue;
     const rentName = rentNameByDestination.get(destination.id) || destination.name;
     destination.rent = rentRows.get(normalizePlaceName(rentName)) || null;
   }
@@ -217,11 +281,12 @@ function initializeComparison() {
   }
 
   for (const destination of destinations) {
+    if (destination.climate && destination.sea) continue;
     const station = DESTINATION_STATIONS.get(destination.id);
     const stationData = station ? stationDetails.get(station.stationId) : null;
-    destination.climate = stationData ? { ...stationData, role: station.role } : null;
+    if (!destination.climate) destination.climate = stationData ? { ...stationData, role: station.role } : null;
     const sea = DESTINATION_SEA_TEMPERATURES.get(destination.id);
-    destination.sea = sea ? { ...sea, sourceUrl: noaaOisstCellUrl(sea.latitude, sea.longitude) } : null;
+    if (!destination.sea) destination.sea = sea ? { ...sea, sourceUrl: noaaOisstCellUrl(sea.latitude, sea.longitude) } : null;
   }
 
   const regionSelect = document.getElementById("comparison-region");

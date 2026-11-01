@@ -95,7 +95,7 @@ p { max-width: 72ch; }
 
 .article-shell { width: min(var(--max), calc(100% - 3rem)); margin: auto; }
 .article-shell-wide { width: min(var(--max), calc(100% - 3rem)); }
-.article-shell-narrow { width: min(850px, calc(100% - 3rem)); }
+.article-shell-narrow { width: min(920px, calc(100% - 3rem)); }
 .breadcrumbs { display: flex; flex-wrap: wrap; gap: .55rem; margin: 1.5rem 0 1.8rem; color: var(--ink-soft); font-size: .88rem; }
 .breadcrumbs a { color: var(--ink-soft); }
 .breadcrumbs [aria-current="page"] { color: var(--ink); }
@@ -260,6 +260,13 @@ tbody th { font-weight: 700; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* A slightly calmer scale for secondary editorial pages; the comparison tool keeps its own layout. */
+body:not(.comparison-body) { --max: 1240px; }
+body:not(.comparison-body) .article-shell .page-heading h1 { font-size: clamp(2.3rem, 3.6vw, 3.3rem); }
+body:not(.comparison-body) .page-heading { padding-bottom: 1.35rem; }
+body:not(.comparison-body) .section { padding-top: 4rem; padding-bottom: 4rem; }
+body:not(.comparison-body) .breadcrumbs { margin-top: 1.2rem; margin-bottom: 1.4rem; }
 
 /* Scoped region-comparison interface */
 .comparison-body { overflow-x: clip; }
@@ -559,7 +566,142 @@ tbody th { font-weight: 700; }
 .flight-search .button { margin-top: .5rem; }
 .cost-section-last { border-bottom: 1px solid var(--line); }
 
+/* Destination directory and generated pilot profiles. */
+.destination-directory-page { padding-bottom: 2.2rem; }
+.destination-directory-heading { max-width: 1050px; padding: .2rem 0 1rem; border-bottom: 1px solid var(--line); }
+.destination-directory-heading h1 { max-width: 20ch; margin-bottom: .55rem; font-size: clamp(2.15rem, 3.4vw, 3.15rem); }
+.destination-directory-heading .eyebrow { margin-bottom: .45rem; }
+.destination-directory-heading .lede { margin-bottom: .65rem; }
+.destination-directory-heading > p:last-child { margin-bottom: 0; }
+.destination-directory-heading > p:last-child { color: var(--ink-soft); }
+.destination-directory-filters { display: grid; grid-template-columns: minmax(220px, 1.2fr) minmax(220px, .8fr) minmax(170px, auto); align-items: end; gap: .7rem 1rem; margin: 1rem 0 1.2rem; padding: .8rem 1rem; border: 1px solid var(--line); background: var(--paper-deep); }
+.destination-directory-filters[hidden] { display: none !important; }
+.destination-directory-filters label { display: grid; gap: .35rem; color: var(--ink); font-weight: 700; }
+.destination-directory-filters input, .destination-directory-filters select { width: 100%; min-height: 46px; padding: .55rem .7rem; border: 1px solid #aeb8ae; border-radius: 2px; color: var(--ink); background: var(--white); font: inherit; }
+.destination-directory-filters p { margin: 0; color: var(--ink-soft); font-size: .9rem; }
+.destination-directory-groups { display: grid; gap: 1.5rem; margin-top: 1.1rem; }
+.destination-directory-region { min-width: 0; padding-top: 1rem; border-top: 1px solid var(--line); scroll-margin-top: 1rem; }
+.destination-directory-region[hidden] { display: none !important; }
+.destination-directory-region .section-heading { margin-bottom: 1rem; }
+.destination-directory-region .section-heading h2 { margin-bottom: 0; }
+.destination-directory-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; }
+.destination-directory-card { display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid var(--line); background: var(--paper); }
+.destination-directory-card[hidden] { display: none !important; }
+.destination-directory-photo { margin: 0; }
+.destination-directory-photo img { display: block; width: 100%; height: clamp(145px, 13vw, 180px); object-fit: cover; background: var(--paper-deep); }
+.destination-directory-photo figcaption { padding: .3rem .65rem; color: var(--ink-soft); font-size: .72rem; line-height: 1.35; }
+.destination-directory-photo figcaption a { color: inherit; }
+.destination-directory-card__body { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: .65rem .8rem .8rem; }
+.destination-directory-card__body .eyebrow { margin-bottom: .3rem; font-size: .68rem; }
+.destination-directory-card__body h3 { margin: .1rem 0 .2rem; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.15rem, 1.35vw, 1.4rem); font-weight: 500; }
+.destination-directory-type { margin-bottom: .55rem; color: var(--ink-soft); font-size: .9rem; }
+.destination-directory-card__body > p:not(.eyebrow):not(.destination-directory-type) { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; color: #35473e; font-size: .9rem; line-height: 1.45; }
+.destination-directory-link { display: inline-flex; min-height: 44px; align-items: center; gap: .45rem; margin-top: auto; color: var(--green); font-weight: 700; text-underline-offset: .18em; }
+.destination-profile-status { margin: auto 0 0; padding-top: .55rem; color: var(--ink-soft); font-size: .88rem; }
+
+.destination-profile-page { padding-bottom: 2.5rem; font-size: 1rem; line-height: 1.6; }
+.destination-profile-page > .breadcrumbs { margin-bottom: .8rem; }
+.destination-profile-hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); align-items: start; gap: clamp(1.25rem, 3vw, 2.5rem); padding-bottom: 1.1rem; border-bottom: 1px solid var(--line); }
+.destination-profile-heading { max-width: none; padding: .1rem 0 .35rem; border: 0; }
+.destination-profile-heading .eyebrow { margin-bottom: .4rem; }
+.destination-profile-heading h1 { max-width: 15ch; font-size: clamp(2.6rem, 3.6vw, 3.35rem); }
+.destination-profile-heading .lede { max-width: 58ch; font-size: clamp(1.15rem, 1.45vw, 1.3rem); line-height: 1.5; }
+.destination-profile-photo { min-width: 0; margin: 0; }
+.destination-profile-photo img { display: block; width: 100%; height: clamp(300px, 22vw, 330px); aspect-ratio: auto; object-fit: cover; background: var(--paper-deep); }
+.destination-profile-photo figcaption { padding: .45rem .1rem; color: var(--ink-soft); font-size: .82rem; line-height: 1.5; }
+.destination-profile-photo figcaption details > summary { width: fit-content; min-height: 40px; padding: .45rem 0; color: var(--green); font-weight: 650; cursor: pointer; }
+.destination-profile-photo figcaption details > summary:focus-visible { outline: 3px solid var(--terracotta); outline-offset: 2px; }
+.destination-profile-photo figcaption p { margin: .25rem 0 .4rem; }
+.destination-profile-section { padding: 1.4rem 0; border-bottom: 1px solid var(--line); }
+.destination-profile-section .section-heading { margin-bottom: .8rem; }
+.destination-profile-section .section-heading .eyebrow { margin-bottom: .35rem; }
+.destination-profile-section .section-heading h2 { margin-bottom: .5rem; font-size: clamp(1.85rem, 2.8vw, 2.35rem); }
+.destination-assessment .section-heading h2 { max-width: none; }
+.destination-profile-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; margin: 1.2rem 0; }
+.destination-profile-facts > div { min-width: 0; padding: .9rem; border-top: 2px solid var(--ochre); background: var(--paper-deep); }
+.destination-profile-facts dt, .destination-climate-metrics dt { color: var(--ink-soft); font-size: .82rem; line-height: 1.4; }
+.destination-profile-facts dd { margin: .3rem 0 0; color: var(--ink); font-weight: 650; line-height: 1.45; }
+.destination-profile-lead { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 2rem; }
+.destination-profile-lead p { margin: 0; color: #35473e; }
+.destination-climate-metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .65rem; margin: 1.2rem 0; }
+.destination-climate-metrics > div { min-width: 0; padding: .9rem; border: 1px solid var(--line); background: var(--paper); }
+.destination-climate-metrics dd { margin: .35rem 0 0; color: var(--green); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.25rem, 2vw, 1.7rem); font-variant-numeric: tabular-nums; }
+.destination-sea-note { margin-top: .75rem; padding: .8rem .9rem; border-left: 3px solid var(--sage-link-line); background: var(--paper-deep); }
+.destination-sea-note h4 { margin-bottom: .35rem; color: var(--green); font-family: Georgia, "Times New Roman", serif; font-size: 1.12rem; font-weight: 500; }
+.destination-sea-note p { margin: 0; color: #35473e; }
+.destination-background-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(250px, .8fr); align-items: start; gap: .85rem; }
+.destination-background-card { min-width: 0; padding: 1rem; border: 1px solid var(--line); background: var(--paper); }
+.destination-background-card > h3 { margin-bottom: .5rem; font-family: Georgia, "Times New Roman", serif; font-size: 1.35rem; font-weight: 500; }
+.destination-background-card > p { color: #35473e; }
+.destination-background-card.destination-profile-rent { padding: 1rem; }
+.destination-background-card .destination-climate-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .45rem; margin: .7rem 0; }
+.destination-background-card .destination-climate-metrics > div { padding: .6rem; }
+.destination-background-card .destination-climate-metrics dd { font-size: 1.35rem; }
+.destination-profile-claims { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.destination-profile-claim { min-width: 0; padding: 1.1rem; border: 1px solid var(--line); background: var(--paper); }
+.destination-profile-claim .eyebrow { margin-bottom: .45rem; font-size: .68rem; }
+.destination-profile-claim > p:nth-child(2) { margin-bottom: .7rem; color: #35473e; }
+.destination-profile-claim .small-note { margin-bottom: .4rem; }
+.destination-source-links { margin: .5rem 0 0; padding-left: 1.2rem; }
+.destination-profile-rent { padding: 1.45rem; border: 1px solid var(--line); border-top: 3px solid var(--ochre); background: var(--paper-deep); }
+.destination-profile-rent h2, .destination-profile-rent h3 { max-width: none; margin: .35rem 0; font-size: clamp(1.4rem, 2.2vw, 1.8rem); }
+.destination-profile-rent-value { margin: .4rem 0; color: var(--green); font-family: Georgia, "Times New Roman", serif; font-size: clamp(2rem, 4vw, 3rem); font-variant-numeric: tabular-nums; }
+.destination-profile-rent-value span { color: var(--ink-soft); font-family: inherit; font-size: .48em; }
+.destination-profile-sources ul { padding-left: 1.2rem; }
+.destination-profile-sources li { margin: .6rem 0; }
+.destination-profile-related { margin-top: 1.5rem; padding: 1.1rem 1.3rem; border-left: 3px solid var(--green); background: var(--green-light); }
+.destination-profile-related h2 { margin-bottom: .7rem; font-size: 1.55rem; }
+.destination-profile-related ul { display: flex; flex-wrap: wrap; gap: .55rem 1.5rem; margin: 0; padding-left: 1.2rem; }
+
+.destination-assessment-key { max-width: 78ch; margin: -.1rem 0 .75rem; padding: .6rem .8rem; border-left: 3px solid var(--ochre); color: var(--ink-soft); background: var(--paper-deep); font-size: .92rem; }
+.destination-rating-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
+.destination-highlight-grid, .destination-fit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.destination-rating-card, .destination-highlight, .destination-fit-grid > article { min-width: 0; padding: .8rem .9rem; border: 1px solid var(--line); background: var(--paper); }
+.destination-rating-card h3, .destination-highlight h4, .destination-highlight-group > h3, .destination-fit-grid h3 { margin: .2rem 0 .4rem; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.2rem, 1.55vw, 1.5rem); font-weight: 500; }
+.destination-highlight-group { margin-top: .9rem; }
+.destination-highlight-group > h3 { margin-bottom: .55rem; color: var(--green); font-size: 1.35rem; }
+.destination-rating-card > p, .destination-highlight > p, .destination-fit-grid p { color: #35473e; }
+.destination-rating-card > p:last-of-type, .destination-highlight > p:last-child, .destination-fit-grid p:last-child { margin-bottom: 0; }
+.destination-rating-card__score { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .35rem; color: var(--green); }
+.destination-rating-stars { display: inline-flex; gap: .02em; color: #9a6823; font-size: 1.05rem; letter-spacing: .04em; white-space: nowrap; }
+.destination-rating-star { line-height: 1; }
+.destination-rating-star--half { color: transparent; background: linear-gradient(90deg, #9a6823 50%, #d5cbb9 50%); background-clip: text; -webkit-background-clip: text; }
+.destination-rating-star--empty { color: #d5cbb9; }
+.destination-rating-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.destination-rating-card__score strong { font-variant-numeric: tabular-nums; }
+.destination-rating-description { margin: 0; color: var(--ink-soft); }
+.destination-rating-card .small-note { font-size: .8rem; line-height: 1.45; }
+.destination-rating-details { margin-top: .35rem; border-top: 1px solid var(--line); }
+.destination-rating-details > summary { width: fit-content; min-height: 40px; padding: .45rem 0; color: var(--green); font-weight: 650; cursor: pointer; }
+.destination-rating-details > summary:focus-visible { outline: 3px solid var(--terracotta); outline-offset: 2px; }
+.destination-rating-details > p { margin: .25rem 0 .4rem; }
+.destination-rating-unassessed { color: var(--ink-soft); font-size: .85rem; font-weight: 700; }
+.destination-rating-card--unassessed details > summary { min-height: 38px; padding: .25rem 0; color: var(--green); font-size: .88rem; font-weight: 650; cursor: pointer; }
+.destination-rating-card--unassessed details > summary:focus-visible { outline: 3px solid var(--terracotta); outline-offset: 2px; }
+.destination-rating-card--unassessed details > p { margin: .25rem 0 0; color: var(--ink-soft); font-size: .9rem; }
+.destination-method, .destination-unassessed { margin-top: .75rem; border-top: 1px solid var(--line); }
+.destination-method > summary, .destination-unassessed > summary { width: fit-content; min-height: 44px; padding: .65rem 0; color: var(--green); font-weight: 700; cursor: pointer; }
+.destination-method > summary:focus-visible, .destination-unassessed > summary:focus-visible { outline: 3px solid var(--terracotta); outline-offset: 2px; }
+.destination-rating-scale { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .4rem; padding: 0; list-style: none; }
+.destination-rating-scale li { display: grid; gap: .2rem; padding: .55rem; border-top: 2px solid var(--ochre); background: var(--paper-deep); font-size: .82rem; }
+.destination-method > p, .destination-unassessed li { color: var(--ink-soft); }
+.destination-unassessed ul { padding-left: 1.2rem; }
+.destination-unassessed li { margin: .5rem 0; }
+.destination-highlight .eyebrow { margin-bottom: .25rem; font-size: .66rem; }
+.destination-highlight > p:not(.eyebrow) { margin-bottom: .55rem; }
+.destination-fit-grid > article { border-top: 2px solid var(--green); background: var(--paper-deep); }
+
+@media (max-width: 1050px) {
+  .destination-directory-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .destination-directory-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .destination-directory-filters p { grid-column: 1 / -1; }
+  .destination-profile-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .destination-climate-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .destination-rating-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 @media (max-width: 760px) {
+  body:not(.comparison-body) .section { padding-top: 3rem; padding-bottom: 3rem; }
   .cost-page { padding-bottom: 1.5rem; }
   .cost-destination-picker { grid-template-columns: 1fr; gap: .6rem; margin-top: .6rem; padding: .85rem; }
   .cost-section { padding: 1.8rem 0; }
@@ -577,4 +719,57 @@ tbody th { font-weight: 700; }
   .cost-national-indicator { grid-template-columns: 1fr; gap: .8rem; }
   .cost-national-indicator > div { padding: 0 0 .8rem; border-right: 0; border-bottom: 1px solid var(--line); }
   .airport-options, .flight-search__fields { grid-template-columns: 1fr; }
+  .destination-directory-heading { padding-top: .2rem; }
+  .destination-directory-heading h1 { font-size: clamp(2.15rem, 8vw, 2.8rem); }
+  .destination-directory-filters { grid-template-columns: 1fr; gap: .75rem; margin: 1rem 0 1.2rem; padding: .85rem; }
+  .destination-directory-filters p { grid-column: auto; }
+  .destination-directory-groups { gap: 1.5rem; margin-top: 1.3rem; }
+  .destination-directory-region { padding-top: 1rem; }
+  .destination-directory-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+  .destination-directory-photo img { height: clamp(104px, 28vw, 145px); }
+  .destination-directory-photo figcaption { padding: .25rem .4rem; font-size: .65rem; }
+  .destination-directory-card__body { padding: .55rem .6rem .65rem; }
+  .destination-directory-card__body .eyebrow { font-size: .58rem; letter-spacing: .08em; }
+  .destination-directory-card__body h3 { font-size: 1.08rem; }
+  .destination-directory-type { margin-bottom: .35rem; font-size: .8rem; }
+  .destination-directory-card__body > p:not(.eyebrow):not(.destination-directory-type) { font-size: .82rem; line-height: 1.4; -webkit-line-clamp: 2; }
+  .destination-directory-link { min-height: 40px; font-size: .84rem; }
+  .destination-profile-status { font-size: .76rem; }
+  .destination-profile-page > .breadcrumbs { margin-bottom: .4rem; }
+  .destination-profile-hero { grid-template-columns: 1fr; gap: .1rem; padding-bottom: .6rem; }
+  .destination-profile-heading { padding: .05rem 0 .2rem; }
+  .destination-profile-heading .eyebrow { margin-bottom: .2rem; }
+  .destination-profile-heading h1 { margin-bottom: .35rem; font-size: clamp(2rem, 8vw, 2.45rem); line-height: 1.08; }
+  .destination-profile-heading .lede { margin-bottom: .45rem; font-size: 1rem; line-height: 1.4; }
+  .destination-profile-photo img { height: clamp(150px, 38vw, 165px); aspect-ratio: auto; }
+  .destination-profile-photo figcaption { padding: .2rem .1rem; }
+  .destination-profile-section { padding: .7rem 0; }
+  .destination-assessment .section-heading { margin-bottom: .45rem; }
+  .destination-assessment .section-heading .eyebrow { margin-bottom: .15rem; }
+  .destination-assessment .section-heading h2 { margin-bottom: .25rem; font-size: clamp(1.4rem, 5.5vw, 1.65rem); line-height: 1.15; }
+  .destination-assessment .section-heading > p:last-child { margin-bottom: 0; font-size: .94rem; line-height: 1.35; }
+  .destination-profile-facts { grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .destination-profile-facts > div { padding: .7rem; }
+  .destination-profile-lead, .destination-profile-claims { grid-template-columns: 1fr; gap: .75rem; }
+  .destination-climate-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+  .destination-climate-metrics > div { padding: .75rem; }
+  .destination-background-grid { grid-template-columns: 1fr; }
+  .destination-background-card .destination-climate-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .destination-profile-rent { padding: 1rem; }
+  .destination-profile-related { padding: 1rem; }
+  .destination-profile-related ul { display: grid; }
+  .destination-rating-grid, .destination-highlight-grid, .destination-fit-grid { grid-template-columns: 1fr; }
+  .destination-rating-grid { gap: .45rem; }
+  .destination-rating-card { padding: .7rem .75rem; }
+  .destination-rating-card__score { margin-bottom: .2rem; }
+  .destination-rating-card h3 { margin-bottom: .25rem; }
+  .destination-rating-metric { margin-bottom: .25rem; }
+  .destination-rating-card > p { margin-bottom: .45rem; }
+  .destination-rating-details > summary { min-height: 38px; padding: .35rem 0; }
+  .destination-rating-card h3, .destination-highlight-group > h3, .destination-fit-grid h3 { font-size: 1.2rem; }
+  .destination-rating-scale { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1280px) {
+  .destination-directory-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
