@@ -4,11 +4,30 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { calculateBudget } from "../public/assets/budget.mjs";
 import {
+  DESTINATION_ASSESSMENT_METHOD,
+  DESTINATION_CATEGORY_IDS,
+  DESTINATION_CATEGORY_LABELS,
+  DESTINATION_RECORDS,
+  DESTINATION_RECORDS_BY_ID,
+  DESTINATION_PROFILE_CONTENT_RECORDS,
+  DESTINATION_PROFILE_CONTENT_RECORDS_BY_ID,
+  DESTINATION_PROFILE_CONTENT_SCHEMA_VERSION,
+  DESTINATION_REGIONS,
+  DESTINATION_SCHEMA_VERSION,
+} from "../public/assets/destinations.mjs";
+import {
+  DESTINATION_SCORE_CATEGORY_IDS,
+  DESTINATION_SCORE_RECORDS,
+  DESTINATION_SCORE_RECORDS_BY_ID,
+} from "../public/assets/destination-scores.mjs";
+import {
   MAX_COMPARISON_ITEMS,
   DESTINATION_SEA_TEMPERATURES,
   DESTINATION_STATIONS,
   addComparisonItem,
+  applyDestinationRecord,
   calculateIndexedRent,
+  comparisonRegionId,
   filterDestinations,
   sortDestinationOptions,
   normalizePlaceName,
@@ -22,6 +41,7 @@ import {
   readComparisonRentRows,
   rentalRowsForRegion,
 } from "../public/assets/rental-index.mjs";
+import { renderDestinationOutputs, renderRatingCard } from "./generate-destination-pages.mjs";
 import {
   AIRPORTS,
   CTMAM_INTERURBAN_SINGLE_FARES,
@@ -63,8 +83,37 @@ const pages = htmlFiles.filter((file) => {
   const relative = path.relative(publicRoot, file).replaceAll(path.sep, "/");
   return relative !== "404.html" && relative !== "aluevertailu/index.html";
 });
+const generatedDestinationOutputs = renderDestinationOutputs();
+assert.equal(generatedDestinationOutputs.size, 25, "Destination generator must produce the directory and all 24 sourced destination profiles");
+for (const [filePath, expectedHtml] of generatedDestinationOutputs) {
+  assert.ok(existsSync(filePath), `Generated destination page is missing: ${path.relative(publicRoot, filePath)}`);
+  assert.equal(readFileSync(filePath, "utf8"), expectedHtml, `Generated destination page is stale: ${path.relative(publicRoot, filePath)}`);
+}
+const destinationDirectoryHtml = readFileSync(path.join(publicRoot, "kohteet", "index.html"), "utf8");
+const destinationDirectoryCards = [...destinationDirectoryHtml.matchAll(/<article class="destination-directory-card" data-destination-card\b[^>]*data-name="([^"]+)"[^>]*data-region="([^"]+)"/g)];
+assert.equal(destinationDirectoryCards.length, 24, "Destination directory must display all 24 places");
+assert.equal((destinationDirectoryHtml.match(/class="destination-directory-region"/g) || []).length, 5, "Destination directory must preserve the five regional groups");
+const directoryProfileLinks = [...destinationDirectoryHtml.matchAll(/href="(\/kohteet\/[a-z0-9-]+\/)"/g)].map(([, href]) => href);
+const expectedPublishedProfileRoutes = ["alicante", "orihuela-costa", "guardamar-del-segura", "denia", "javea-xabia", "calp", "cartagena", "los-alcazares", "san-pedro-del-pinatar", "la-manga-del-mar-menor", "puerto-de-mazarron", "aguilas", "almeria", "roquetas-de-mar", "almerimar", "vera", "torrevieja", "fuengirola", "benidorm", "malaga", "valencia", "murcia", "cadiz", "huelva"].map((id) => `/kohteet/${id}/`);
+assert.deepEqual(directoryProfileLinks.sort(), [...expectedPublishedProfileRoutes].sort(), "Directory must link to all 24 published profiles");
+assert.equal((destinationDirectoryHtml.match(/Profiilia ei ole vielä julkaistu\./g) || []).length, 0, "All 24 destination directory entries must link to a published profile");
+assert.doesNotMatch(destinationDirectoryHtml, /Avaa [^<]+-profiili/, "Directory profile links must use the reader-facing concise label");
+assert.ok(destinationDirectoryHtml.includes('id="destination-search"') && destinationDirectoryHtml.includes('id="destination-region-filter"'), "Destination directory must include a progressive search and region filter");
+assert.ok(destinationDirectoryHtml.includes('src="/assets/destination-directory.mjs"'), "Destination directory must load its lightweight filter module");
+for (const [filePath, html] of generatedDestinationOutputs) {
+  const jsonLd = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  assert.ok(jsonLd, `Generated destination route needs BreadcrumbList data: ${path.relative(publicRoot, filePath)}`);
+  const breadcrumbData = JSON.parse(jsonLd);
+  assert.equal(breadcrumbData["@type"], "BreadcrumbList", `Only breadcrumb structured data is expected: ${path.relative(publicRoot, filePath)}`);
+  assert.ok(breadcrumbData.itemListElement.length >= 2, `BreadcrumbList must have a visible path: ${path.relative(publicRoot, filePath)}`);
+  const breadcrumbNav = html.match(/<nav class="breadcrumbs" aria-label="Murupolku">([\s\S]*?)<\/nav>/)?.[1] || "";
+  for (const item of breadcrumbData.itemListElement) assert.ok(breadcrumbNav.includes(item.name), `Structured breadcrumb item is not visible: ${item.name}`);
+  assert.doesNotMatch(jsonLd, /"@type"\s*:\s*"(?:Article|BlogPosting)"/);
+}
+assert.equal(pages.length, 33, "The indexable site should contain the original eight pages, directory and 24 sourced profiles");
 const expectedPrimaryNavigation = [
   ["/", "Vertaa"],
+  ["/kohteet/", "Kohteet"],
   ["/vuokraus/", "Vuokraus"],
   ["/budjetti/", "Budjetti"],
   ["/elinkustannukset/", "Elinkustannukset"],
@@ -80,11 +129,44 @@ const activeNavigationByRoute = new Map([
   ["/talvehtiminen-espanjassa/", ["/talvehtiminen-espanjassa/"]],
   ["/toimitusperiaatteet/", []],
   ["/palvelut-ja-linkit/", ["/palvelut-ja-linkit/"]],
+  ["/kohteet/", ["/kohteet/"]],
+  ["/kohteet/torrevieja/", ["/kohteet/"]],
+  ["/kohteet/fuengirola/", ["/kohteet/"]],
+  ["/kohteet/benidorm/", ["/kohteet/"]],
+  ["/kohteet/alicante/", ["/kohteet/"]],
+  ["/kohteet/orihuela-costa/", ["/kohteet/"]],
+  ["/kohteet/guardamar-del-segura/", ["/kohteet/"]],
+  ["/kohteet/denia/", ["/kohteet/"]],
+  ["/kohteet/javea-xabia/", ["/kohteet/"]],
+  ["/kohteet/calp/", ["/kohteet/"]],
+  ["/kohteet/cartagena/", ["/kohteet/"]],
+  ["/kohteet/los-alcazares/", ["/kohteet/"]],
+  ["/kohteet/san-pedro-del-pinatar/", ["/kohteet/"]],
+  ["/kohteet/la-manga-del-mar-menor/", ["/kohteet/"]],
+  ["/kohteet/puerto-de-mazarron/", ["/kohteet/"]],
+  ["/kohteet/aguilas/", ["/kohteet/"]],
+  ["/kohteet/almeria/", ["/kohteet/"]],
+  ["/kohteet/roquetas-de-mar/", ["/kohteet/"]],
+  ["/kohteet/almerimar/", ["/kohteet/"]],
+  ["/kohteet/vera/", ["/kohteet/"]],
+  ["/kohteet/malaga/", ["/kohteet/"]],
+  ["/kohteet/valencia/", ["/kohteet/"]],
+  ["/kohteet/murcia/", ["/kohteet/"]],
+  ["/kohteet/cadiz/", ["/kohteet/"]],
+  ["/kohteet/huelva/", ["/kohteet/"]],
 ]);
 const titles = new Set();
 const descriptions = new Set();
 const canonicalRoutes = new Set();
 const expectedDestinations = ["alicante", "torrevieja", "benidorm", "orihuela-costa", "guardamar-del-segura", "denia", "javea-xabia", "calp", "malaga", "fuengirola", "cartagena", "los-alcazares", "san-pedro-del-pinatar", "la-manga-del-mar-menor", "puerto-de-mazarron", "aguilas", "almeria", "roquetas-de-mar", "almerimar", "vera", "valencia", "murcia", "cadiz", "huelva"];
+const expectedPilotIds = ["torrevieja", "fuengirola", "benidorm"];
+const expectedNewProfileIds = ["alicante", "orihuela-costa", "guardamar-del-segura", "denia", "javea-xabia", "calp", "cartagena", "los-alcazares", "san-pedro-del-pinatar", "la-manga-del-mar-menor", "puerto-de-mazarron", "aguilas", "almeria", "roquetas-de-mar", "almerimar", "vera", "malaga", "valencia", "murcia", "cadiz", "huelva"];
+const expectedPublishedProfileIds = [...expectedPilotIds, ...expectedNewProfileIds];
+const expectedDestinationCategoryIds = [
+  "climate-and-sunshine", "beaches-and-outdoors", "culture-and-sights", "events", "nightlife",
+  "restaurants-and-shopping", "quietness", "walkability", "public-transport",
+  "health-and-daily-services", "rental-availability", "price-level",
+];
 const expectedCostaBlancaProfiles = ["alicante", "torrevieja", "benidorm", "orihuela-costa", "guardamar-del-segura", "denia", "javea-xabia", "calp"];
 const expectedDestinationNavigationGroups = new Map([
   ["Costa Blanca", [...expectedCostaBlancaProfiles, "alicante-vai-torrevieja"]],
@@ -284,7 +366,7 @@ for (const filePath of pages) {
   }
 }
 
-assert.equal(htmlFiles.length, 10, "Expected ten static HTML files, including the 404 and legacy-route fallback");
+assert.equal(htmlFiles.length, 35, "Expected thirty-five static HTML files, including 24 destination profiles, the directory, 8 main pages, the 404 and legacy-route fallback");
 let configuredAnalyticsToken = null;
 let analyticsTaggedPages = 0;
 for (const filePath of htmlFiles) {
@@ -405,12 +487,50 @@ assert.ok(servicesPage.includes(`<link rel="canonical" href="${canonicalOrigin}/
 assert.ok(servicesPage.includes("https://sede.carm.es/web/pagina?IDCONTENIDO=3749&amp;IDTIPO=240&amp;RASTRO=c%24m40293"), "Services directory must include the verified regional Murcia transport source");
 const guidePage = readFileSync(path.join(publicRoot, "talvehtiminen-espanjassa", "index.html"), "utf8");
 assert.ok(guidePage.includes('href="/palvelut-ja-linkit/"'), "The wintering guide must link to the services directory");
+assert.ok(guidePage.includes('href="/kohteet/"'), "The wintering guide must make the destination directory discoverable without changing the primary navigation");
 assert.ok(!guidePage.includes("https://www.renfe.com/es/en"), "The wintering guide should not duplicate the directory's long transport link list");
 for (const destination of expectedDestinations) {
   assert.ok(comparison.includes(`id="${destination}"`), `Missing destination profile: ${destination}`);
 }
 const destinationCards = [...comparison.matchAll(/<article class="destination-card" id="([^"]+)">([\s\S]*?)<\/article>/g)];
 assert.equal(destinationCards.length, expectedDestinations.length, "Each destination needs exactly one profile");
+const expectedComparisonRegions = [
+  ["costa-blanca", "Costa Blanca", "costa-blanca-heading", 8],
+  ["costa-del-sol", "Costa del Sol", "costa-del-sol-heading", 2],
+  ["costa-calida", "Costa Cálida", "costa-calida-heading", 6],
+  ["costa-de-almeria", "Costa de Almería", "costa-almeria-heading", 4],
+  ["other-spain", "Muut kohteet Espanjassa", "other-destinations-heading", 4],
+];
+assert.deepEqual(
+  DESTINATION_REGIONS.map(({ id, name, headingId }) => [id, name, headingId, expectedComparisonRegions.find(([expectedId]) => expectedId === id)?.[3]]),
+  expectedComparisonRegions,
+  "The shared region model must retain the five canonical region IDs and expected destination counts",
+);
+const comparisonRegionSections = [...comparison.matchAll(/<section class="destination-region" aria-labelledby="([^"]+)">([\s\S]*?)<\/section>/g)];
+assert.equal(comparisonRegionSections.length, DESTINATION_REGIONS.length, "The comparison tool must expose all five modeled regions");
+const comparisonFilterDestinations = [];
+const comparisonProfileIdsByRegion = new Map();
+for (const [, headingId, sectionHtml] of comparisonRegionSections) {
+  const region = DESTINATION_REGIONS.find(({ headingId: expectedHeadingId }) => expectedHeadingId === headingId);
+  assert.ok(region, `Comparison section heading is missing from the shared region model: ${headingId}`);
+  const headingName = sectionHtml.match(new RegExp(`<h2\\s+id="${headingId}"[^>]*>([^<]+)<\\/h2>`))?.[1];
+  assert.equal(headingName, region.name, `Comparison section heading differs from the shared region model: ${headingId}`);
+  assert.equal(comparisonRegionId(headingId), region.id, `Comparison selector must use the canonical region ID for ${region.name}`);
+  const profileIds = [...sectionHtml.matchAll(/<article class="destination-card" id="([^"]+)">/g)].map(([, id]) => id);
+  comparisonProfileIdsByRegion.set(region.id, profileIds);
+  for (const id of profileIds) {
+    const recordRegionId = DESTINATION_RECORDS_BY_ID.get(id)?.region.id;
+    const regionId = recordRegionId || comparisonRegionId(headingId);
+    assert.equal(regionId, region.id, `Comparison destination has a mismatched canonical region: ${id}`);
+    comparisonFilterDestinations.push({ id, regionId });
+  }
+}
+assert.equal(filterDestinations(comparisonFilterDestinations, "all").length, 24, "The all-regions comparison selector must expose all 24 destinations");
+for (const [regionId, , , expectedCount] of expectedComparisonRegions) {
+  const filtered = filterDestinations(comparisonFilterDestinations, regionId);
+  assert.equal(filtered.length, expectedCount, `Comparison selector returned the wrong number of destinations for ${regionId}`);
+  assert.deepEqual(filtered.map(({ id }) => id), comparisonProfileIdsByRegion.get(regionId), `Comparison selector membership differs from the homepage region for ${regionId}`);
+}
 const destinationNavGroups = [...comparison.matchAll(/<nav class="city-index" aria-label="([^"]+)">([\s\S]*?)<\/nav>/g)];
 assert.equal(destinationNavGroups.length, expectedDestinationNavigationGroups.size, "Destination index must have one navigation group per region category");
 const navigationProfileTargets = [];
@@ -435,6 +555,207 @@ assert.deepEqual(costaBlancaProfileIds, expectedCostaBlancaProfiles, "Costa Blan
 const destinationImages = new Set();
 const imageSourceRegistry = readFileSync(path.join(projectRoot, "IMAGE-SOURCES.md"), "utf8");
 const foldText = (value) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("fi");
+assert.equal(DESTINATION_SCHEMA_VERSION, 2, "Destination data schema version must be explicit");
+assert.deepEqual(DESTINATION_CATEGORY_IDS, expectedDestinationCategoryIds, "Destination data must define every planned assessment category exactly once");
+assert.deepEqual(Object.keys(DESTINATION_CATEGORY_LABELS), expectedDestinationCategoryIds, "Every category must have one reader-facing Finnish label");
+assert.equal(DESTINATION_ASSESSMENT_METHOD.scale.length, 5, "Editorial assessment scale must explain all five levels");
+assert.deepEqual(DESTINATION_ASSESSMENT_METHOD.scale.map(({ score }) => score), [1, 2, 3, 4, 5], "Assessment scale must be ordered from one to five");
+assert.ok(DESTINATION_ASSESSMENT_METHOD.explanation && DESTINATION_ASSESSMENT_METHOD.limitation, "Assessment method must disclose its interpretation and limitations");
+assert.ok(DESTINATION_ASSESSMENT_METHOD.sharedScope, "Shared assessment scope must be defined once in the destination model");
+assert.deepEqual(Object.keys(DESTINATION_ASSESSMENT_METHOD.categoryMethods), DESTINATION_SCORE_CATEGORY_IDS, "Assessment method must define the seven published star categories in order");
+assert.match(DESTINATION_ASSESSMENT_METHOD.explanation, /mainintojen määrää ei muuteta pisteiksi|lähteiden tai mainintojen määrää ei muuteta pisteiksi/i, "Assessment method must rule out source-count scoring");
+assert.deepEqual(DESTINATION_RECORDS.map(({ id }) => id), expectedPilotIds, "The shared dataset should contain only the three approved pilot destinations");
+assert.equal(DESTINATION_RECORDS_BY_ID.size, DESTINATION_RECORDS.length, "Pilot IDs must be unique");
+assert.equal(new Set(DESTINATION_RECORDS.map(({ slug }) => slug)).size, DESTINATION_RECORDS.length, "Pilot slugs must be unique");
+assert.deepEqual(DESTINATION_SCORE_CATEGORY_IDS, ["beaches-and-outdoors", "culture-and-sights", "events", "restaurants-and-shopping", "nightlife", "walkability", "public-transport"]);
+assert.deepEqual(DESTINATION_SCORE_RECORDS.map(({ id }) => id), expectedDestinations, "Score model must contain the 24 current IDs in source order");
+assert.equal(DESTINATION_SCORE_RECORDS_BY_ID.size, 24, "Score records must have unique destination IDs");
+const expectedScoreMatrix = [
+  [4, 4.5, 4.5, 4.5, 4, 4, 4.5], [4, 3, 4, 3.5, 3, 3, 3], [4, 4, 4, 4, 5, 3.5, 3], [4.5, 2.5, null, 3, 2, 2, 2.5],
+  [4.5, 3, 3, 3, 2, 3.5, 2.5], [4.5, 4, 3.5, 4.5, 3, 3.5, 3], [4.5, 4, 3, 4, 3, 2.5, 2.5], [4.5, 3.5, 3.5, 4, 3, 3, 3],
+  [4, 5, 4.5, 5, 4.5, 4.5, 5], [4, 4, 4, 4, 3, 4, 4], [3.5, 4.5, 3.5, 4, 3, 4, 4], [4, 2.5, 3, 3, 2, 4, 2.5],
+  [4.5, 3.5, 3, 3, 2, 3, 2.5], [5, 2, null, 3, 2, 2, 2.5], [4, 3, null, 3.5, 2.5, 3.5, 2.5], [4.5, 4, 3.5, 3.5, 3, 3.5, 3],
+  [4, 4.5, 4, 4, 4, 4, 4], [4, 3.5, 3.5, 3.5, 3, 3, 3], [3.5, 2, null, 3, 2, 2.5, 2], [4, 3.5, 3, 3, 2.5, 2.5, 2],
+  [4.5, 5, 5, 5, 4.5, 4.5, 5], [3, 4.5, 4, 4.5, 4, 4.5, 4.5], [4.5, 5, 5, 4.5, 4, 5, 3.5], [3.5, 3.5, 3.5, 4, 3, 4, 3.5],
+];
+const expectedScoreRegions = [
+  ...Array(8).fill("costa-blanca"), ...Array(2).fill("costa-del-sol"), ...Array(6).fill("costa-calida"),
+  ...Array(4).fill("costa-de-almeria"), ...Array(4).fill("other-spain"),
+];
+for (let destinationIndex = 0; destinationIndex < DESTINATION_SCORE_RECORDS.length; destinationIndex += 1) {
+  const scoreRecord = DESTINATION_SCORE_RECORDS[destinationIndex];
+  assert.equal(scoreRecord.regionId, expectedScoreRegions[destinationIndex], `Score region changed for ${scoreRecord.id}`);
+  assert.deepEqual(scoreRecord.assessments.map(({ categoryId }) => categoryId), DESTINATION_SCORE_CATEGORY_IDS, `Seven categories must remain ordered for ${scoreRecord.id}`);
+  assert.deepEqual(scoreRecord.assessments.map(({ score }) => score), expectedScoreMatrix[destinationIndex], `Score differs from the approved comparison matrix for ${scoreRecord.id}`);
+  for (const assessment of scoreRecord.assessments) {
+    assert.ok(assessment.score === null || (Number.isFinite(assessment.score) && assessment.score >= 1 && assessment.score <= 5 && assessment.score * 2 % 1 === 0), `Score must be null or a half-step from 1 to 5: ${scoreRecord.id}/${assessment.categoryId}`);
+    assert.equal(assessment.status, assessment.score === null ? "not-assessed" : "assessed", `Score status must match value for ${scoreRecord.id}/${assessment.categoryId}`);
+    if (assessment.score === null) assert.equal(assessment.categoryId, "events", `Only events may be unassessed: ${scoreRecord.id}`);
+  }
+  if (scoreRecord.profilePublication.status === "ready") {
+    assert.ok(scoreRecord.assessments.every((assessment) => assessment.score === null
+      ? assessment.categoryId === "events" && assessment.publicDescription === null && assessment.scope === null && assessment.checkedOn === null
+      : assessment.publicDescription && assessment.sources.length && assessment.scope && /^\d{4}-\d{2}-\d{2}$/.test(assessment.checkedOn)), `Published score copy needs unique text, sources, scope and date except an explicitly unassessed event: ${scoreRecord.id}`);
+    for (const assessment of scoreRecord.assessments) for (const source of assessment.sources) assert.match(source, /^https:\/\//, `Rating source must be HTTPS: ${scoreRecord.id}/${assessment.categoryId}`);
+  } else {
+    assert.ok(scoreRecord.profilePublication.blockers.length > 0, `Unpublished profile needs recorded readiness gaps: ${scoreRecord.id}`);
+    assert.ok(scoreRecord.assessments.every(({ publicDescription }) => publicDescription === null), `Unverified prose must not be exposed for ${scoreRecord.id}`);
+  }
+}
+assert.deepEqual(DESTINATION_SCORE_RECORDS.filter(({ profilePublication }) => profilePublication.status === "ready").map(({ id }) => id).sort(), [...expectedPublishedProfileIds].sort(), "Only profiles that passed their content and source gate may be generated");
+assert.deepEqual(DESTINATION_PROFILE_CONTENT_RECORDS.map(({ id }) => id), expectedNewProfileIds, "Editorial content must cover exactly the approved sourced profiles in source order");
+assert.equal(DESTINATION_PROFILE_CONTENT_RECORDS_BY_ID.size, expectedNewProfileIds.length, "New profile editorial IDs must be unique");
+assert.equal(DESTINATION_PROFILE_CONTENT_SCHEMA_VERSION, 1, "New editorial profile content must have an explicit schema version");
+for (const profile of DESTINATION_PROFILE_CONTENT_RECORDS) {
+  assert.ok(profile.profilePage?.title && profile.profilePage.description && profile.profilePage.introduction, `New profile needs distinct page copy: ${profile.id}`);
+  assert.ok(profile.fitGuidance?.maySuit && profile.fitGuidance.weigh, `New profile needs balanced reader guidance: ${profile.id}`);
+  assert.ok(profile.seasonalHighlights.length >= 3, `New profile must include at least three source-backed place-specific highlights: ${profile.id}`);
+  assert.ok(profile.claims.length >= 2, `New profile must document practical local facts: ${profile.id}`);
+  for (const highlight of profile.seasonalHighlights) {
+    assert.ok(["beaches-and-outdoors", "culture-and-sights", "events", "restaurants-and-shopping"].includes(highlight.categoryId), `Unknown highlight category: ${profile.id}/${highlight.title}`);
+    assert.ok(highlight.title && highlight.text && highlight.period && /^\d{4}-\d{2}-\d{2}$/.test(highlight.checkedOn), `Highlight needs copy, time scope and review date: ${profile.id}`);
+    assert.match(highlight.source, /^https:\/\//, `Highlight source must be HTTPS: ${profile.id}`);
+    for (const source of highlight.additionalSources ?? []) {
+      assert.ok(source.label && source.url, `Additional highlight source needs a label and URL: ${profile.id}/${highlight.title}`);
+      assert.match(source.url, /^https:\/\//, `Additional highlight source must be HTTPS: ${profile.id}/${highlight.title}`);
+    }
+  }
+  for (const claim of profile.claims) {
+    assert.ok(claim.id && claim.categoryId && claim.statement && claim.geographicScope && /^\d{4}-\d{2}-\d{2}$/.test(claim.checkedOn), `Practical claim needs scope and review date: ${profile.id}`);
+    assert.ok(claim.sources?.length, `Practical claim needs a verifiable source: ${profile.id}/${claim.id}`);
+    for (const source of claim.sources) assert.match(source, /^https:\/\//, `Claim source must be HTTPS: ${profile.id}/${claim.id}`);
+  }
+}
+assert.equal(DESTINATION_SCORE_RECORDS_BY_ID.get("orihuela-costa").assessments.find(({ categoryId }) => categoryId === "events").score, null, "Orihuela Costa events must remain unassessed");
+const integerSample = renderRatingCard({ categoryId: "nightlife", score: 4, publicDescription: "Testikuvaus.", scope: "Testirajaus.", sources: ["https://example.com/source"], checkedOn: "2026-11-01" }, "Yöelämä");
+assert.equal((integerSample.match(/destination-rating-star--/g) || []).length, 5, "Integer rating sample must render five star slots");
+const halfSample = renderRatingCard({ categoryId: "walkability", score: 3.5, publicDescription: "Testikuvaus.", scope: "Testirajaus.", sources: ["https://example.com/source"], checkedOn: "2026-11-01" }, "Käveltävyys");
+assert.equal((halfSample.match(/destination-rating-star--/g) || []).length, 5, "Half-star sample must render five star slots");
+assert.equal((halfSample.match(/destination-rating-star--half/g) || []).length, 1, "Half-star sample must show exactly one half star");
+assert.match(halfSample, /3,5 tähteä viidestä[\s\S]*3,5\/5/, "Half-star score must be localized and screen-reader readable");
+const nullSample = renderRatingCard({ categoryId: "events", score: null }, "Tapahtumat");
+assert.ok(nullSample.includes("Tämän kohteen tapahtumatarjontaa ei ole arvioitu erikseen."), "Null event rating must use the approved short reader-facing copy");
+assert.doesNotMatch(nullSample, /destination-rating-star|0\/5|Miksi ei arvioitu|perustelu/i, "Null rating must not render stars, zero or internal explanation");
+const sharedScopeSample = renderRatingCard({ categoryId: "walkability", score: 4, publicDescription: "Testikuvaus.", scope: DESTINATION_ASSESSMENT_METHOD.sharedScope, sources: ["https://example.com/source"], checkedOn: "2026-11-01" }, "Käveltävyys");
+assert.ok(!sharedScopeSample.includes(DESTINATION_ASSESSMENT_METHOD.sharedScope), "Shared scope must be omitted from the individual category card");
+assert.ok(sharedScopeSample.includes("https://example.com/source") && sharedScopeSample.includes("Tarkistettu "), "Deduplicating shared scope must preserve category sources and review dates");
+const allowedCoverageStatuses = new Set(["proxy-data", "not-assessed", "qualitative-only", "sources-not-comparable", "rental-index-only"]);
+for (const record of DESTINATION_RECORDS) {
+  assert.equal(record.schemaVersion, DESTINATION_SCHEMA_VERSION, `Wrong schema version for ${record.id}`);
+  assert.ok(expectedDestinations.includes(record.id), `Unknown pilot ID: ${record.id}`);
+  assert.equal(record.slug, record.id, `Pilot slug should remain stable and match its current profile ID: ${record.id}`);
+  assert.ok(record.name && record.region?.id && record.region?.name && record.placeType && record.summary && record.comparisonFallbackSummary && record.practicalSummary && record.comparisonFallbackPracticalSummary, `Pilot identity and editorial fields must be populated: ${record.id}`);
+  assert.ok(record.profilePage?.title && record.profilePage.description && record.profilePage.introduction, `Pilot profile page needs a unique title, description and useful introduction: ${record.id}`);
+  assert.deepEqual(Object.keys(record.coverage), expectedDestinationCategoryIds, `Coverage must explicitly represent all categories for ${record.id}`);
+  assert.ok(Object.values(record.coverage).every((state) => allowedCoverageStatuses.has(state)), `Unknown coverage state for ${record.id}`);
+  assert.ok(record.seasonalHighlights.length >= 3, `Each pilot must have at least three distinct sourced seasonal highlights: ${record.id}`);
+  assert.ok(record.fitGuidance?.maySuit && record.fitGuidance?.weigh, `Profile needs balanced fit guidance: ${record.id}`);
+  for (const highlight of record.seasonalHighlights) {
+    assert.ok(highlight.categoryId && ["culture-and-sights", "events", "beaches-and-outdoors"].includes(highlight.categoryId), `Seasonal highlight needs a supported profile category: ${record.id}`);
+    assert.ok(highlight.title && highlight.text && highlight.period && /^\d{4}-\d{2}-\d{2}$/.test(highlight.checkedOn), `Seasonal highlight needs a title, text, period and date: ${record.id}`);
+    assert.match(highlight.source, /^https:\/\//, `Seasonal highlight needs an HTTPS primary source: ${record.id}`);
+    for (const source of highlight.additionalSources ?? []) {
+      assert.ok(source.label && source.url, `Additional seasonal source needs a label and URL: ${record.id}/${highlight.title}`);
+      assert.match(source.url, /^https:\/\//, `Additional seasonal source needs an HTTPS URL: ${record.id}/${highlight.title}`);
+    }
+  }
+  assert.ok(record.claims.length > 0, `Pilot needs documented category claims: ${record.id}`);
+  for (const claim of record.claims) {
+    assert.ok(expectedDestinationCategoryIds.includes(claim.categoryId), `Claim uses an unknown category: ${record.id}/${claim.id}`);
+    assert.ok(claim.statement && claim.geographicScope && /^\d{4}-\d{2}-\d{2}$/.test(claim.checkedOn), `Claim needs text, geographic scope and review date: ${record.id}/${claim.id}`);
+    if (claim.kind === "source-linked-description") assert.ok(claim.sources?.length > 0, `Sourced claim has no sources: ${record.id}/${claim.id}`);
+    if (Object.hasOwn(claim, "sources")) assert.ok(Array.isArray(claim.sources) && claim.sources.length > 0, `Optional claim sources must be omitted rather than left empty: ${record.id}/${claim.id}`);
+    for (const source of claim.sources || []) assert.match(source, /^https:\/\//, `Claim source must be an HTTPS URL: ${record.id}/${claim.id}`);
+  }
+  assert.ok(Number.isFinite(record.rentalIndex.value) && record.rentalIndex.period === "2026-09" && record.rentalIndex.unit === "€/m²/kk" && record.rentalIndex.sourceUrl.startsWith("https://www.idealista.com/"), `Rental index needs value, date, unit and source: ${record.id}`);
+  assert.ok(record.rentalIndex.metric.includes("pyyntihintaindeksi") && record.rentalIndex.geographicCoverage, `Rental metric scope must be explicit: ${record.id}`);
+  assert.ok(record.climate.station.id && record.climate.station.name && record.climate.station.period && record.climate.station.sourceUrl.startsWith("https://www.aemet.es/"), `Climate station metadata needs a period and source: ${record.id}`);
+  assert.ok(["city", "airport", "regional"].includes(record.climate.station.role) && record.climate.station.geographicCoverage, `Climate station role and coverage must be explicit: ${record.id}`);
+  assert.ok(Object.values(record.climate.january).every(Number.isFinite), `Climate observations must be numeric and source-backed: ${record.id}`);
+  assert.ok(Number.isFinite(record.seaSurface.valueC) && record.seaSurface.period === "1991–2020" && record.seaSurface.sourceUrl.startsWith("https://comet.nefsc.noaa.gov/"), `Sea-surface record needs a period and source: ${record.id}`);
+  assert.ok(Number.isFinite(record.seaSurface.gridCenter.latitude) && Number.isFinite(record.seaSurface.gridCenter.longitude), `Sea grid coordinates must be explicit: ${record.id}`);
+  assert.ok(record.image.src && record.image.srcset && record.image.alt && record.image.width > 0 && record.image.height > 0, `Image metadata is incomplete: ${record.id}`);
+  assert.ok(record.image.credit.author && record.image.credit.display && record.image.credit.sourceUrl && record.image.credit.license, `Image attribution and license notes are required: ${record.id}`);
+  if (record.image.credit.licenseUrl) assert.match(record.image.credit.licenseUrl, /^https:\/\//, `Image license URL must be HTTPS: ${record.id}`);
+
+  const profilePath = path.join(publicRoot, "kohteet", record.slug, "index.html");
+  const profileHtml = readFileSync(profilePath, "utf8");
+  const ratingSection = profileHtml.match(/<section class="destination-profile-section destination-assessment"[\s\S]*?<\/section>/)?.[0] || "";
+  const methodDetails = ratingSection.match(/<details class="destination-method">[\s\S]*?<\/details>/)?.[0] || "";
+  const ratingCards = [...ratingSection.matchAll(/<article class="destination-rating-card(?: [^"]*)?">[\s\S]*?<\/article>/g)].map(([html]) => html);
+  const scoreRecord = DESTINATION_SCORE_RECORDS_BY_ID.get(record.id);
+  const expectedRatingLabels = DESTINATION_SCORE_CATEGORY_IDS.map((id) => DESTINATION_CATEGORY_LABELS[id]);
+  assert.ok(ratingSection, `Profile must show category comparison immediately after its hero: ${record.id}`);
+  assert.equal(ratingSection.split(DESTINATION_ASSESSMENT_METHOD.sharedScope).length - 1, 1, `Shared assessment scope must appear exactly once per profile: ${record.id}`);
+  assert.ok(methodDetails.includes(DESTINATION_ASSESSMENT_METHOD.sharedScope), `Shared assessment scope belongs in the common method disclosure: ${record.id}`);
+  const ratingPositions = expectedRatingLabels.map((label) => ratingSection.indexOf(`<h3>${label}</h3>`));
+  assert.ok(ratingPositions.every((position) => position >= 0), `Profile is missing one of the seven rating categories: ${record.id}`);
+  assert.deepEqual(ratingPositions, [...ratingPositions].sort((a, b) => a - b), `Rating categories must follow the shared order: ${record.id}`);
+  assert.equal((ratingSection.match(/class="destination-rating-card(?:\s|\")/g) || []).length, 7, `Profile must show exactly seven lightweight category cards: ${record.id}`);
+  assert.ok(ratingSection.includes("Lähteet ja tarkistuspäivä"), `Rating sources and checked date must be disclosed: ${record.id}`);
+  for (const assessment of scoreRecord.assessments) {
+    const ratingCard = ratingCards.find((html) => html.includes(`<h3>${DESTINATION_CATEGORY_LABELS[assessment.categoryId]}</h3>`)) || "";
+    assert.ok(ratingCard, `Each score category must have one corresponding card: ${record.id}/${assessment.categoryId}`);
+    if (assessment.score === null) {
+      assert.equal(assessment.categoryId, "events", `Only event ratings may be unassessed: ${record.id}`);
+      assert.ok(ratingSection.includes("Tämän kohteen tapahtumatarjontaa ei ole arvioitu erikseen."), `Unassessed event must have its neutral status text: ${record.id}`);
+      assert.equal(ratingSection.includes("0/5"), false, `Unassessed event must not render as zero: ${record.id}`);
+    } else {
+      assert.ok(ratingSection.includes(assessment.publicDescription), `Published profile is missing the approved traveler-facing copy: ${record.id}/${assessment.categoryId}`);
+      assert.ok(ratingCard.includes("Tarkistettu "), `Category card must retain its checked date: ${record.id}/${assessment.categoryId}`);
+      for (const source of assessment.sources) assert.ok(ratingCard.includes(`href="${source}"`), `Category card must retain its own source link: ${record.id}/${assessment.categoryId}`);
+      if (assessment.scope === DESTINATION_ASSESSMENT_METHOD.sharedScope) {
+        assert.ok(!ratingCard.includes(DESTINATION_ASSESSMENT_METHOD.sharedScope), `Shared scope must not repeat inside each category card: ${record.id}/${assessment.categoryId}`);
+      } else {
+        assert.ok(ratingCard.includes(assessment.scope), `Category-specific scope must remain with its category source: ${record.id}/${assessment.categoryId}`);
+      }
+    }
+  }
+  assert.doesNotMatch(ratingSection, /rationale|Sisäinen peruste|Mitä ei arvioitu|Miksi ei arvioitu/i, `Internal scoring rationale must not be rendered: ${record.id}`);
+  assert.equal((ratingSection.match(/destination-rating-star--half/g) || []).length, scoreRecord.assessments.filter(({ score }) => score % 1 === 0.5).length, `Half-stars must match the data model: ${record.id}`);
+  assert.ok(!profileHtml.includes("Mitä kannattaa verrata?") && !profileHtml.includes("Mitä lähteistä dokumentoitu tarjonta kertoo?"), `Profile must not retain the generic V2 section headings: ${record.id}`);
+  assert.ok(!profileHtml.includes("Lähteissä nimetyt muodot") && !profileHtml.includes("evidenceTypes"), `Profile must not describe source-count ratings: ${record.id}`);
+  const profileOrder = ["destination-profile-hero", "destination-assessment", "destination-winter-highlights", "-daily-title", "-fit-title", "destination-profile-context", "-sources-title"]
+    .map((token) => profileHtml.indexOf(token));
+  assert.ok(profileOrder.every((index) => index >= 0), `Profile must include each planned section: ${record.id}`);
+  assert.deepEqual(profileOrder, [...profileOrder].sort((a, b) => a - b), `Profile sections must follow the requested reading order: ${record.id}`);
+  assert.ok(profileHtml.includes("Kulttuuri ja nähtävyydet") && profileHtml.includes("Tapahtumat") && profileHtml.includes("Rannat ja ulkoilu"), `Profile highlights must be grouped by useful content category: ${record.id}`);
+
+  const card = destinationCards.find(([, id]) => id === record.id)?.[2] || "";
+  assert.ok(card, `Pilot must retain its static profile card: ${record.id}`);
+  const htmlName = card.match(/<h3\b[^>]*>([\s\S]*?)<\/h3>/)?.[1]?.replace(/<[^>]+>/g, "").replaceAll("&amp;", "&").trim();
+  const htmlRegionAndType = card.match(/<span class="card-index">([^<]+)<\/span>/)?.[1] || "";
+  const htmlDescription = card.match(/<p class="destination-fit">([\s\S]*?)<\/p>/)?.[1]?.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+  const htmlPractical = card.match(/<div class="destination-columns">[\s\S]*?<h4>Arki ja liikkuminen<\/h4>\s*<p>([\s\S]*?)<\/p>/)?.[1]?.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+  const imageTag = card.match(/<figure class="destination-photo">[\s\S]*?<img\b([^>]*)>/)?.[1] || "";
+  const imageAttribute = (name) => imageTag.match(new RegExp(`\\b${name}="([^"]*)"`, "i"))?.[1] || "";
+  const expectedRegion = [...expectedDestinationNavigationGroups].find(([, ids]) => ids.includes(record.id))?.[0];
+  assert.equal(htmlName, record.name, `Pilot name differs from its static profile: ${record.id}`);
+  assert.equal(record.region.name, expectedRegion, `Pilot region differs from the current profile grouping: ${record.id}`);
+  assert.equal(foldText(htmlRegionAndType.split("·")[0].trim()), foldText(record.region.name), `Pilot region label differs from its static profile: ${record.id}`);
+  assert.equal(foldText(htmlRegionAndType.split("·").slice(1).join("·").trim()), foldText(record.placeType), `Pilot place type differs from its static profile: ${record.id}`);
+  assert.equal(htmlDescription, record.comparisonFallbackSummary, `Static fallback description differs from its dedicated data field: ${record.id}`);
+  assert.equal(htmlPractical, record.comparisonFallbackPracticalSummary, `Static fallback practical description differs from its dedicated data field: ${record.id}`);
+  assert.equal(imageAttribute("src"), record.image.src, `Pilot image source differs from its static profile: ${record.id}`);
+  assert.equal(imageAttribute("srcset"), record.image.srcset, `Pilot image srcset differs from its static profile: ${record.id}`);
+  assert.equal(imageAttribute("sizes"), record.image.sizes, `Pilot image sizes differs from its static profile: ${record.id}`);
+  assert.equal(imageAttribute("alt"), record.image.alt, `Pilot image alt differs from its static profile: ${record.id}`);
+  assert.equal(Number(imageAttribute("width")), record.image.width, `Pilot image width differs from its static profile: ${record.id}`);
+  assert.equal(Number(imageAttribute("height")), record.image.height, `Pilot image height differs from its static profile: ${record.id}`);
+  const pilotFigure = card.match(/<figure class="destination-photo">([\s\S]*?)<\/figure>/)?.[1] || "";
+  assert.ok(pilotFigure.includes(`href="${record.image.credit.sourceUrl}"`) && pilotFigure.includes(record.image.credit.display), `Pilot image credit differs from its static profile: ${record.id}`);
+  assert.ok(imageSourceRegistry.includes(`public/assets/${path.basename(record.image.src)}`) && imageSourceRegistry.includes(record.image.credit.sourceUrl), `Pilot image source is missing from IMAGE-SOURCES.md: ${record.id}`);
+
+  const merged = applyDestinationRecord({ id: record.id, name: "legacy", regionId: "legacy", regionName: "legacy", description: "legacy", practical: "legacy" }, record);
+  assert.deepEqual(
+    [merged.name, merged.regionId, merged.regionName, merged.description, merged.practical, merged.image, merged.srcset, merged.sizes, merged.alt, merged.imageWidth, merged.imageHeight],
+    [record.name, record.region.id, record.region.name, record.summary, record.practicalSummary, record.image.src, record.image.srcset, record.image.sizes, record.image.alt, record.image.width, record.image.height],
+    `Comparison adapter must resolve the pilot presentation from the shared data record: ${record.id}`,
+  );
+  assert.deepEqual([merged.rent.value, merged.rent.label, merged.rent.url], [record.rentalIndex.value, record.rentalIndex.value.toLocaleString("fi-FI", { minimumFractionDigits: 1, maximumFractionDigits: 1 }), record.rentalIndex.sourceUrl], `Comparison adapter must use the shared rent record: ${record.id}`);
+  assert.deepEqual([merged.climate.stationId, merged.climate.role, merged.climate.period, merged.climate.high, merged.climate.low, merged.climate.sourceUrl], [record.climate.station.id, record.climate.station.role, record.climate.station.period, record.climate.january.dayHighMeanC, record.climate.january.nightLowMeanC, record.climate.station.sourceUrl], `Comparison adapter must use the shared climate record: ${record.id}`);
+  assert.deepEqual([merged.sea.value, merged.sea.place, merged.sea.latitude, merged.sea.longitude], [record.seaSurface.valueC, record.seaSurface.place, record.seaSurface.gridCenter.latitude, record.seaSurface.gridCenter.longitude], `Comparison adapter must use the shared sea-surface record: ${record.id}`);
+}
 for (const [, destination, card] of destinationCards) {
   assert.ok(expectedDestinations.includes(destination), `Unexpected destination profile: ${destination}`);
   const figure = card.match(/<figure class="destination-photo">([\s\S]*?)<\/figure>/)?.[1];
@@ -526,7 +847,16 @@ for (const [, block] of climateBlocks) {
   const values = [...january.matchAll(/<td>([^<]*)<\/td>/g)].map(([, value]) => Number(value.replace(",", ".")));
   assert.ok(stationId && period, "Each station table must expose its station ID and comparison period");
   assert.equal(values.length, 5, `Station ${stationId} must have complete January T/TM/Tm/R/I values`);
-  stationRows.set(stationId, { period, high: values[1], low: values[2], sourceUrl: block.match(/<a href="(https:\/\/www\.aemet\.es\/[^\"]+)"/)?.[1] || "" });
+  stationRows.set(stationId, {
+    name: summary.replace(/\s*·\s*asema\s+[\dA-Z]+.*$/i, ""),
+    period,
+    mean: values[0],
+    high: values[1],
+    low: values[2],
+    precipitation: values[3],
+    sunshine: values[4],
+    sourceUrl: (block.match(/<a href="(https:\/\/www\.aemet\.es\/[^\"]+)"/)?.[1] || "").replaceAll("&amp;", "&"),
+  });
 }
 for (const [destination, [stationId, role]] of expectedClimateAssignments) {
   const station = stationRows.get(stationId);
@@ -534,6 +864,17 @@ for (const [destination, [stationId, role]] of expectedClimateAssignments) {
   assert.ok(["city", "airport", "regional"].includes(role), `Unknown station role for ${destination}`);
   assert.ok(Number.isFinite(station.high) && Number.isFinite(station.low), `Destination ${destination} must receive numeric January TM/Tm values`);
   assert.ok(station.period && station.sourceUrl, `Destination ${destination} must retain the AEMET station period and source`);
+}
+for (const record of DESTINATION_RECORDS) {
+  const station = stationRows.get(record.climate.station.id);
+  assert.ok(station, "Pilot AEMET station is absent from the static climate tables");
+  assert.deepEqual(
+    [station.name, station.period, station.mean, station.high, station.low, station.precipitation, station.sunshine, station.sourceUrl],
+    [record.climate.station.name, record.climate.station.period, record.climate.january.meanC, record.climate.january.dayHighMeanC, record.climate.january.nightLowMeanC, record.climate.january.precipitationMm, record.climate.january.sunshineHours, record.climate.station.sourceUrl],
+    "Pilot dataset climate metadata and January observations must match the pre-migration source table",
+  );
+  assert.equal(record.seaSurface.valueC, expectedSeaCells.get(record.id)[0], "Pilot NOAA value changed from the pre-migration comparison baseline");
+  assert.deepEqual([record.seaSurface.gridCenter.latitude, record.seaSurface.gridCenter.longitude], expectedSeaCells.get(record.id).slice(1), "Pilot NOAA grid changed from the pre-migration comparison baseline");
 }
 for (const [destination, [value, latitude, longitude]] of expectedSeaCells) {
   const sea = DESTINATION_SEA_TEMPERATURES.get(destination);
@@ -557,6 +898,14 @@ for (const [, city, value, source] of rentRows) {
   assert.equal(value, expectedComparisonRents.get(city), `Rental index value changed or mismatched for ${city}`);
   assert.equal(source, expectedComparisonSources.get(city), `Unexpected Idealista report for ${city}`);
 }
+for (const record of DESTINATION_RECORDS) {
+  assert.equal(record.rentalIndex.value.toLocaleString("fi-FI", { minimumFractionDigits: 1, maximumFractionDigits: 1 }), expectedComparisonRents.get(record.name), `Pilot dataset rent value differs from the pre-migration comparison baseline: ${record.id}`);
+  assert.equal(record.rentalIndex.sourceUrl, expectedComparisonSources.get(record.name), `Pilot dataset rent source differs from the pre-migration comparison baseline: ${record.id}`);
+  const staticRentRow = rentRows.find(([, city]) => city === record.name);
+  assert.ok(staticRentRow, `Static rent table must retain the pilot row: ${record.id}`);
+  assert.equal(Number(staticRentRow[2].replace(",", ".")), record.rentalIndex.value, `Pilot dataset and static rent table values must match: ${record.id}`);
+  assert.equal(staticRentRow[3], record.rentalIndex.sourceUrl, `Pilot dataset and static rent table sources must match: ${record.id}`);
+}
 const costaBlancaRentBody = rentTable.match(/<tbody><tr><th scope="rowgroup" colspan="3">Costa Blanca<\/th><\/tr>([\s\S]*?)<\/tbody>/)?.[1] || "";
 const costaBlancaRentRows = [...costaBlancaRentBody.matchAll(/<tr>\s*<th scope="row">([^<]+)<\/th>\s*<td>([^<]+)<\/td>\s*<td><a href="([^"]+)"/g)];
 assert.equal(costaBlancaRentRows.length, expectedCostaBlancaRents.size, "Costa Blanca must have exactly eight approved rental-index rows");
@@ -573,6 +922,40 @@ for (const [, body] of rentTable.matchAll(/<tbody>([\s\S]*?)<\/tbody>/gi)) {
   for (const [, city, value, source] of body.matchAll(/<tr>\s*<th scope="row">([^<]+)<\/th>\s*<td>([^<]+)<\/td>\s*<td><a href="([^"]+)"/g)) {
     sourceRentRecords.set(city, { region, value, source });
   }
+}
+const newProfileRentNames = new Map([
+  ["alicante", "Alicante / Alacant"], ["orihuela-costa", "Orihuela Costa"], ["guardamar-del-segura", "Guardamar del Segura"],
+  ["denia", "Dénia"], ["javea-xabia", "Jávea / Xàbia"], ["calp", "Calp / Calpe"],
+  ["cartagena", "Cartagena"], ["los-alcazares", "Los Alcázares"], ["san-pedro-del-pinatar", "San Pedro del Pinatar"],
+  ["la-manga-del-mar-menor", "La Manga del Mar Menor"], ["puerto-de-mazarron", "Puerto de Mazarrón"], ["aguilas", "Águilas"],
+  ["almeria", "Almería"], ["roquetas-de-mar", "Roquetas de Mar"], ["almerimar", "Almerimar"], ["vera", "Vera"],
+  ["malaga", "Málaga"], ["valencia", "Valencia"], ["murcia", "Murcia"], ["cadiz", "Cádiz"], ["huelva", "Huelva"],
+]);
+for (const id of expectedNewProfileIds) {
+  const html = generatedDestinationOutputs.get(path.join(publicRoot, "kohteet", id, "index.html"));
+  const rentName = newProfileRentNames.get(id);
+  const rent = sourceRentRecords.get(rentName);
+  const assignment = DESTINATION_STATIONS.get(id);
+  const station = assignment && stationRows.get(assignment.stationId);
+  const sea = DESTINATION_SEA_TEMPERATURES.get(id);
+  const card = destinationCards.find(([, cardId]) => cardId === id)?.[2] || "";
+  const cardImage = card.match(/<img\b([^>]*)>/i)?.[1] || "";
+  const profileImage = html?.match(/<figure class="destination-profile-photo[^"]*">\s*<img\b([^>]*)>/i)?.[1] || "";
+  const cardAttrs = Object.fromEntries([...cardImage.matchAll(/\b([\w:-]+)="([^"]*)"/g)].map(([, key, value]) => [key, value]));
+  const profileAttrs = Object.fromEntries([...profileImage.matchAll(/\b([\w:-]+)="([^"]*)"/g)].map(([, key, value]) => [key, value]));
+  assert.ok(html && rent && station && sea, `New profile must use existing sourced facts for climate, sea and rent: ${id}`);
+  assert.equal(profileAttrs.src, cardAttrs.src, `New profile must reuse the homepage image source: ${id}`);
+  assert.equal(profileAttrs.srcset, cardAttrs.srcset, `New profile must reuse the homepage responsive image source: ${id}`);
+  assert.ok(html.includes(`>${rent.value} <span>€/m²/kk</span></p>`), `New profile rent value must match the homepage source table: ${id}`);
+  assert.ok(html.includes(`href="${rent.source}"`), `New profile rent link must match the homepage source table: ${id}`);
+  assert.ok(html.includes(`${station.name} (${assignment.stationId}), ${station.period}`), `New profile must use the existing AEMET station and period: ${id}`);
+  for (const value of [station.mean, station.high, station.low, station.precipitation, station.sunshine]) {
+    assert.ok(html.includes(value.toLocaleString("fi-FI")), `New profile climate value must match its AEMET table: ${id}/${value}`);
+  }
+  assert.ok(html.includes(`${sea.value} °C tammikuun alueellisessa NOAA/OISST-meriruudussa`), `New profile must use its existing NOAA/OISST cell: ${id}`);
+  assert.ok(!Object.hasOwn(DESTINATION_PROFILE_CONTENT_RECORDS_BY_ID.get(id), "rentalIndex")
+    && !Object.hasOwn(DESTINATION_PROFILE_CONTENT_RECORDS_BY_ID.get(id), "climate")
+    && !Object.hasOwn(DESTINATION_PROFILE_CONTENT_RECORDS_BY_ID.get(id), "seaSurface"), `Editorial data must not duplicate maintained source facts: ${id}`);
 }
 const costPageHtml = readFileSync(path.join(publicRoot, "elinkustannukset", "index.html"), "utf8");
 const costModule = readFileSync(path.join(publicRoot, "assets", "elinkustannukset.mjs"), "utf8");

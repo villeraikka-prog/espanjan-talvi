@@ -135,7 +135,7 @@ Costa de Almerían vertailussa Almería ja Roquetas de Mar esitetään kuntakoht
 | Kaupunki / alue | Lähde ja mitä sillä tuetaan |
 |---|---|
 | Alicante | [Alicanten TAM](https://www.alicante.es/es/contenidos/transporte-alicante-metropolitano-tam) — kaupunki- ja seudun bussi-/raitiotieverkko; [TRAM d’Alacant](https://www.tramalacant.es/) — reitti- ja matkansuunnittelu. Kaupungin yleissivu voi näyttää vanhoja hintoja; sivulla ei ole hintoja lainattu. |
-| Torrevieja | [Linja-autoasema](https://torrevieja.es/es/otros-lugares-interes/estacion-autobuses-torrevieja) — bussi- ja alueyhteydet; [kaupungin 13.7.2026 tiedote uudesta verkosta](https://torrevieja.es/es/noticias/2026-07-13-presentado-plano-oficial-nueva-red-transporte-urbano-torrevieja-ocho-lineas) ja [26.10.2026 tiedote reittimuutoksesta](https://torrevieja.es/es/noticias/2026-10-26-lineas-1-2-autobus-urbano-conectaran-directamente-centro-sin-transbordo) — verkko on käyttöönottovaiheessa ja muuttuu. |
+| Torrevieja | [Linja-autoasema](https://torrevieja.es/es/otros-lugares-interes/estacion-autobuses-torrevieja) — bussi- ja alueyhteydet; [kaupungin matkailusivun saapumisohje](https://turismo.torrevieja.es/es/planifica/como-llegar) — junaliikenteen asema- ja bussijatkoyhteyksien rajaus; [kaupungin 13.7.2026 tiedote uudesta verkosta](https://torrevieja.es/es/noticias/2026-07-13-presentado-plano-oficial-nueva-red-transporte-urbano-torrevieja-ocho-lineas) ja [26.10.2026 tiedote reittimuutoksesta](https://torrevieja.es/es/noticias/2026-10-26-lineas-1-2-autobus-urbano-conectaran-directamente-centro-sin-transbordo) — kaupunkibussiverkko on käyttöönottovaiheessa ja muuttuu. |
 | Benidorm | [TRAM d’Alacant](https://www.tramalacant.es/) — Benidormin seudun raitiotie- ja junayhteyksien reitti-/aikatarkistus. |
 | Málaga ja Fuengirola | [Renfe: Cercanías Málaga](https://www.renfe.com/es/es/cercanias/cercanias-malaga/mapas) — C-1-reitti Málaga–lentoasema–Fuengirola ja ajantasaisen yhteyden tarkistus; [Fuengirolan asema](https://www.renfe.com/es/es/inspirate/estaciones/estacion-fuengirola). |
 | Almería | [Almerían kaupunki: kaupunkibussit](https://almeriaciudad.es/autobuses-urbanos) ja [Surbús: linjat/reitit](https://www.surbusalmeria.es/lineas). Kaupunkisivulla linjamäärästä on päivityksiä; sisällössä ei luvata tiettyä määrää. |
@@ -231,3 +231,164 @@ Kuvaajien nimet, kaikki 24 paikallista kuvatiedostoparia, lisenssit, attribuutio
 
 - [Aena: lentoasemien nimet ja IATA-koodit](https://www.aena.es/en/passengers/our-airports.html) sekä lentoasemakohtaiset reittitiedot: [Alicante-Elche Miguel Hernández (ALC)](https://www.aena.es/en/alicante-elche-miguel-hernandez/airlines-and-destinations/airport-destinations.html), [Málaga-Costa del Sol (AGP)](https://www.aena.es/en/malaga-costa-del-sol/airlines-and-destinations/airport-destinations.html), [Internacional Región de Murcia (RMU)](https://www.aena.es/es/internacional-region-de-murcia/aerolineas-y-destinos/destinos-del-aeropuerto.html), [Almería (LEI)](https://www.aena.es/es/almeria/aerolineas-y-destinos/destinos-del-aeropuerto-de-almeria.html), [Valencia (VLC)](https://www.aena.es/es/valencia/aerolineas-destinos/destinos-aeropuerto.html), [Jerez (XRY)](https://www.aena.es/en/jerez/airlines-and-destinations/.html) ja [Sevilla (SVQ)](https://www.aena.es/en/sevilla/airlines-and-destinations/airport-destinations.html). Reittitiedot perustuvat lentoyhtiöiden aikatauluihin ja voivat muuttua.
 - Päivämääräkohtainen [Google Flights -haku](https://www.google.com/travel/flights?hl=fi&curr=EUR) muodostetaan käyttäjän valitsemalle Helsinki (HEL)–lentoasemalle -menopaluumatkalle. Sivusto ei näytä lentohintaa eikä lupaa suoraa tai talvikaudella liikennöitävää yhteyttä. Lentoasemat näytetään vaihtoehtoina ilman vahvistamatonta ensisijaisuus- tai matka-aikajärjestystä.
+
+## Kohdeprofiilien V3-pilotti: viralliset kohde- ja tapahtumalähteet
+
+Alla olevia lähteitä käytetään Torreviejan, Fuengirolan ja Benidormin kohdekohtaisten, päivättyjen kuvausten ja rajattujen toimituksellisten arvioiden pohjana. Lähteet tarkistettu 1.11.2026. Tapahtuma- ja aukiolotiedot voivat muuttua; ne eivät ole lupaus tulevien talvien ohjelmasta.
+
+### Torrevieja
+
+- [Torreviejan matkailusivusto: luonto ja ulkoilu](https://turismo.torrevieja.es/es/que-ver/naturaleza) — La Mata–Torreviejan laguunialue, rannat ja poukamat, Vía Verde sekä Molino del Aguan dyynialue.
+- [Torreviejan matkailusivusto: Museo del Mar y de la Sal](https://turismo.torrevieja.es/es/poi/museo-del-mar-y-la-sal) — suola-, kalastus-, rannikkonavigointi- ja veneenrakennusperintöä käsittelevä museosisältö. Aukiolo tarkistettava ennen vierailua.
+- [Torreviejan kunta: vuoden 2026 viimeisen neljänneksen kulttuuriohjelma](https://torrevieja.es/es/noticias/2026-08-06-cultura-torrevieja-presenta-su-programacion-para-ultimo-cuatrimestre-2026-tras) — syys–joulukuun 2026 päivätty ohjelmaesimerkki; ei tulevien kausien kalenteri.
+
+### Fuengirola
+
+- [Fuengirolan kunta: kulttuuriosasto](https://www.fuengirola.es/concejalia/concejalia-de-cultura/) ja [Casa de la Cultura](https://www.fuengirola.es/item/casa-de-la-cultura/) — kunnan nimeämät kulttuuritoiminnan muodot ja kulttuuritalo.
+- [Fuengirolan virallinen matkailusivusto: rannat](https://www.somosfuengirola.es/que-hacer/playas/) — esittelee neljä rantaa ja seitsemän kilometriä rantaviivaa. Kohdeprofiilin ulkoiluarvio käyttää tietoa rantojen valikoimasta, ei talvikauden palvelujen tai yksittäisen asunnon saavutettavuuden mittana.
+- [Fuengirolan virallinen matkailusivusto: liikkuminen](https://www.somosfuengirola.es/planifica/como-moverse/) — kuvaa yli seitsemän kilometrin rantapromenadin, alueita sen varrella ja julkisen liikenteen vaihtoehtoja. Tiedot ovat kaupungin omaa matkailukuvausta; reittiä tai sen talviolosuhteita ei ole tarkastettu maastossa.
+- [Fuengirolan virallinen matkailusivusto: historia](https://www.somosfuengirola.es/descubre/historia/) — kuvaa Sohailin linnan sijaintia Fuengirolajoen suulla ja sen käyttöä kulttuuritapahtumissa. Aukiolot ja tapahtumatiedot tarkistettava erikseen.
+- [Fuengirolan kunta: ikääntyneiden vuoden 2026 loppuvuoden ohjelma](https://www.fuengirola.es/el-ayuntamiento-de-fuengirola-programa-una-veintena-de-actividades-dirigidas-a-las-personas-mayores-durante-el-ultimo-cuatrimestre-del-ano/) — päivätty tapahtumaesimerkki; osa tapahtumista on rajattu paikallisen eläkeläiskortin haltijoille.
+- [Fuengirolan kunta: joulumarkkinat Plaza de la Constituciónilla](https://www.fuengirola.es/la-plaza-de-la-constitucion-acogera-del-26-de-noviembre-al-20-de-diciembre-el-mercado-navideno-de-fuengirola/) — ilmoitettu kausi 26.11.–20.12.2026; tapahtuman tiedot tarkistettava ennen matkaa.
+
+### Benidorm
+
+- [Benidormin kunta: tapahtumakalenteri](https://benidorm.org/es/agenda) — päiväkohtainen virallinen tapahtumakalenteri; ohjelma on ajassa muuttuva.
+- [Benidormin kunta: Fiestas Mayores Patronales](https://benidorm.org/es/ayuntamiento/concejalias/fiestas/fiestas-mayores-patronales-de-benidorm) — kunnan juhlan ja sen ohjelman lähdesivu; päivät ja ohjelma tarkistettava vuosittain.
+- [Benidormin kunta: Fancy Dress Party 2026](https://benidorm.org/es/comunicacion/noticias/la-fancy-dress-party-preve-reunir-mas-de-30000-personas-para-disfrutar-en-benidorm-de-la-fiesta-de-disfraces-mas-grande-de-europa) — marraskuun 2026 tapahtumaesimerkki ja arvioidun yleisömäärän lähde; huomioi mahdollinen ruuhka, ei pysyvä kävijätilasto.
+- [Benidormin kaupunki: suojellut luontoalueet](https://benidorm.org/en/city-hall/departments/environment/protected-natural-spaces-enps) ja [Serra Geladan luonnonpuisto](https://comunitatvalenciana.com/es/alacant-alicante/altea/espacios-naturales/parque-natural-de-serra-gelada) — viralliset alue- ja reittikuvaukset. Reittien vaikeus, olosuhteet ja lähtöpisteet tarkistettava erikseen.
+- [Benidormin kunnan reittiopas (PDF, 2021)](https://contenidos.benidorm.org/sites/default/files/descargas/2021-03/rutas_es.pdf) — kuvaa kaupungin reittejä, muun muassa Punta de Cavallin ja La Cruzin reitit pituus-, kesto- ja vaikeustietoineen. Tiedot ovat vuodelta 2021; opasteet ja käytännön olosuhteet tarkistettava ennen retkeä.
+- [Benidormin yleinen matkailuesite (PDF, 2025)](https://contenidos.benidorm.org/sites/default/files/descargas/2025-01/folleto_general_de_benidorm_espanol_english_deutsch.pdf) — kunnan julkaisema kohdeopas, jota käytetään rantojen ja alueiden tunnistamiseen; ei yksin todista talvikauden saavutettavuutta.
+
+## Kohdeprofiilit V3: arviointitapa ja sisältörajaukset
+
+Profiilien V3-arviot eivät perustu lähteiden, linkkien tai mainittujen kohteiden määrään. Jokaiselle kategorialle on määritelty oma, vertailukelpoiseen talvikauden aineistoon perustuva tarkastelutapa ja 1–5-asteikon laadulliset ankkurit. Ilmasto näytetään vain lähdearvoina; tapahtumat, yöelämä, palvelut, käveltävyys, liikenne, vuokra-asuntojen saatavuus ja yleinen hintataso jäävät arvioimatta, kun saman rajauksen tietoa ei ole.
+
+Kulttuuri ja nähtävyydet ovat yhteinen kategoria sekä ravintolat ja ostokset yhteinen arjen palvelukategoria, koska lähteiden luokittelut ja käytännön tarjonta limittyvät. Rannat ja ulkoilu on ainoa pilotissa pisteytetty kategoria. Piste kuvaa lähteissä dokumentoitujen ympäristöjen ja reittitietojen käytännöllisyyttä, ei kohteen laatua eikä asunnon osoitekohtaista saavutettavuutta.
+
+- Torrevieja: [virallinen luonto- ja matkailusivu](https://turismo.torrevieja.es/es/que-ver/naturaleza) ja [kaupungin liikunta- ja reittitiedot](https://turismo.torrevieja.es/es/que-hacer/deportes) — ranta-, laguuni- ja reittikuvaukset. Reittien saavutettavuus ja olosuhteet on tarkistettava erikseen.
+- Fuengirola: yllä mainitut viralliset matkailusivut [rannoista](https://www.somosfuengirola.es/que-hacer/playas/), [liikkumisesta](https://www.somosfuengirola.es/planifica/como-moverse/) ja [historiasta](https://www.somosfuengirola.es/descubre/historia/) — rantavalikoima, promenadi ja Sohailin linna. Sivut eivät arvioi talvikauden oloja tai saavutettavuutta eri vuokra-asunnoista.
+- Benidorm: yllä mainittu kunnan [suojeltujen luontoalueiden sivu](https://benidorm.org/en/city-hall/departments/environment/protected-natural-spaces-enps), [reittiopas (PDF, 2021)](https://contenidos.benidorm.org/sites/default/files/descargas/2021-03/rutas_es.pdf) ja [yleinen matkailuesite (PDF, 2025)](https://contenidos.benidorm.org/sites/default/files/descargas/2025-01/folleto_general_de_benidorm_espanol_english_deutsch.pdf) — Serra Geladan reitit, kaupungin kävelyreitit ja rannat. Osa yksityiskohtaisista reittitiedoista on vuodelta 2021 ja alue ulottuu naapurikuntiin.
+
+Profiilin arvioinnin tarkistuspäivä ja lähderajaus näkyvät itse sivulla. Tapahtumien päivämäärät ovat yhden kauden esimerkkejä, eivät tulevan talven ohjelmalupauksia.
+
+## Kohdeprofiilit: Costa de Almería
+
+Tarkistettu 1.11.2026. Kohteiden kuvaukset ovat lähteistettyjä toimituksellisia yhteenvetoja. Päivätyt tapahtumaohjelmat kuvaavat vain ilmoitettua kautta; ne eivät ole lupaus tulevien talvien ohjelmasta. Palvelujen, reittien ja aukiolojen ajantasaisuus tulee tarkistaa alkuperäislähteestä.
+
+### Almería
+
+- [Almerían virallinen matkailusivusto: kaupunkirannat ja rannikkokohteet](https://www.turismodealmeria.org/en/what-to-do/beach-tourism/) — erottaa pääkaupungin kaupunkirannat muista kunnan rannikkoalueista ja Cabo de Gata-Níjarin luonnonpuistosta.
+- [Almerían matkailusivusto: kulttuurikohteet](https://www.turismodealmeria.org/turismo-cultural/) ja [Almería Musulmana -reitti](https://www.turismodealmeria.org/rutas/almeria-musulmana/) — Alcazaba, vanha kaupunki ja muut historialliset kohteet; opastuksen varaus ja vierailuajat tarkistettava.
+- [Junta de Andalucía: Alcazaba](https://www.juntadeandalucia.es/organismos/culturapatrimoniohistoricoydeporte/areas/cultura/museos-arte/directorio-museos/detalle/2597.html) — kulttuuriperintökohteen virallinen rekisteritieto.
+- [Almerían tapahtumakalenteri](https://www.turismodealmeria.org/eventos-y-ocio/) ja [Fundación Unicajan kausiohjelma 2026–2027](https://www.turismodealmeria.org/evento/programacion-de-artes-escenicas-del-centro-fundacion-unicaja-almeria-2026-2027/) — päivätty esimerkki esittävästä kulttuuriohjelmasta, ei myöhempien kausien vahvistus.
+- [Paseo de Almerían historia](https://www.turismodealmeria.org/paseo-almeria/historia-del-paseo/) — keskustan ja sataman suuntaisen historiallisen pääväylän kuvaus.
+- [Almerían matkailusivusto: käytännön saapumisohjeet](https://www.turismodealmeria.org/prepara-tu-viaje/como-llegar/) — ilmoittaa lentoaseman olevan lähellä kaupunkia; yksittäinen kulkuyhteys ja matka-aika on tarkistettava erikseen.
+- [Almerían gastronominen reitti (PDF)](https://www.turismodealmeria.org/wp-content/uploads/2025/02/Ruta-Gastro-Tour.pdf) — kaupungin ruokakulttuurin ja keskustan kohteiden esittely.
+
+### Roquetas de Mar
+
+- [Roquetas de Marin kunta: rannat](https://roquetasdemar.es/tu-ayuntamiento/areas-municipales/turismo-y-playas/playas) — ilmoittaa kunnan rantaviivan ja rannat sekä rajaa osan siivous- ja rantaturvallisuuspalveluista kesäkauteen.
+- [RoqueBus-kartta](https://roquebus.roquetasdemar.es/) — kunnan nähtävyyksiä ja eri keskuksia yhdistävä matkailukartta; sitä ei pidä tulkita tavalliseksi päivittäiseksi bussipalveluksi.
+- [Roquetas de Marin kulttuuriohjelma](https://www.roquetasdemar.es/tu-ayuntamiento/areas-municipales/deportes-tiempo-libre-y-cultura/cultura/programacion-cultural) ja [Faro Culturalin agenda](https://farocultural.roquetasdemar.es/agenda) — vaihtuvaa kulttuuriohjelmaa; tapahtumien päivät ja sisältö voivat muuttua.
+- [Kunnan gastronomiasivu](https://roquetasdemar.es/la-ciudad/gastronomia) ja [kauppahallit](https://www.roquetasdemar.es/node/154) — paikallisen ruoan kuvaus sekä erilliset kauppahallit Roquetasissa, Aguadulcessa ja Las Marinasissa.
+- [Kunnan liikennetieto](https://roquetasdemar.es/la-ciudad/transporte/) — ohjaa alueellisen bussiverkon reitteihin ja aikatauluihin; ei vahvista tietyn asunnon pysäkin saavutettavuutta tai vuorotiheyttä.
+
+### Almerimar
+
+- [El Ejidon matkailusivusto: käytännön tiedot](https://turismo.elejido.es/index.php/informacion/info-practica/) — erottaa Almerimarin El Ejidon kunnan paikallisuudeksi ja kertoo linjoista 11 ja 21 El Ejidon ja Almerimarin välillä; tarkista aikataulut.
+- [Almerimarin venesatama](https://turismo.elejido.es/index.php/puerto-deportivo/) — sataman palvelu- ja ravintolakeskittymä sekä kunnan ilmoittama venepaikkamäärä.
+- [Playa Poniente](https://turismo.elejido.es/index.php/playa-poniente/) — ranta sataman vieressä; palvelujen saatavuus ja aukiolo on tarkistettava ajankohdan mukaan.
+- [El Ejidon usein kysytyt kysymykset](https://turismo.elejido.es/index.php/informacion/preguntas-frecuentes/) ja [nähtävyydet ja luonto](https://turismo.elejido.es/index.php/ver-y-hacer/que-ver/) — Punta Entinas-Sabinarin kulkurajoitukset ja luontokohteet; alueella tulee pysyä sallituilla reiteillä.
+- [Almerimarin golf](https://turismo.elejido.es/index.php/disfruta-todo-el-ano-del-mejor-golf/) — kunnan matkailusivun kenttä- ja palvelukuvaus; ajantasainen toiminta ja varaukset tarkistettava suoraan.
+
+### Vera
+
+- [Veran matkailusivusto: saapuminen ja alueet](https://www.vera.es/turismo/index.php?page=ven_a_vera&subpage=como_llegar) — erottaa Vera Pueblon ja rannikon alueet sekä kuvaa niiden välistä bussiyhteyttä.
+- [Veran kunta: rantapalvelut ja turvallisuuskausi](https://www.vera.es/turismo/index.php?page=playas&subpage=info) — uimakauden ja pelastuspalvelun ajallinen rajaus; ei kuvaa kaikkien talvipalvelujen saatavuutta.
+- [Veran matkailureitit](https://www.vera.es/turismo/index.php?page=rutas&subpage=index) ja [monumentit ja museot](https://www.vera.es/turismo/index.php?page=monumentos_museos) — historiallisten keskustakohteiden ja reittien lähteet; osa reiteistä voi sisältää ajoneuvolla kuljettavia osuuksia.
+- [Veran virallinen matkailusivusto](https://www.vera.es/turismo/) — vuoden 2026 viimeisen neljänneksen päivätty kulttuuriohjelmaesimerkki, ei tulevien talvien lupaus.
+- [Veran ravintolahakemisto](https://vera.es/turismo/index.php?page=donde_comer&page_no=4) ja [iltaelämän hakemisto](https://vera.es/turismo/index.php?page=vera_noche) — kunnallisen matkailusivuston listaukset; yritysten toiminta ja aukiolo on tarkistettava.
+- [Veran majoitushakemisto](https://vera.es/turismo/index.php?page=donde_alojarse) — antaa keskustassa sijaitsevan Terraza Carmona -hotellin etäisyydeksi Veran rannoilta noin 7 km. Tämä on yhden majoituskohteen esimerkki, ei yleinen Vera Pueblo–Vera Playa -etäisyys.
+
+## Kohdeprofiilit: Málaga, Valencia, Murcia, Cádiz ja Huelva
+
+Tarkistettu 1.11.2026. Profiilien paikalliset kuvaukset ovat lähteistettyjä toimituksellisia yhteenvetoja. Agenda-, liikenne-, palvelu- ja aukiolotiedot voivat muuttua; tarkista ajantasainen tieto ennen matkaa. Yhteiset ilmasto-, merivesi- ja vuokraindeksit johdetaan nykyisistä lähdetaulukoista, eikä niitä ylläpidetä näissä profiileissa erikseen.
+
+### Málaga
+
+- [Málagan kaupungin rannat](https://www.malaga.eu/la-ciudad/playas/index.html) ja [La Malagueta](https://www.malaga.eu/la-ciudad/playas/la-malagueta/) — La Malagueta kuvataan kaupunkirannaksi historiallisen keskustan tuntumassa. Tämä ei tarkoita, että kaikki kaupunginosat tai rantapalvelut olisivat yhtä lähellä tai käytössä ympäri vuoden.
+- [Spain.info: Málaga](https://www.spain.info/en/destination/malaga/) ja [Málagan kaupungin Alcazaba-tiedot](https://www.malaga.eu/la-ciudad/instalaciones-y-espacios/detalle-de-la-instalacion/?id=130) — yleiskuva kaupungin nähtävyyksistä sekä virallinen muistomerkkitieto; vierailuajat tarkistettava kohdekohtaisesti.
+- [Málagan kaupungin kulttuuriagenda](https://cultura.malaga.eu/es/agenda/) — päivätty tapahtumakalenteri, ei tulevien vuosien ohjelmalupaus.
+- [Mercado de Atarazanas](https://www.malaga.eu/la-ciudad/mercados-y-mercadillos/detalle/Mercado-de-Atarazanas-00001/) — kaupungin keskusmarkkinan esittely; nykyiset aukiolot ja palvelut tarkistettava.
+- [Renfe: Málagan Cercanías-kartat](https://www.renfe.com/es/es/cercanias/cercanias-malaga/mapas) — C1-linjan reittikartta, jossa näkyvät Málaga, lentoasema ja rannikon pysäkkejä. Vuorot ja reitin ajantasaisuus tarkistettava matkapäivälle.
+
+### Valencia
+
+- [Valencian kaupungin museoluettelo](https://www.valencia.es/web/guest/cas/la-ciudad/museos) — kaupungin museo- ja kulttuurikohteiden hakemisto; kohdekohtaiset ohjelmat ja aukiolot tarkistettava.
+- [Valencian kaupungin agenda](https://www.valencia.es/cas/cultura/agenda) ja [Cultural València](https://cultural.valencia.es/es/agenda/) — vaihtuva, päivämääräkohtainen tapahtumaohjelma.
+- [Valencian kaupungin liikennetieto](https://www.valencia.es/es/-/informacion-de-interes), [Metrovalencian kartat](https://www.metrovalencia.es/en/check-maps/) ja [kaupunkirantojen raitiovaunuyhteydet](https://www.metrovalencia.es/es/?p=55985) — bussi-, metro- ja raitiovaunureittien viralliset lähtöpisteet. Tarkista linjat ja palvelu matkapäivälle.
+- [Visit Valencia: rannat](https://blog.visitvalencia.com/en/discover-valencias-beaches-an-endless-variety) ja [Albufera](https://blog.visitvalencia.com/en/albufera-valencia) — rannikkokaupunginosien sekä kaupungin ulkopuolella sijaitsevan luonnonpuiston yleiskuva. Albufera on erillinen retkikohde, ei keskustan kaupunginosa.
+- [Valencian kunnalliset markkinat](https://www.valencia.es/es/-/mercados-ordinarios-1) — kaupungin kunnallisten markkinoiden lähtötiedot; yksittäisten markkinoiden sijainti ja aukiolo tarkistetaan erikseen.
+- [Visit Valencia: iltaelämä ja kaupunginosat](https://blog.visitvalencia.com/en/seven-plans-for-your-next-getaway-to-valencia) — yleinen matkailukuvaus iltaelämän alueista; toimipaikkojen nykyistä toimintaa tai talvikauden aukioloa ei päätellä artikkelista.
+
+### Murcia
+
+- [Murcian matkailusivusto: nähtävyydet](https://www.turismodemurcia.es/es/que-ver-visitar) ja [kulttuuri ja vapaa-aika](https://www.turismodemurcia.es/es/cultura-ocio) — kaupungin monumenttien, museoiden ja vaihtuvan ohjelman lähteet.
+- [Murcian gastronomia](https://www.turismodemurcia.es/es/gastronomia) ja [huerta ja luonto](https://www.turismodemurcia.es/es/deporte-naturaleza) — ruokakulttuurin ja sisämaan kaupunkiympäristön matkailukuvaukset.
+- [Murciassa liikkuminen](https://www.turismodemurcia.es/es/como-moverse) — kaupungin bussit, pedanías-alueet sekä 18 kilometrin raitiovaunureitti pohjoisten alueiden ja keskustan välillä. Reitit ja vuorot tarkistettava ajantasaisesti.
+- [Tranvía de Murcian reittikartta](https://www.tranviademurcia.es/linea/sinoptico/) — liikennöitsijän linja- ja pysäkkitiedot.
+
+### Cádiz
+
+- [Cádizin rannat](https://turismo.cadiz.es/ver/playa) — kaupungin virallinen rantahakemisto; palvelut ja olosuhteet tarkistettava kauden mukaan.
+- [Kaupunkireitit ja kävelyt](https://turismo.cadiz.es/es/visitas-y-paseos-por-la-ciudad) ja [Mercado Central](https://turismo.cadiz.es/es/rutas-y-visitas-en-cadiz/mercado-central) — historiallisen keskustan reittien ja markkinan lähteet. Maakunnan retkikohteita ei käsitellä kaupungin käveltävänä tarjontana.
+- [Cádizin kaupungin agenda](https://turismo.cadiz.es/eventos/all) ja [virallinen matkailusivusto](https://turismo.cadiz.es/) — tapahtumakalenteri sekä kaupungin perinteiden ja juhlien yleissivu. Vuosittaiset päivät ja ohjelmat tarkistettava erikseen.
+- [Cádizin kaupunkibussit](https://turismo.cadiz.es/es/autobuses) — kaupungin ilmoittamat linjat muun muassa keskustan ja rantojen välillä. Ajantasaiset linjat ja talvikauden aikataulut tarkistettava.
+
+### Huelva
+
+- [Huelvan luontoreitti ja suisto](https://turismo.huelva.es/rutas-y-monumentos/ruta-naturaleza-original/) — kuvaa Tinton ja Odielin yhtymäkohdan, Paseo de la Rían sekä kaupungin ja sataman ympäristöä.
+- [Marismas del Odiel](https://turismo.huelva.es/rutas-y-monumentos/ruta-naturaleza-original/paraje-natural-marismas-del-odiel/) — kaupungin lähellä sijaitsevan suojellun kosteikkoalueen ja sen käyntikohteiden kuvaus; reitit ja yhteydet tarkistettava.
+- [Huelvan kaupungin matkailukohteet](https://en.andalucia.org/places-to-visit/huelva/huelva/) ja [kaupungin luontoreitti](https://turismo.huelva.es/rutas-y-monumentos/ruta-naturaleza-original/) — kaupunkihistorian ja suistoalueen reittien lähteet.
+- [Huelvan tapahtumat](https://turismo.huelva.es/eventos-es/) ja [festivaalit](https://turismo.huelva.es/cultura/festivales/) — tapahtumien ja vuosittaisen Iberoamerikkalaisen elokuvafestivaalin esittely; päivät tarkistettava vuosittain.
+- [EMTUSA: linjat ja reaaliaikaiset saapumiset](https://www.emtusahuelva.com/lineas) ja [aikataulut](https://www.emtusahuelva.com/horarios) — Huelvan kaupunkibussien reitit ja palvelutiedot; tarkista matkapäivän muutokset.
+
+## Kohdeprofiilien arjen palvelut ja liikennetiedot – tarkistettu 1.11.2026
+
+### Almerimar
+
+- [El Ejidon matkailusivusto: käytännön tiedot ja liikenneyhteydet](https://turismo.elejido.es/index.php/informacion/info-practica/) — Almerimar–El Ejido-yhteyksien linjat 11 ja 21. Sivusto ohjaa tarkistamaan ajantasaiset aikataulut; se ei yksin vahvista talvikauden vuorotiheyttä.
+- [El Ejidon matkailusivuston usein kysytyt kysymykset](https://turismo.elejido.es/index.php/informacion/preguntas-frecuentes/) — kunnan mukaan Almerimarissa ei ole viikoittaista katumarkkinaa. Tämä ei ole täydellinen päivittäistavarakauppojen luettelo.
+- [El Ejidon kaupallinen toimintasuunnitelma 2025 (PDF)](https://elejido.es/comercio/wp-content/uploads/2025/10/DOC2.pdf) — kaupungin kaupallisen keskustan sekä Almerimarin matkailu- ja vapaa-ajan luonteen suunnittelukuvaus. Suunnitelma ei takaa yksittäisen yrityksen nykyistä aukioloa.
+- [Andalusian terveyspalvelu: Ponienten terveyskeskukset](https://www.sspa.juntadeandalucia.es/servicioandaluzdesalud/dponiente/centros-de-salud-de-distrito-poniente-de-almeria/) — luettelossa Consultorio Almerimar sekä El Ejidon kaupungin terveyskeskukset.
+- [Hospital Universitario Poniente: sijainti](https://www.sspa.juntadeandalucia.es/servicioandaluzdesalud/hospital/poniente/hospital/contacto-y-ubicacion) — sairaalan virallinen osoite El Ejidossa. Palvelun soveltuvuus ja vastaanottoajat on tarkistettava virallisesta lähteestä.
+
+### La Manga del Mar Menor
+
+- [Cartagenan kaupunkiliikenne, linja 43](https://www.transportesurbanoscartagena.es/linea/43) — Cartagena–La Manga -linjan julkaistut lähdöt ja pysäkit; näkyvä aikataulu ei takaa samaa palvelua viikon jokaisena päivänä. Tarkista matkustuspäivä ja pysäkki.
+- [Cartagenan kaupunkiliikenne, linja 44](https://www.transportesurbanoscartagena.es/linea/44) — Cabo de Palos–Veneziola-yhteys ja operaattorin julkaisema vuorotarjonta.
+- [Región de Murcian matkailusivusto: La Manga](https://www.turismoregiondemurcia.es/es/la_manga/) — nimeää muun muassa El Zocon, Plaza Bohemian ja Puerto Tomás Maestren alueiden palvelu- ja ravintolakeskittymiksi; ei vahvista yksittäisten liikkeiden talviaukioloja.
+- [Cartagenan kunta: linjan 43 kesäkauden lisävuorot 2026](https://www.cartagena.es/detalle_noticias.asp?c=&d=&h=&id=88768&pagina=1&t=) — kesä–syyskuulle ilmoitettu lisäpalvelu on kausiluonteinen, eikä sitä tule käyttää talviaikatauluna.
+
+### Orihuela Costa
+
+- [Orihuelan kunta: Costa-alueen kuljetuspalvelu](https://www.orihuela.es/desarrollo-de-la-ciudad/costa/transporte-costa/) — kunnan sivulla kuvattu torstainen maksuton reitti Entrenaranjosista Torremendon terveyskeskuksen ja Hospital Los Balconesen kautta Playa Flamencaan; sivu ei vahvista palvelun voimassaoloa tai aikataulua myöhemmälle matkustuspäivälle.
+- [Orihuelan kunta: kaupunkiliikenteen ja kuljetusten tiedot](https://www.orihuela.es/servicios-basicos/transporte-urbano/transportes/) — kunnan kuljetus- ja taksipalvelujen ilmoitetut yhteyspisteet, mukaan lukien Costa-alueen paikallisuuksia. Tarkista soveltuva linja ja palvelupäivä.
+- [Orihuelan kunta: Costa-alueen palvelut](https://www.orihuela.es/desarrollo-de-la-ciudad/costa/servicios-orihuela-costa/) ja [Costa-alueen katu- ja urbanisaatiokartta](https://www.orihuela.es/desarrollo-de-la-ciudad/costa/callejero-costa/) — alueen hallinnollisia palveluja ja eri urbanisaatioiden sijainteja; eivät ole täydellinen tai ajantasainen kauppojen/apteekkien hakemisto.
+- [Generalitat Valenciana: Orihuela Costa -terveyskeskus](https://torrevieja.san.gva.es/es/c.s.-orihuela-costa) — virallinen keskuksen osoite Aguamarina/Urbanización Orihuela Costa -alueella. Aukiolo ja vastaanotto tarkistettava ennen asiointia.
+
+### Los Alcázares
+
+- [Interbus Murcia: MUR 055, Los Narejos–Los Alcázares](https://www.interbusmurcia.es/mur-055-los-narejos-los-alcazares/) ja [reitit ja aikataulut](https://www.interbusmurcia.es/consultar-rutas-y-horarios/) — alueellinen yhteys, joka yhdistää muun muassa Murcian, Torre Pachecon, Los Alcázaresin, Los Narejosin ja La Uniónin. Se ei ole osoitus tiheästä paikallisesta kiertoliikenteestä.
+- [Los Alcázaresin paikallisen kaupankäynnin portaali](https://clic.losalcazares.es/) — kunnallinen yritys- ja asiointihakemisto, jonka listauksista voi tarkistaa eri alueita; yksittäiset tiedot on varmistettava toimijalta.
+- [Los Alcázaresin rantapromenadi](https://turismo.losalcazares.es/paseo-maritimo/) — kunnan matkailukuvaus promenadista; ei yksin osoita palvelujen ympärivuotista aukioloa.
+- [MurciaSalud: Los Alcázaresin terveyskeskus](https://www.murciasalud.es/en/web/centros-sanitarios/-/centro-de-salud-los-alc%C3%A1zares) — ilmoittaa keskuksen sijainnin ja palveluaikoja sekä Los Narejosin konsultointipisteen saman perusterveydenhuollon tiimin yhteydessä. Kiireellisen hoidon järjestelyt ja aukiolo on tarkistettava ajantasaisesti.
+
+### Muut liikennetietojen ajantasaisuustarkistukset
+
+- [Torreviejan kunta: linjojen 1, 2 ja 8 muutokset](https://torrevieja.es/es/noticias/2026-10-26-lineas-1-2-autobus-urbano-conectaran-directamente-centro-sin-transbordo) — 26.10.2026 julkaistun tiedotteen mukaan reittimuutokset oli määrä ottaa käyttöön 2.11.2026. Tarkistus tehtiin 1.11.2026, joten kyse oli tuolloin seuraavalle päivälle ajoitetusta muutoksesta; toteutuminen tulee tarkistaa liikennöitsijältä.
+- [Renfe Cercanías Murcia–Alicante](https://www.renfe.com/es/es/cercanias/cercanias-murcia-alicante) — Renfen C2-rataa koskeva ajantasainen liikennetiedote kuvaa Murcia–Águilas-junaliikenteen tilapäistä korvaamista maantiekuljetuksilla infrastruktuuritöiden vuoksi. Lähde ei anna päättymispäivää; varmista tilanne ennen matkaa.
+- [Mazarrónin matkailusivusto: reitit ja aikataulut](https://visitamazarron.com/page/show/guias-y-horarios-descargas) — julkaisee paikallis- ja alueellisten bussien aikataulut, joista sivulla on muun muassa 31.8.2026 ja 1.10.2026 alkaen voimassa oleviksi merkittyjä versioita. Sivulla ei ilmoiteta kaikille aikatauluille päättymispäivää; voimassaolo ja pysäkki on tarkistettava matkapäivälle.
+- [San Pedro del Pinatar: palveluopas 2026 (PDF)](https://www.sanpedrodelpinatar.es/wp-content/uploads/2026/03/guia-de-servicios-2026.pdf) — maaliskuussa 2026 päivitetty kunnallinen opas yhteystiedoista, peruspalveluista ja liikenteestä; opas itse huomauttaa tietojen voivan muuttua.
+- [San Pedro del Pinatar: liikennepalvelut](https://www.sanpedrodelpinatar.es/concejalias/transportes/) ja [ALSA/Movibus: Mar Menor–Cartagena](https://www.alsa.com/en/urban/murcia/mar-menor-metropolitana-de-cartagena) — liikenneviranomaisen ja operaattorin reitti- ja palvelulähteet. Tarkista linjat, aikataulut ja poikkeukset matkustuspäivälle.
