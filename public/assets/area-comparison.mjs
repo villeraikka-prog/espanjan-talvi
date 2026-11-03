@@ -296,16 +296,19 @@ function initializeComparison() {
   const selectedImage = document.getElementById("selected-destination-image");
   const selectedImageSizes = "(max-width: 760px) calc(100vw - 2.1rem), (max-width: 1100px) calc(51.35vw - 45px), (max-width: 1488px) calc(41.86vw - 45px), 578px";
   const selectedStationNote = document.getElementById("selected-station-note");
-  const stationSources = document.createElement("details");
+  const stationSources = selectedStationNote.closest("details") || document.createElement("details");
+  stationSources.id = "selected-station-sources";
   stationSources.className = "climate-summary__sources";
-  const stationSourcesSummary = document.createElement("summary");
+  const stationSourcesSummary = stationSources.querySelector("summary") || document.createElement("summary");
   stationSourcesSummary.textContent = "Lähteet ja laskentatapa";
-  const stationCaveat = document.createElement("p");
+  const stationCaveat = document.getElementById("selected-station-caveat") || document.createElement("p");
   stationCaveat.id = "selected-station-caveat";
   stationCaveat.className = "climate-summary__note climate-summary__caveat";
-  selectedStationNote.before(stationCaveat);
-  selectedStationNote.replaceWith(stationSources);
-  stationSources.append(stationSourcesSummary, selectedStationNote);
+  if (!stationCaveat.isConnected) selectedStationNote.before(stationCaveat);
+  if (!stationSources.contains(selectedStationNote)) {
+    selectedStationNote.replaceWith(stationSources);
+    stationSources.append(stationSourcesSummary, selectedStationNote);
+  }
   const comparisonHead = document.getElementById("comparison-table-head");
   const comparisonBody = document.getElementById("comparison-table-body");
   const comparisonEmpty = document.getElementById("comparison-empty");
@@ -334,6 +337,7 @@ function initializeComparison() {
     option.textContent = label;
     select.append(option);
   };
+  regionSelect.replaceChildren();
   appendOption(regionSelect, "all", "Kaikki alueet");
   for (const region of regions) appendOption(regionSelect, region.id, region.name);
 
