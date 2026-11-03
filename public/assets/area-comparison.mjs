@@ -294,6 +294,7 @@ function initializeComparison() {
   const addButton = document.getElementById("comparison-add");
   const status = document.getElementById("comparison-status");
   const selectedImage = document.getElementById("selected-destination-image");
+  const selectedImageSizes = "(max-width: 760px) calc(100vw - 2.1rem), (max-width: 1100px) calc(51.35vw - 45px), (max-width: 1488px) calc(41.86vw - 45px), 578px";
   const selectedStationNote = document.getElementById("selected-station-note");
   const stationSources = document.createElement("details");
   stationSources.className = "climate-summary__sources";
@@ -309,6 +310,16 @@ function initializeComparison() {
   const comparisonBody = document.getElementById("comparison-table-body");
   const comparisonEmpty = document.getElementById("comparison-empty");
   const comparisonWrap = document.getElementById("comparison-table-wrap");
+  comparisonWrap.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    const maxScroll = comparisonWrap.scrollWidth - comparisonWrap.clientWidth;
+    if (maxScroll <= 0) return;
+    const direction = event.key === "ArrowRight" ? 1 : -1;
+    const nextScroll = Math.min(maxScroll, Math.max(0, comparisonWrap.scrollLeft + direction * 48));
+    if (nextScroll === comparisonWrap.scrollLeft) return;
+    event.preventDefault();
+    comparisonWrap.scrollLeft = nextScroll;
+  });
   const selectedDestination = document.querySelector(".selected-destination");
   const comparisonResults = document.getElementById("comparison-results");
   const practicalPanel = document.getElementById("practical-panel");
@@ -401,7 +412,7 @@ function initializeComparison() {
     appendSourceLink(selectedStationNote, destination.sea?.sourceUrl, "NOAA/OISST-ruutu");
     selectedImage.src = destination.image;
     if (destination.srcset) selectedImage.srcset = destination.srcset;
-    if (destination.sizes) selectedImage.sizes = destination.sizes;
+    selectedImage.sizes = selectedImageSizes;
     selectedImage.alt = destination.alt;
     selectedImage.width = destination.imageWidth;
     selectedImage.height = destination.imageHeight;
