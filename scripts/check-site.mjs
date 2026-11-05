@@ -93,6 +93,15 @@ const destinationDirectoryHtml = readFileSync(path.join(publicRoot, "kohteet", "
 const destinationDirectoryCards = [...destinationDirectoryHtml.matchAll(/<article class="destination-directory-card" data-destination-card\b[^>]*data-name="([^"]+)"[^>]*data-region="([^"]+)"/g)];
 assert.equal(destinationDirectoryCards.length, 24, "Destination directory must display all 24 places");
 assert.equal((destinationDirectoryHtml.match(/class="destination-directory-region"/g) || []).length, 5, "Destination directory must preserve the five regional groups");
+const directoryImageCredits = [...destinationDirectoryHtml.matchAll(/<figure class="destination-directory-photo">[\s\S]*?<figcaption>([\s\S]*?)<\/figcaption><\/figure>/g)].map(([, caption]) => caption);
+assert.equal(directoryImageCredits.length, 24, "Every directory image must include its own credit disclosure");
+for (const [index, caption] of directoryImageCredits.entries()) {
+  assert.match(caption, /<details><summary>Kuvan lähde ja lisenssi<\/summary><p>[\s\S]*?kuvan lähdesivu[\s\S]*?Lisenssitieto:/, `Directory image credit must include its source and license: ${index + 1}`);
+  if (/CC BY(?:-SA)?\b/.test(caption)) {
+    assert.match(caption, /href="https:\/\/creativecommons\.org\/licenses\//, `Creative Commons directory credit needs a license link: ${index + 1}`);
+    assert.match(caption, /Koonmuutos|pienennetty|Paikalliset/i, `Creative Commons directory credit needs a modification notice: ${index + 1}`);
+  }
+}
 const directoryProfileLinks = [...destinationDirectoryHtml.matchAll(/href="(\/kohteet\/[a-z0-9-]+\/)"/g)].map(([, href]) => href);
 const expectedPublishedProfileRoutes = ["alicante", "orihuela-costa", "guardamar-del-segura", "denia", "javea-xabia", "calp", "cartagena", "los-alcazares", "san-pedro-del-pinatar", "la-manga-del-mar-menor", "puerto-de-mazarron", "aguilas", "almeria", "roquetas-de-mar", "almerimar", "vera", "torrevieja", "fuengirola", "benidorm", "malaga", "valencia", "murcia", "cadiz", "huelva"].map((id) => `/kohteet/${id}/`);
 assert.deepEqual(directoryProfileLinks.sort(), [...expectedPublishedProfileRoutes].sort(), "Directory must link to all 24 published profiles");
@@ -185,49 +194,51 @@ const destinationAltNames = new Map([
   ["roquetas-de-mar", "Roquetas de Mar"],
 ]);
 const expectedNewPhotoSources = new Map([
-  ["alicante", "https://images.pexels.com/photos/34672275/pexels-photo-34672275.jpeg"],
+  ["alicante", "https://commons.wikimedia.org/wiki/File:Alicante_Harbor_from_Santa_Barbara_Castle.jpg"],
   ["orihuela-costa", "https://commons.wikimedia.org/wiki/File:Mediterranean_coastline_of_Cabo_Roig_in_Orihuela_Costa,_Orihuela,_Alicante,_Spain,_2022_January.jpg"],
-  ["guardamar-del-segura", "https://images.pexels.com/photos/28974185/pexels-photo-28974185.jpeg"],
+  ["guardamar-del-segura", "https://commons.wikimedia.org/wiki/File:Dunes_of_Guardamar_del_Segura.JPG"],
   ["denia", "https://unsplash.com/photos/white-boats-on-docking-station-oADsJyngtEs"],
-  ["javea-xabia", "https://images.pexels.com/photos/30249354/pexels-photo-30249354.jpeg"],
-  ["calp", "https://images.pexels.com/photos/38986912/pexels-photo-38986912.jpeg"],
+  ["javea-xabia", "https://commons.wikimedia.org/wiki/File:Port_de_X%C3%A0bia_i_Montg%C3%B3.JPG"],
+  ["calp", "https://commons.wikimedia.org/wiki/File:Pe%C3%B1%C3%B3n_de_Ifach,_Calpe,_Espa%C3%B1a,_2014-07-01,_DD_14.JPG"],
   ["torrevieja", "https://commons.wikimedia.org/wiki/File:Strandentorrevieja.jpg"],
   ["cartagena", "https://unsplash.com/photos/ancient-roman-amphitheater-ruins-under-the-bright-sun-2GGPhORBdVE"],
   ["benidorm", "https://www.pexels.com/photo/benidorm-skyline-with-intempo-building-33739349/"],
   ["malaga", "https://www.pexels.com/photo/aerial-view-of-malaga-spain-at-sunset-12876971/"],
-  ["los-alcazares", "https://images.pexels.com/photos/32769861/pexels-photo-32769861.jpeg"],
+  ["los-alcazares", "https://commons.wikimedia.org/wiki/File:Playa_de_Las_Palmeras_en_Los_Alc%C3%A1zares.jpg"],
   ["san-pedro-del-pinatar", "https://commons.wikimedia.org/wiki/File:Salinas_y_Arenales_de_San_Pedro_del_Pinatar_-_WLE_Spain_2015.jpg"],
   ["la-manga-del-mar-menor", "https://unsplash.com/photos/green-palm-trees-near-white-and-brown-concrete-building-during-daytime-PlObKBlri-M"],
   ["puerto-de-mazarron", "https://commons.wikimedia.org/wiki/File:Hafen_Pto.d.Mazarron05.JPG"],
-  ["aguilas", "https://commons.wikimedia.org/wiki/File:Aguilasmurcia.JPG"],
+  ["aguilas", "https://commons.wikimedia.org/wiki/File:Castilloaguilasmurcia.jpg"],
   ["almeria", "https://www.pexels.com/photo/town-on-sea-coast-15947296/"],
-  ["roquetas-de-mar", "https://images.pexels.com/photos/9068808/pexels-photo-9068808.jpeg"],
-  ["murcia", "https://images.pexels.com/photos/37466123/pexels-photo-37466123.jpeg"],
-  ["cadiz", "https://images.pexels.com/photos/37240602/pexels-photo-37240602.jpeg"],
+  ["roquetas-de-mar", "https://commons.wikimedia.org/wiki/File:Playa_Roquetas_de_Mar.jpg"],
+  ["murcia", "https://commons.wikimedia.org/wiki/File:Cathedral,_Murcia.jpg"],
+  ["cadiz", "https://commons.wikimedia.org/wiki/File:Catedral_of_Cadiz.jpg"],
   ["almerimar", "https://commons.wikimedia.org/wiki/File:PXL_20240126_gale%C3%B3n_Andaluc%C3%ADa_en_Almerimar_12.jpg"],
   ["vera", "https://commons.wikimedia.org/wiki/File:Vista_de_Vera_013.jpg"],
 ]);
 const expectedOriginalImageUrls = new Map([
-  ["alicante", "https://images.pexels.com/photos/34672275/pexels-photo-34672275.jpeg"],
+  ["alicante", "https://upload.wikimedia.org/wikipedia/commons/4/41/Alicante_Harbor_from_Santa_Barbara_Castle.jpg"],
   ["torrevieja", "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Strandentorrevieja.jpg/1920px-Strandentorrevieja.jpg"],
   ["benidorm", "https://images.pexels.com/photos/33739349/pexels-photo-33739349.jpeg"],
-  ["guardamar-del-segura", "https://images.pexels.com/photos/28974185/pexels-photo-28974185.jpeg"],
-  ["javea-xabia", "https://images.pexels.com/photos/30249354/pexels-photo-30249354.jpeg"],
-  ["calp", "https://images.pexels.com/photos/38986912/pexels-photo-38986912.jpeg"],
+  ["guardamar-del-segura", "https://upload.wikimedia.org/wikipedia/commons/7/7a/Dunes_of_Guardamar_del_Segura.JPG"],
+  ["javea-xabia", "https://upload.wikimedia.org/wikipedia/commons/d/da/Port_de_X%C3%A0bia_i_Montg%C3%B3.JPG"],
+  ["calp", "https://upload.wikimedia.org/wikipedia/commons/d/df/Pe%C3%B1%C3%B3n_de_Ifach%2C_Calpe%2C_Espa%C3%B1a%2C_2014-07-01%2C_DD_14.JPG"],
   ["malaga", "https://images.pexels.com/photos/12876971/pexels-photo-12876971.jpeg"],
-  ["los-alcazares", "https://images.pexels.com/photos/32769861/pexels-photo-32769861.jpeg"],
+  ["los-alcazares", "https://upload.wikimedia.org/wikipedia/commons/6/67/Playa_de_Las_Palmeras_en_Los_Alc%C3%A1zares.jpg"],
   ["almeria", "https://images.pexels.com/photos/15947296/pexels-photo-15947296.jpeg"],
-  ["roquetas-de-mar", "https://images.pexels.com/photos/9068808/pexels-photo-9068808.jpeg"],
-  ["murcia", "https://images.pexels.com/photos/37466123/pexels-photo-37466123.jpeg"],
-  ["cadiz", "https://images.pexels.com/photos/37240602/pexels-photo-37240602.jpeg"],
+  ["roquetas-de-mar", "https://upload.wikimedia.org/wikipedia/commons/9/94/Playa_Roquetas_de_Mar.jpg"],
+  ["murcia", "https://upload.wikimedia.org/wikipedia/commons/2/27/Cathedral%2C_Murcia.jpg"],
+  ["cadiz", "https://upload.wikimedia.org/wikipedia/commons/3/39/Catedral_of_Cadiz.jpg"],
+  ["aguilas", "https://upload.wikimedia.org/wikipedia/commons/5/5e/Castilloaguilasmurcia.jpg"],
 ]);
 const expectedDestinationPhotoFiles = new Map([
-  ["alicante", ["alicante-avenue-v2", 933]], ["torrevieja", ["torrevieja-homes-v2", 1050]],
-  ["benidorm", ["benidorm-street-v2", 933]], ["guardamar-del-segura", ["guardamar-del-segura-v2", 933]],
-  ["javea-xabia", ["javea-xabia-v2", 933]], ["calp", ["calp-v2", 933]],
-  ["malaga", ["malaga-street-v2", 788]], ["los-alcazares", ["los-alcazares-v2", 933]],
-  ["almeria", ["almeria-old-town-v2", 927]], ["roquetas-de-mar", ["roquetas-de-mar-v2", 664]],
-  ["murcia", ["murcia-street-v2", 933]], ["cadiz", ["cadiz-alley-v2", 933]],
+  ["alicante", ["alicante-harbor-v3", 630]], ["torrevieja", ["torrevieja-homes-v2", 1050]],
+  ["benidorm", ["benidorm-street-v2", 933]], ["guardamar-del-segura", ["guardamar-dunes-v3", 919]],
+  ["javea-xabia", ["javea-harbor-montgo-v3", 901]], ["calp", ["calp-penon-v3", 933]],
+  ["malaga", ["malaga-street-v2", 788]], ["los-alcazares", ["los-alcazares-playa-palmeras-v3", 663]],
+  ["almeria", ["almeria-old-town-v2", 927]], ["roquetas-de-mar", ["roquetas-castillo-santa-ana-v3", 788]],
+  ["murcia", ["murcia-cathedral-v3", 1050]], ["cadiz", ["cadiz-cathedral-v3", 933]],
+  ["aguilas", ["aguilas-castle-v3", 933]],
 ]);
 const expectedStations = ["8025", "8019", "6155A", "8416", "6325O", "7178I", "5973", "4642E"];
 const expectedClimateAssignments = new Map([

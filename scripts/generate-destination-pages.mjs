@@ -46,7 +46,7 @@ function getImageCredit(name, sourceUrl, display) {
   if (!row) throw new Error(`IMAGE-SOURCES.md has no credit row for ${name}`);
   const cells = markdownTableCells(row);
   const licenseCell = cells[3] || "";
-  const recognizedLicense = licenseCell.match(/CC BY-SA 4\.0|CC BY 2\.0|CC BY 4\.0|CC0 1\.0 Universal Public Domain Dedication|Lähdesivun public domain -dedikaatio \(ei CC0\)|tekijän public domain -dedikaatio[^.]*|Pexels License|Unsplash License/)?.[0];
+  const recognizedLicense = licenseCell.match(/CC BY-SA 4\.0|CC BY-SA 3\.0|CC BY 2\.0|CC BY 4\.0|CC0 1\.0 Universal Public Domain Dedication|Lähdesivun public domain -dedikaatio \(ei CC0\)|tekijän public domain -dedikaatio[^.]*|Pexels License|Unsplash License/)?.[0];
   const license = recognizedLicense || (/\*\*Public domain\*\*/i.test(licenseCell) && /ei CC0-lisenssimerkintää/i.test(licenseCell)
     ? "tekijän public domain -dedikaatio, ei CC0-lisenssimerkintä"
     : null);
@@ -182,8 +182,11 @@ function getCatalog() {
           ? getImageCredit(title, imageBase.credit.sourceUrl, imageBase.credit.display)
           : imageBase.credit,
       };
-      if (!title || !placeType || !summary || !image.src || !image.alt || !image.credit?.sourceUrl) {
+      if (!title || !placeType || !summary || !image.src || !image.alt || !image.credit?.sourceUrl || !image.credit?.license) {
         throw new Error(`Destination catalog data is incomplete for ${id}`);
+      }
+      if (/^CC BY(?:-SA)?\b/.test(image.credit.license) && (!image.credit.licenseUrl || !image.credit.modification)) {
+        throw new Error(`Creative Commons destination image needs a license link and modification notice: ${id}`);
       }
       return {
         id,
@@ -270,11 +273,16 @@ function renderImage(image, { className = "", eager = false } = {}) {
 }
 
 function renderCatalogCard(destination) {
+  const credit = destination.image.credit;
+  const licenseText = credit.license
+    ? ` Lisenssitieto: ${escapeHtml(credit.license)}${credit.licenseUrl ? ` (<a href="${escapeHtml(credit.licenseUrl)}" rel="noopener">lisenssin ehdot</a>)` : ""}.`
+    : "";
+  const modification = credit.modification ? ` ${escapeHtml(credit.modification)}` : "";
   const profileLink = destination.profileAvailable
     ? `<a class="destination-directory-link" href="/kohteet/${escapeHtml(destination.slug)}/" aria-label="Lue ${escapeHtml(destination.name)}n kohdeprofiili">Tarkemmat tiedot <span aria-hidden="true">→</span></a>`
     : `<p class="destination-profile-status">Profiilia ei ole vielä julkaistu.</p>`;
   return `<article class="destination-directory-card" data-destination-card data-name="${escapeHtml(destination.name)}" data-region="${escapeHtml(destination.regionId)}">
-    <figure class="destination-directory-photo"><img src="${escapeHtml(destination.image.src)}" srcset="${escapeHtml(destination.image.srcset)}" sizes="(max-width: 760px) calc(100vw - 2.5rem), (max-width: 1050px) 46vw, 30vw" alt="${escapeHtml(destination.image.alt)}" width="${destination.image.width}" height="${destination.image.height}" loading="lazy" decoding="async"><figcaption><a href="${escapeHtml(destination.image.credit.sourceUrl)}" rel="noopener">Kuvan lähde: ${escapeHtml(destination.image.credit.display)}</a></figcaption></figure>
+    <figure class="destination-directory-photo"><img src="${escapeHtml(destination.image.src)}" srcset="${escapeHtml(destination.image.srcset)}" sizes="(max-width: 760px) calc(100vw - 2.5rem), (max-width: 1050px) 46vw, 30vw" alt="${escapeHtml(destination.image.alt)}" width="${destination.image.width}" height="${destination.image.height}" loading="lazy" decoding="async"><figcaption><details><summary>Kuvan lähde ja lisenssi</summary><p>${escapeHtml(credit.display)} · <a href="${escapeHtml(credit.sourceUrl)}" rel="noopener">kuvan lähdesivu</a>.${licenseText}${modification}</p></details></figcaption></figure>
     <div class="destination-directory-card__body"><p class="eyebrow">${escapeHtml(destination.regionName)}</p><h3>${escapeHtml(destination.name)}</h3><p class="destination-directory-type">${escapeHtml(destination.placeType)}</p><p>${escapeHtml(destination.summary)}</p>${profileLink}</div>
   </article>`;
 }

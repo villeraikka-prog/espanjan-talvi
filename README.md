@@ -1,6 +1,6 @@
 # Espanjan talviarki — staattinen sivusto
 
-Suomenkielinen staattinen opas 1–6 kuukauden talvehtimisen suunnitteluun. Tuotantosivusto on [Netlifyssä](https://espanjan-talvi.netlify.app/); tämän repositorion GitHub-etärepo on [villeraikka-prog/espanjan-talvi](https://github.com/villeraikka-prog/espanjan-talvi). Google Search Console -omistajuus on vahvistettu, ja sitemapin tila on ilmoitettu onnistuneeksi. Cloudflare Web Analytics -tagi on koodissa kahdeksalla indeksoitavalla HTML-sivulla; tagin näkyminen HTML:ssä ei yksin vahvista mittauspyynnön onnistumista tai raporttidatan kertymistä. Cloudflaren asetuksia tai infrastruktuuritason lokitus- ja säilytyskäytäntöjä ei ole itsenäisesti varmennettu. Sivusto julkaistaan staattisena `public/`-hakemistosta ilman build-komentoa. Kun budjettilaskurin JavaScript-moduuli toimii, se käsittelee syötteet selaimessa ja estää lomakkeen tavallisen lähetyksen. HTML-lomake ei määritä `method`-arvoa, joten jos JavaScript ei toimi, selaimen oletusarvoinen GET-lähetys voi liittää nimetyt kenttäarvot URL:iin. Paikallisessa projektissa ei ole omaa backendia, kirjautumista, uutiskirjettä, mainoksia tai affiliate-seurantaa.
+Suomenkielinen staattinen opas 1–6 kuukauden talvehtimisen suunnitteluun. Tuotantosivusto on [Netlifyssä](https://espanjan-talvi.netlify.app/); tämän repositorion GitHub-etärepo on [villeraikka-prog/espanjan-talvi](https://github.com/villeraikka-prog/espanjan-talvi). Google Search Console -omistajuus on vahvistettu, ja sitemapin tila on ilmoitettu onnistuneeksi. Cloudflare Web Analytics -tagi on koodissa kaikilla 33 indeksoitavalla HTML-sivulla; tagin näkyminen HTML:ssä ei yksin vahvista mittauspyynnön onnistumista tai raporttidatan kertymistä. Cloudflaren asetuksia tai infrastruktuuritason lokitus- ja säilytyskäytäntöjä ei ole itsenäisesti varmennettu. Sivusto julkaistaan staattisena `public/`-hakemistosta ilman build-komentoa. Kun budjettilaskurin JavaScript-moduuli toimii, se käsittelee syötteet selaimessa ja estää lomakkeen tavallisen lähetyksen. HTML-lomake ei määritä `method`-arvoa, joten jos JavaScript ei toimi, selaimen oletusarvoinen GET-lähetys voi liittää nimetyt kenttäarvot URL:iin. Paikallisessa projektissa ei ole omaa backendia, kirjautumista, uutiskirjettä, mainoksia tai affiliate-seurantaa.
 
 ## Rakenne
 
@@ -10,7 +10,7 @@ Suomenkielinen staattinen opas 1–6 kuukauden talvehtimisen suunnitteluun. Tuot
 - `IMAGE-SOURCES.md` — kuvien lähdesivut, kuvaajat, käyttöehdot ja paikalliset tiedostot.
 - Tutkimuskansiossa olevia alkuperäisiä raportteja ei ole muokattu.
 
-Sivuston arkkitehtuuri on HTML/CSS/JavaScript ilman build-vaihetta tai riippuvuuksien asennusta. Cloudflare Pagesin julkaistava hakemisto on `public/`. Kun laskurin JavaScript toimii, laskenta tapahtuu käyttäjän selaimessa. Tämän repositorion lomakkeen tavallinen GET-varatapa voi JavaScriptin puuttuessa liittää syötteet URL:iin. Tässä projektikoodissa ei ole omaa backendia, CMS:ää, tietokantaa tai ulkoisia kuvapyyntöjä.
+Sivuston arkkitehtuuri on HTML/CSS/JavaScript ilman palvelinpuolen sovellusta tai riippuvuuksien asennusta. Netlifyn julkaistava hakemisto on `public/`; automaattisen tuotantojulkaisun build-komento on tyhjä. Kohdesivujen generaattori ylläpitää staattista hakemistoa ja profiileja, ja se ajetaan ennen näiden sivujen julkaisemista. Kun laskurin JavaScript toimii, laskenta tapahtuu käyttäjän selaimessa. Tämän repositorion lomakkeen tavallinen GET-varatapa voi JavaScriptin puuttuessa liittää syötteet URL:iin. Tässä projektikoodissa ei ole omaa backendia, CMS:ää, tietokantaa tai ulkoisia kuvapyyntöjä.
 
 ## Paikallinen käyttö ja testit
 
@@ -27,14 +27,17 @@ Avaa `http://localhost:4173/`. Pysäytä käynnistetty palvelin `Ctrl+C`-näppä
 
 ## Sivuarkkitehtuuri ja sisältö
 
-- `/` — etusivu ja interaktiivinen vertailutyökalu: 24 kohdeprofiilia viidessä kategoriassa (kahdeksan Costa Blancalla), kahdeksan AEMET-aseman kuukausinormaalit ja Idealistan ilmoitusindeksit.
-- `/vuokraus/` — asunnon talvikunto, kysymykset ennen maksua, tyhjä saman ehtorakenteen vertailupohja sekä virallinen lakilähde.
-- `/budjetti/` — selaimessa toimiva laskuri 1–2 matkustajalle ja 1–6 kuukaudelle. Käyttäjä syöttää kaikki kustannukset; laskuri ei sisällä hintaoletuksia.
-- `/talvehtiminen-espanjassa/` — 1–6 kuukauden suunnittelupolku, aikajana, talvikodin tarkistus, liikkuminen sekä viranomaislinkit ja yksilöllisyysrajaukset.
-- `/toimitusperiaatteet/` ja `/tietosuoja/` — sivuston rajat, lähteet ja nykyiset tietosuojatoiminnot.
-- `/aluevertailu/` — pysyvä 301-uudelleenohjaus vertailun etusivulle.
+- `/` — etusivu ja interaktiivinen vertailutyökalu 24 kohteelle; rinnakkain näytetään ilmasto- ja vuokramittarit.
+- `/kohteet/` ja `/kohteet/{slug}/` — 24 kohteen alueittain ryhmitelty hakemisto ja yksilölliset profiilit.
+- `/vuokraus/` — asunnon talvikunto, kysymykset ennen maksua, vertailupohja sekä virallinen lakilähde.
+- `/budjetti/` — selaimessa toimiva henkilökohtainen laskuri 1–2 matkustajalle ja 1–6 kuukaudelle; käyttäjä syöttää kaikki kustannukset eikä laskuri sisällä hintaoletuksia.
+- `/elinkustannukset/` — alueelliset ja kansalliset elinkustannusindikaattorit sekä vuokraindeksit; ei kokonaistulos-pistemäärää.
+- `/talvehtiminen-espanjassa/` — 1–6 kuukauden suunnittelupolku, aikajana, talvikodin tarkistus, liikkuminen sekä viranomaislinkit.
+- `/palvelut-ja-linkit/` — viranomais- ja arjen palvelulinkkejä.
+- `/toimitusperiaatteet/` ja `/tietosuoja/` — sivuston rajat, lähteet ja tietosuojakuvaus.
+- `/aluevertailu/` — vanha reitti ohjataan uudelleen etusivulle.
 
-Jokaisella kahdeksalla indeksoitavalla sivulla on oma title, description, self-referencing canonical, vastaava `og:url` ja yksi H1. `public/sitemap.xml` sisältää kaikki kahdeksan kanonista sivua eikä listaa noindex- tai uudelleenohjattuja reittejä. `public/sitemap-google.xml` on vaihtoehtoinen, sisällöltään identtinen sitemap. Vanha `/aluevertailu/`-osoite ohjataan `public/_redirects`-säännöllä etusivulle; paikallinen fallback on noindex eikä sisällä rinnakkaista vertailusisältöä. `robots.txt` osoittaa ensisijaiseen sitemap-tiedostoon. SEO-URL-osoitteiden ensisijainen origin on `https://espanjan-talvi.netlify.app/`; originin vaihtuessa päivitä HTML:n canonical- ja `og:url`-arvot, molemmat sitemap-tiedostot, robots.txt sekä tarkistusskriptin origin yhdessä.
+Kaikilla 33 indeksoitavalla URL-osoitteella on oma sivu ja itseensä osoittava canonical. `public/sitemap.xml` sisältää kaikki 33 kanonista sivua eikä listaa noindex- tai uudelleenohjattuja reittejä. `public/sitemap-google.xml` on vaihtoehtoinen, sisällöltään identtinen sitemap. Vanha `/aluevertailu/`-osoite ohjataan `public/_redirects`-säännöllä etusivulle. `robots.txt` osoittaa ensisijaiseen sitemap-tiedostoon. SEO-URL-osoitteiden ensisijainen origin on `https://espanjan-talvi.netlify.app/`; originin vaihtuessa päivitä HTML:n canonical- ja `og:url`-arvot, molemmat sitemap-tiedostot, robots.txt sekä tarkistusskriptin origin yhdessä.
 
 ## Lähteet ja päiväykset
 
@@ -64,7 +67,7 @@ Google Search Console -omistajuus on vahvistettu URL-prefix-ominaisuudelle `http
 - **Hakutulokset:** tarkista Performance-raportista impressions/clicks/queries/pages sekä ajan myötä CTR. Tämänhetkisiä lukuja ei ole tarkistettu eikä niitä päätellä lähdekoodista.
 - **Budjettilaskurin käyttö:** tällä hetkellä ei mitata. Search Console näyttää budjettisivun haku- ja laskeutumissivutietoja, ei lomakkeen käyttöä. Jos erillinen mittaus myöhemmin hyväksytään, mittaa korkeintaan laskurin aloitus/laskentatapahtuma suostumus- ja tietosuojaratkaisun jälkeen; älä koskaan lähetä euroarvoja, matkan päivämääriä tai muita lomakekenttien sisältöjä analytiikkaan.
 - **Affiliate-linkit ja tulokset:** tarkastetussa koodissa ei ole affiliate-seurantaa; mahdollisten linkkien kumppanuussuhteita ei ole tässä tarkistuksessa erikseen vahvistettu. Jos kumppanuusmarkkinointia myöhemmin lisätään, päivitä sitä koskevat tiedot ja mittaa linkkien tuloksia vain erillisellä päätöksellä. Erota kumppanin raportoimat varaukset klikkauksista äläkä esitä provisioita tai konversioita ilman todellista dataa.
-- **Nykyinen tila:** Search Console -omistajuus ja ensisijaisen sitemapin käsittely on ilmoitettu vahvistetuiksi. Cloudflare Web Analytics -tagi on kahdeksalla indeksoitavalla sivulla; mittauspyynnön onnistumista tai raporttidatan kertymistä ei ole vahvistettu. Budjettilaskurin käyttöä, affiliate-klikkauksia tai myyntejä ei mitata erillisinä tapahtumina.
+- **Nykyinen tila:** Search Console -omistajuus ja ensisijaisen sitemapin käsittely on ilmoitettu vahvistetuiksi. Cloudflare Web Analytics -tagi on 33 indeksoitavalla sivulla; mittauspyynnön onnistumista tai raporttidatan kertymistä ei ole vahvistettu. Budjettilaskurin käyttöä, affiliate-klikkauksia tai myyntejä ei mitata erillisinä tapahtumina.
 
 ## Avoimet tietotäydennykset ja ylläpito
 
