@@ -978,7 +978,7 @@ for (const id of expectedNewProfileIds) {
   const sea = DESTINATION_SEA_TEMPERATURES.get(id);
   const card = destinationCards.find(([, cardId]) => cardId === id)?.[2] || "";
   const cardImage = card.match(/<img\b([^>]*)>/i)?.[1] || "";
-  const profileImage = html?.match(/<figure class="destination-profile-photo[^"]*">\s*<img\b([^>]*)>/i)?.[1] || "";
+  const profileImage = html?.match(/<figure class="destination-profile-photo[^"]*">[\s\S]*?<img\b([^>]*)>/i)?.[1] || "";
   const cardAttrs = Object.fromEntries([...cardImage.matchAll(/\b([\w:-]+)="([^"]*)"/g)].map(([, key, value]) => [key, value]));
   const profileAttrs = Object.fromEntries([...profileImage.matchAll(/\b([\w:-]+)="([^"]*)"/g)].map(([, key, value]) => [key, value]));
   assert.ok(html && rent && station && sea, `New profile must use existing sourced facts for climate, sea and rent: ${id}`);
