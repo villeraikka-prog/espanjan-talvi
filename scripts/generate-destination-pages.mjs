@@ -15,6 +15,16 @@ function escapeHtml(value) {
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
 }
 
+function modernSrcset(srcset, format) {
+  return srcset.replace(/\.jpe?g(?=\s|,|$)/gi, `.${format}`);
+}
+
+function renderModernImageSources(srcset, sizes) {
+  return ["avif", "webp"].map((format) =>
+    `<source type="image/${format}" srcset="${escapeHtml(modernSrcset(srcset, format))}" sizes="${escapeHtml(sizes)}">`,
+  ).join("");
+}
+
 function textFromHtml(value) {
   return value
     .replace(/<[^>]*>/g, "")
@@ -262,18 +272,20 @@ function renderBreadcrumbs(items, currentName) {
 
 function renderImage(image, { className = "", eager = false } = {}) {
   const credit = image.credit;
+  const sizes = "(max-width: 760px) calc(100vw - 2rem), (max-width: 1100px) 46vw, 620px";
   const licenseText = credit.license
     ? ` Lisenssitieto: ${escapeHtml(credit.license)}${credit.licenseUrl ? ` (<a href="${escapeHtml(credit.licenseUrl)}" rel="noopener">lisenssin ehdot</a>)` : ""}.`
     : "";
   const modification = credit.modification ? ` ${escapeHtml(credit.modification)}` : "";
   return `<figure class="destination-profile-photo ${className}">
-      <img src="${escapeHtml(image.src)}" srcset="${escapeHtml(image.srcset)}" sizes="(max-width: 760px) calc(100vw - 2rem), (max-width: 1100px) 46vw, 620px" alt="${escapeHtml(image.alt)}" width="${image.width}" height="${image.height}" decoding="async"${eager ? ' fetchpriority="high"' : ' loading="lazy"'}>
+      <picture class="responsive-picture">${renderModernImageSources(image.srcset, sizes)}<img src="${escapeHtml(image.src)}" srcset="${escapeHtml(image.srcset)}" sizes="${sizes}" alt="${escapeHtml(image.alt)}" width="${image.width}" height="${image.height}" decoding="async"${eager ? ' fetchpriority="high"' : ' loading="lazy"'}></picture>
       <figcaption><details><summary>Kuvan lähde ja lisenssi</summary><p>${escapeHtml(credit.display)} · <a href="${escapeHtml(credit.sourceUrl)}" rel="noopener">kuvan lähdesivu</a>.${licenseText}${modification}</p></details></figcaption>
     </figure>`;
 }
 
 function renderCatalogCard(destination) {
   const credit = destination.image.credit;
+  const sizes = "(max-width: 760px) calc(100vw - 2.5rem), (max-width: 1050px) 46vw, 30vw";
   const licenseText = credit.license
     ? ` Lisenssitieto: ${escapeHtml(credit.license)}${credit.licenseUrl ? ` (<a href="${escapeHtml(credit.licenseUrl)}" rel="noopener">lisenssin ehdot</a>)` : ""}.`
     : "";
@@ -282,7 +294,7 @@ function renderCatalogCard(destination) {
     ? `<a class="destination-directory-link" href="/kohteet/${escapeHtml(destination.slug)}/" aria-label="Lue ${escapeHtml(destination.name)}n kohdeprofiili">Tarkemmat tiedot <span aria-hidden="true">→</span></a>`
     : `<p class="destination-profile-status">Profiilia ei ole vielä julkaistu.</p>`;
   return `<article class="destination-directory-card" data-destination-card data-name="${escapeHtml(destination.name)}" data-region="${escapeHtml(destination.regionId)}">
-    <figure class="destination-directory-photo"><img src="${escapeHtml(destination.image.src)}" srcset="${escapeHtml(destination.image.srcset)}" sizes="(max-width: 760px) calc(100vw - 2.5rem), (max-width: 1050px) 46vw, 30vw" alt="${escapeHtml(destination.image.alt)}" width="${destination.image.width}" height="${destination.image.height}" loading="lazy" decoding="async"><figcaption><details><summary>Kuvan lähde ja lisenssi</summary><p>${escapeHtml(credit.display)} · <a href="${escapeHtml(credit.sourceUrl)}" rel="noopener">kuvan lähdesivu</a>.${licenseText}${modification}</p></details></figcaption></figure>
+    <figure class="destination-directory-photo"><picture class="responsive-picture">${renderModernImageSources(destination.image.srcset, sizes)}<img src="${escapeHtml(destination.image.src)}" srcset="${escapeHtml(destination.image.srcset)}" sizes="${sizes}" alt="${escapeHtml(destination.image.alt)}" width="${destination.image.width}" height="${destination.image.height}" loading="lazy" decoding="async"></picture><figcaption><details><summary>Kuvan lähde ja lisenssi</summary><p>${escapeHtml(credit.display)} · <a href="${escapeHtml(credit.sourceUrl)}" rel="noopener">kuvan lähdesivu</a>.${licenseText}${modification}</p></details></figcaption></figure>
     <div class="destination-directory-card__body"><p class="eyebrow">${escapeHtml(destination.regionName)}</p><h3>${escapeHtml(destination.name)}</h3><p class="destination-directory-type">${escapeHtml(destination.placeType)}</p><p>${escapeHtml(destination.summary)}</p>${profileLink}</div>
   </article>`;
 }

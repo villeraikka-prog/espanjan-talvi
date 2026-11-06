@@ -3,6 +3,38 @@ import { DESTINATION_RECORDS_BY_ID, DESTINATION_REGIONS } from "./destinations.m
 export const MAX_COMPARISON_ITEMS = 4;
 const REGION_ID_BY_HEADING_ID = new Map(DESTINATION_REGIONS.map(({ headingId, id }) => [headingId, id]));
 
+function modernSrcset(srcset, format) {
+  return srcset.replace(/\.jpe?g(?=\s|,|$)/gi, `.${format}`);
+}
+
+function updatePictureSources(picture, srcset, sizes) {
+  if (!picture || !srcset) return;
+  for (const format of ["avif", "webp"]) {
+    let source = picture.querySelector(`source[type="image/${format}"]`);
+    if (!source) {
+      source = document.createElement("source");
+      source.type = `image/${format}`;
+      if (format === "avif") picture.prepend(source);
+      else picture.insertBefore(source, picture.querySelector('img'));
+    }
+    source.srcset = modernSrcset(srcset, format);
+    source.sizes = sizes;
+  }
+}
+
+function activateDeferredComparisonPicture(picture) {
+  const image = picture.querySelector("img");
+  if (!image) return;
+  for (const source of picture.querySelectorAll("source[data-srcset]")) {
+    source.srcset = source.dataset.srcset;
+    delete source.dataset.srcset;
+  }
+  image.srcset = image.dataset.srcset;
+  image.src = image.dataset.src;
+  delete image.dataset.srcset;
+  delete image.dataset.src;
+}
+
 export function comparisonRegionId(headingId, fallback = headingId) {
   return REGION_ID_BY_HEADING_ID.get(headingId) || fallback;
 }
@@ -294,6 +326,7 @@ function initializeComparison() {
   const addButton = document.getElementById("comparison-add");
   const status = document.getElementById("comparison-status");
   const selectedImage = document.getElementById("selected-destination-image");
+  const selectedPicture = selectedImage.closest("picture");
   const selectedImageSizes = "(max-width: 760px) calc(100vw - 2.1rem), (max-width: 1100px) calc(51.35vw - 45px), (max-width: 1488px) calc(41.86vw - 45px), 578px";
   const selectedStationNote = document.getElementById("selected-station-note");
   const stationSources = selectedStationNote.closest("details") || document.createElement("details");
@@ -313,6 +346,7 @@ function initializeComparison() {
   const comparisonBody = document.getElementById("comparison-table-body");
   const comparisonEmpty = document.getElementById("comparison-empty");
   const comparisonWrap = document.getElementById("comparison-table-wrap");
+  let comparisonImageObserver = null;
   comparisonWrap.addEventListener("keydown", (event) => {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     const maxScroll = comparisonWrap.scrollWidth - comparisonWrap.clientWidth;
@@ -414,6 +448,7 @@ function initializeComparison() {
     selectedStationNote.replaceChildren(document.createTextNode(stationNote(destination)));
     appendSourceLink(selectedStationNote, destination.climate?.sourceUrl, "AEMET-lähde");
     appendSourceLink(selectedStationNote, destination.sea?.sourceUrl, "NOAA/OISST-ruutu");
+    updatePictureSources(selectedPicture, destination.srcset, selectedImageSizes);
     selectedImage.src = destination.image;
     if (destination.srcset) selectedImage.srcset = destination.srcset;
     selectedImage.sizes = selectedImageSizes;
@@ -434,6 +469,7 @@ function initializeComparison() {
   }
 
   function renderComparison() {
+    comparisonImageObserver?.disconnect();
     const active = comparisonIds.map((id) => byId.get(id)).filter(Boolean);
     comparisonHead.replaceChildren();
     const headerRow = document.createElement("tr");
@@ -445,16 +481,26 @@ function initializeComparison() {
       header.scope = "col";
       const card = document.createElement("div");
       card.className = "comparison-destination-head";
+      const picture = document.createElement("picture");
+      picture.className = "responsive-picture";
       const image = document.createElement("img");
-      image.src = destination.image;
-      if (destination.srcset) image.srcset = destination.srcset;
       image.sizes = "(max-width: 760px) 45vw, 25vw";
       image.alt = "";
       image.width = destination.imageWidth;
       image.height = destination.imageHeight;
-      image.loading = "eager";
+      image.loading = "lazy";
       image.decoding = "async";
-      card.append(image);
+      for (const format of ["avif", "webp"]) {
+        const source = document.createElement("source");
+        source.type = `image/${format}`;
+        source.dataset.srcset = modernSrcset(destination.srcset || "", format);
+        source.sizes = image.sizes;
+        picture.append(source);
+      }
+      image.dataset.src = destination.image;
+      image.dataset.srcset = destination.srcset || "";
+      picture.append(image);
+      card.append(picture);
       const label = document.createElement("span");
       label.className = "comparison-destination-head__label";
       label.append(createCell("strong", destination.name), createCell("span", destination.regionName));
@@ -474,6 +520,28 @@ function initializeComparison() {
       headerRow.append(header);
     }
     comparisonHead.append(headerRow);
+    for (const picture of comparisonHead.querySelectorAll(".responsive-picture")) {
+      const image = picture.querySelector("img");
+      if (!image) continue;
+      const bounds = image.getBoundingClientRect();
+      if (bounds.top < window.innerHeight && bounds.bottom > 0) {
+        image.loading = "eager";
+        activateDeferredComparisonPicture(picture);
+      } else if ("IntersectionObserver" in window) {
+        if (!comparisonImageObserver) {
+          comparisonImageObserver = new IntersectionObserver((entries, observer) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              activateDeferredComparisonPicture(entry.target);
+              observer.unobserve(entry.target);
+            }
+          }, { rootMargin: "200px 0px" });
+        }
+        comparisonImageObserver.observe(picture);
+      } else {
+        activateDeferredComparisonPicture(picture);
+      }
+    }
 
     const rows = [
       { type: "climate", icon: "sun", label: "Tammikuu – päivän ylin keskimäärin", value: (destination) => destination.climate ? formatTemperature(destination.climate.high) : "—", source: (destination) => destination.climate?.sourceUrl },
