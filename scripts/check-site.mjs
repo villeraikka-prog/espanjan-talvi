@@ -42,6 +42,7 @@ import {
   rentalRowsForRegion,
 } from "../public/assets/rental-index.mjs";
 import { renderDestinationOutputs, renderRatingCard } from "./generate-destination-pages.mjs";
+import { renderOrganicGuideOutputs } from "./generate-organic-guides.mjs";
 import {
   AIRPORTS,
   CTMAM_INTERURBAN_SINGLE_FARES,
@@ -89,6 +90,30 @@ for (const [filePath, expectedHtml] of generatedDestinationOutputs) {
   assert.ok(existsSync(filePath), `Generated destination page is missing: ${path.relative(publicRoot, filePath)}`);
   assert.equal(readFileSync(filePath, "utf8").replaceAll("\r\n", "\n"), expectedHtml.replaceAll("\r\n", "\n"), `Generated destination page is stale: ${path.relative(publicRoot, filePath)}`);
 }
+const generatedOrganicGuideOutputs = renderOrganicGuideOutputs();
+assert.equal(generatedOrganicGuideOutputs.size, 2, "Organic guide generator must produce exactly the two approved decision guides");
+for (const [filePath, expectedHtml] of generatedOrganicGuideOutputs) {
+  assert.ok(existsSync(filePath), `Generated organic guide is missing: ${path.relative(publicRoot, filePath)}`);
+  assert.equal(readFileSync(filePath, "utf8").replaceAll("\r\n", "\n"), expectedHtml.replaceAll("\r\n", "\n"), `Generated organic guide is stale: ${path.relative(publicRoot, filePath)}`);
+}
+const carFreeGuideHtml = readFileSync(path.join(publicRoot, "espanja-ilman-autoa", "index.html"), "utf8");
+const carFreeTableRows = [...carFreeGuideHtml.matchAll(/<tbody>([\s\S]*?)<\/tbody>/g)].flatMap(([, body]) => [...body.matchAll(/<tr>/g)]);
+assert.equal(carFreeTableRows.length, 24, "Car-free guide must include all 24 current destinations exactly once");
+for (const { id } of DESTINATION_SCORE_RECORDS) {
+  assert.ok(carFreeGuideHtml.includes(`href=\"/kohteet/${id}/\"`), `Car-free guide must link to the ${id} profile`);
+}
+assert.match(carFreeGuideHtml, /Kaksi eri arviota, ei yhtä autottomuuspistettä/);
+assert.match(carFreeGuideHtml, /Finavian talvikauden 2026–2027 reittilistassa/);
+assert.match(carFreeGuideHtml, /kohteet varmistetuiksi 8\.10\.2026/);
+assert.match(carFreeGuideHtml, /Alicante-Elche Miguel Hernández/);
+assert.match(carFreeGuideHtml, /aria-label=\"24 talvikohteen käveltävyys-, joukkoliikenne- ja lentoasemavertailu\"/);
+const alicanteTorreviejaGuideHtml = readFileSync(path.join(publicRoot, "alicante-vai-torrevieja", "index.html"), "utf8");
+assert.match(alicanteTorreviejaGuideHtml, /Linjojen 1, 2 ja 8 muutokset tulivat voimaan 2\.11\.2026/);
+assert.match(alicanteTorreviejaGuideHtml, /alicanteturismo\.com\/en\/public-transport/);
+assert.match(alicanteTorreviejaGuideHtml, /torrevieja\.es\/es\/noticias\/2026-10-26/);
+for (const guideRoute of ["/espanja-ilman-autoa/", "/alicante-vai-torrevieja/"]) {
+  assert.ok(existsSync(path.join(publicRoot, guideRoute.slice(1), "index.html")), `Organic guide route is missing: ${guideRoute}`);
+}
 const destinationDirectoryHtml = readFileSync(path.join(publicRoot, "kohteet", "index.html"), "utf8");
 const destinationDirectoryCards = [...destinationDirectoryHtml.matchAll(/<article class="destination-directory-card" data-destination-card\b[^>]*data-name="([^"]+)"[^>]*data-region="([^"]+)"/g)];
 assert.equal(destinationDirectoryCards.length, 24, "Destination directory must display all 24 places");
@@ -119,7 +144,7 @@ for (const [filePath, html] of generatedDestinationOutputs) {
   for (const item of breadcrumbData.itemListElement) assert.ok(breadcrumbNav.includes(item.name), `Structured breadcrumb item is not visible: ${item.name}`);
   assert.doesNotMatch(jsonLd, /"@type"\s*:\s*"(?:Article|BlogPosting)"/);
 }
-assert.equal(pages.length, 33, "The indexable site should contain the original eight pages, directory and 24 sourced profiles");
+assert.equal(pages.length, 35, "The indexable site should contain eight core pages, directory, 24 profiles and two organic decision guides");
 const expectedPrimaryNavigation = [
   ["/", "Vertaa"],
   ["/kohteet/", "Kohteet"],
@@ -139,6 +164,8 @@ const activeNavigationByRoute = new Map([
   ["/toimitusperiaatteet/", []],
   ["/palvelut-ja-linkit/", ["/palvelut-ja-linkit/"]],
   ["/kohteet/", ["/kohteet/"]],
+  ["/espanja-ilman-autoa/", []],
+  ["/alicante-vai-torrevieja/", []],
   ["/kohteet/torrevieja/", ["/kohteet/"]],
   ["/kohteet/fuengirola/", ["/kohteet/"]],
   ["/kohteet/benidorm/", ["/kohteet/"]],
@@ -377,7 +404,7 @@ for (const filePath of pages) {
   }
 }
 
-assert.equal(htmlFiles.length, 35, "Expected thirty-five static HTML files, including 24 destination profiles, the directory, 8 main pages, the 404 and legacy-route fallback");
+assert.equal(htmlFiles.length, 37, "Expected thirty-seven static HTML files, including 24 destination profiles, the directory, 10 main pages, the 404 and legacy-route fallback");
 let configuredAnalyticsToken = null;
 let analyticsTaggedPages = 0;
 for (const filePath of htmlFiles) {

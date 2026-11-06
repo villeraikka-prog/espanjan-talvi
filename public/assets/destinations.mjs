@@ -179,9 +179,9 @@ export const DESTINATION_RECORDS = Object.freeze([
         id: "local-transit",
         categoryId: "public-transport",
         kind: "source-linked-description",
-        statement: "Kunnan uusi kaupunkibussiverkko otetaan käyttöön vaiheittain. Kunta ilmoitti 26.10.2026, että linjojen 1, 2 ja 8 reittimuutokset tulevat voimaan 2.11.2026. Tarkista reitit ja vuorot matkustuspäivälle liikennöitsijältä.",
+        statement: "Kunnan 26.10.2026 tiedotteen mukaan linjojen 1 ja 2 keskustayhteydet ilman sairaalan vaihtoa sekä linjan 8 reittimuutos tulivat voimaan 2.11.2026. Tarkista reitit ja vuorot matkustuspäivälle liikennöitsijältä.",
         geographicScope: "Torreviejan kunta; yksittäisen osoitteen yhteydet vaihtelevat.",
-        checkedOn: "2026-11-01",
+        checkedOn: "2026-11-06",
         sources: [
           "https://torrevieja.es/es/otros-lugares-interes/estacion-autobuses-torrevieja",
           "https://turismo.torrevieja.es/es/planifica/como-llegar",
