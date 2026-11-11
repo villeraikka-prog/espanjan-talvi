@@ -102,7 +102,7 @@ assert.equal(carFreeTableRows.length, 24, "Car-free guide must include all 24 cu
 for (const { id } of DESTINATION_SCORE_RECORDS) {
   assert.ok(carFreeGuideHtml.includes(`href=\"/kohteet/${id}/\"`), `Car-free guide must link to the ${id} profile`);
 }
-assert.match(carFreeGuideHtml, /Kaksi eri arviota, ei yhtä autottomuuspistettä/);
+assert.match(carFreeGuideHtml, /arvioita ei yhdistetä yhdeksi autottomuuspisteeksi/);
 assert.match(carFreeGuideHtml, /Finavian talvikauden 2026–2027 reittilistassa/);
 assert.match(carFreeGuideHtml, /kohteet varmistetuiksi 8\.10\.2026/);
 assert.match(carFreeGuideHtml, /Alicante-Elche Miguel Hernández/);
@@ -456,9 +456,10 @@ const redirectsText = readFileSync(path.join(publicRoot, "_redirects"), "utf8");
 const redirectRules = new Map(redirectsText.split(/\r?\n/)
   .map((line) => line.trim().split(/\s+/))
   .filter(([source, destination, code]) => source && !source.startsWith("#") && destination && code)
-  .map(([source, destination]) => [source, destination]));
-assert.equal(redirectRules.get("/aluevertailu"), "/", "Legacy comparison URL without trailing slash must redirect to the homepage");
-assert.equal(redirectRules.get("/aluevertailu/"), "/", "Legacy comparison URL with trailing slash must redirect to the homepage");
+  .map(([source, destination, code]) => [source, { destination, code }]));
+for (const legacyRoute of ["/aluevertailu", "/aluevertailu/"]) {
+  assert.deepEqual(redirectRules.get(legacyRoute), { destination: "/", code: "301!" }, `Legacy comparison URL must force a permanent redirect over the existing fallback file: ${legacyRoute}`);
+}
 for (const url of sitemapUrls) {
   assert.ok(!redirectRules.has(new URL(url).pathname), `Sitemap must not list a redirecting route: ${url}`);
 }
